@@ -233,7 +233,17 @@ function item:Update()
     if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
         BankFrameItemButton_Update(self)
     else
-        local isQuestItem, questId, isActive = Container.GetContainerItemQuestInfo(bag, self:GetID())
+        local questInfo1, questInfo2, questInfo3 = Container.GetContainerItemQuestInfo(bag, self:GetID())
+        local isQuestItem, questId, isActive
+        if type(questInfo1) == "table" then
+            isQuestItem = questInfo1.isQuestItem
+            questId = questInfo1.questID
+            isActive = questInfo1.isActive
+        else
+            isQuestItem = questInfo1
+            questId = questInfo2
+            isActive = questInfo3
+        end
         local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
         local isBattlePayItem
         if Container and Container.IsBattlePayItem then
