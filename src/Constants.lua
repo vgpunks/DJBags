@@ -1,5 +1,10 @@
 local ADDON_NAME, ADDON = ...
 
+-- Compatibility for new reagent bag container constant
+REAGENTBAG_CONTAINER = REAGENTBAG_CONTAINER
+    or (Enum.BagIndex and Enum.BagIndex.ReagentBag)
+    or 5
+
 -- Formatter types
 ADDON.formats = {
 	MASONRY = 0,
