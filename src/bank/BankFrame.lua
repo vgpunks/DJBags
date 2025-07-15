@@ -39,8 +39,15 @@ end
 
 function bankFrame:BANKFRAME_OPENED()
     self:Show()
-    if BankFrame and BankFrame.Hide then
-        BankFrame:Hide()
+    if BankFrame_LoadUI then
+        BankFrame_LoadUI()
+    end
+    if BankFrame then
+        BankFrame:UnregisterAllEvents()
+        BankFrame:SetScript('OnShow', nil)
+        if BankFrame.Hide then
+            BankFrame:Hide()
+        end
     end
     DJBagsBag:Show()
 end
