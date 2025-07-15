@@ -15,13 +15,8 @@ function DJBagsRegisterBankBagContainer(self, bags)
     ADDON.eventManager:Add('PLAYERBANKSLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERBANKBAGSLOTS_CHANGED', self)
 
-    if BankFrame_LoadUI then
-        BankFrame_LoadUI()
-    end
-    if BankFrame then
-        BankFrame:UnregisterAllEvents()
-        BankFrame:SetScript('OnShow', nil)
-    end
+    BankFrame:UnregisterAllEvents()
+    BankFrame:SetScript('OnShow', nil)
 end
 
 function bank:BANKFRAME_OPENED()
