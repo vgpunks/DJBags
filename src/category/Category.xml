@@ -19,11 +19,7 @@
             </Layer>
         </Layers>
         <Frames>
-            <EditBox name="$parentCategoryEdit" parentKey="edit" inherits="BackdropTemplate">
-                <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8" edgeSize="1">
-                    <Color r="0" g="0" b="0" a="0.6" />
-                    <BorderColor r="0.3" g="0.3" b="0.3" a="1" />
-                </Backdrop>
+            <EditBox name="$parentCategoryEdit" parentKey="edit" inherits="InputBoxTemplate">
                 <Size x="300" y="25" />
                 <Anchors>
                     <Anchor point="TOPLEFT" x="5" y="-25" />
