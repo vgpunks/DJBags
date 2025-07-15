@@ -3,6 +3,16 @@ local ADDON_NAME, ADDON = ...
 -- Convenience local for new container API
 local Container = C_Container
 
+-- WoW API version differences mean that IsContainerItemAnUpgrade might not be
+-- available.  Create a local reference if possible so calls are safe.
+local UpgradeCheck = _G.IsContainerItemAnUpgrade
+if not UpgradeCheck and C_Item and C_Item.IsItemAnUpgrade then
+    -- Use the C_Item API if present
+    UpgradeCheck = function(bag, slot)
+        return C_Item.IsItemAnUpgrade(ItemLocation:CreateFromBagAndSlot(bag, slot))
+    end
+end
+
 local item = {}
 item.__index = item
 
@@ -154,13 +164,19 @@ end
 
 local function UpdateUpgrade(self)
     self.timeSinceUpgradeCheck = 0;
-    
-    local itemIsUpgrade = IsContainerItemAnUpgrade(self:GetParent():GetID(), self:GetID());
-    if ( itemIsUpgrade == nil ) then -- nil means not all the data was available to determine if this is an upgrade.
-        self.UpgradeIcon:SetShown(false);
-        self:SetScript("OnUpdate", OnItemUpdate);
+
+    if UpgradeCheck then
+        local itemIsUpgrade = UpgradeCheck(self:GetParent():GetID(), self:GetID());
+        if ( itemIsUpgrade == nil ) then -- nil means data wasn't ready to check.
+            self.UpgradeIcon:SetShown(false);
+            self:SetScript("OnUpdate", OnItemUpdate);
+        else
+            self.UpgradeIcon:SetShown(itemIsUpgrade);
+            self:SetScript("OnUpdate", nil);
+        end
     else
-        self.UpgradeIcon:SetShown(itemIsUpgrade);
+        -- Upgrade information not available on this client version
+        self.UpgradeIcon:SetShown(false);
         self:SetScript("OnUpdate", nil);
     end
 end
