@@ -202,7 +202,8 @@ function item:Update()
         filtered = info.isFiltered
         id = info.itemID
     end
-    local equipable = IsEquippableItem(id)
+    -- Only call IsEquippableItem when we have a valid item ID
+    local equipable = id and IsEquippableItem(id)
 
     local name, level, classId, class, subClass
     if id then
