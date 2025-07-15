@@ -2,6 +2,7 @@
     <Script file="src/bank/BankFrame.lua"/>
     <Script file="src/bank/Bank.lua"/>
     <Script file="src/bank/Reagent.lua"/>
+    <Script file="src/bank/Warband.lua"/>
 
     <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
         <Size x="307" y="85" />
@@ -197,6 +198,26 @@
                     </OnClick>
                 </Scripts>
             </Button>
+            <Button name="$parentTab3" inherits="PanelTabButtonTemplate" text="WARBAND_BANK">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentTab2" relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
+                        end
+                        self.tab = 3
+                    </OnLoad>
+                    <OnClick>
+                        DJBagsBankTab_OnClick(self)
+                    </OnClick>
+                </Scripts>
+            </Button>
             <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
                    hidden="true" parent="DJBagsBankBar">
                 <Anchors>
@@ -222,6 +243,23 @@
                 <Scripts>
                     <OnLoad>
                         DJBagsRegisterReagentBagContainer(self, {REAGENTBANK_CONTAINER})
+                    </OnLoad>
+                    <OnShow>
+                        self:OnShow()
+                    </OnShow>
+                    <OnHide>
+                        self:OnHide()
+                    </OnHide>
+                </Scripts>
+            </Frame>
+            <Frame name="DJBagsWarband" inherits="DJBagsBackgroundTemplate" parentKey="warbandBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
+                   hidden="true" parent="DJBagsBankBar">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsRegisterWarbandBagContainer(self, {WARDBANK_CONTAINER})
                     </OnLoad>
                     <OnShow>
                         self:OnShow()
@@ -320,10 +358,42 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
+            <Frame name="$parentSettingsWarband" parentKey="warbandSettingsMenu" inherits="DJBagsSettings" hidden="true">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentSettingsReagents" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="-10"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight" text="WARBAND_BANK">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="10"/>
+                                    </Offset>
+                                </Anchor>
+                                <Anchor point="TOPRIGHT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="10"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnLoad>
+                        self.bag = self:GetParent().warbandBag
+                    </OnLoad>
+                </Scripts>
+            </Frame>
         </Frames>
         <Scripts>
             <OnLoad>
-                PanelTemplates_SetNumTabs(self, 2)
+                PanelTemplates_SetNumTabs(self, 3)
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
             <OnHide>
