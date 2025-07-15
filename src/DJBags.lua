@@ -78,6 +78,27 @@ CloseBackpack = function()
     DJBagsBag:Hide()
 end
 
+-- Bank API overrides
+local oldOpenBankFrame = OpenBankFrame
+OpenBankFrame = function(...)
+    if oldOpenBankFrame then
+        oldOpenBankFrame(...)
+    end
+    if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
+        DJBagsBankBar:BANKFRAME_OPENED()
+    end
+end
+
+local oldCloseBankFrame = CloseBankFrame
+CloseBankFrame = function(...)
+    if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
+        DJBagsBankBar:BANKFRAME_CLOSED()
+    end
+    if oldCloseBankFrame then
+        oldCloseBankFrame(...)
+    end
+end
+
 SLASH_DJBAGS1, SLASH_DJBAGS2, SLASH_DJBAGS3, SLASH_DJBAGS4 = '/djb', '/dj', '/djbags', '/db';
 function SlashCmdList.DJBAGS(msg, editbox)
     DJBagsBag:Show()
