@@ -66,7 +66,7 @@ end
 local function GetAllItems(self, bags)
     local updateOccured = false
     for _, bag in pairs(bags) do
-        local bagSlots = GetContainerNumSlots(bag)
+        local bagSlots = C_Container.GetContainerNumSlots(bag)
         local container = self.containers[bag]
         for slot = 1, bagSlots do
             if not container.items[slot] then

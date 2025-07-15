@@ -1,7 +1,8 @@
 local ADDON_NAME, ADDON = ...
 
 DJBags_AddCategoryFilter(function(bag, slot)
-    local _, _, _, _, _, _, _, _, _, id = GetContainerItemInfo(bag, slot)
+    local info = C_Container.GetContainerItemInfo(bag, slot)
+    local id = info and info.itemID
 
     return DJBags_DB_Char.categories[id] or DJBags_DB.categories[id]
 end, 'Player defined categories')
