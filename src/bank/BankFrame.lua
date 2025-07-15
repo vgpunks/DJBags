@@ -38,7 +38,10 @@ function DJBagsBankTab_OnClick(tab)
 end
 
 function bankFrame:BANKFRAME_OPENED()
-	self:Show()
+    self:Show()
+    if BankFrame and BankFrame.Hide then
+        BankFrame:Hide()
+    end
     DJBagsBag:Show()
 end
 
