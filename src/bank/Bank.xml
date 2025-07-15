@@ -157,7 +157,10 @@
                     <OnLoad>
                         if self.Text then
                             PanelTemplates_TabResize(self, 0);
-                            self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
                         end
                         self.tab = 1
                     </OnLoad>
@@ -174,7 +177,10 @@
                     <OnLoad>
                         if self.Text then
                             PanelTemplates_TabResize(self, 0);
-                            self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
                         end
                         self.tab = 2
                     </OnLoad>
