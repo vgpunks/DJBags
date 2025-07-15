@@ -3,10 +3,6 @@
 
     <Frame name="DJBagsCategorySettings" inherits="BackdropTemplate" virtual="true" movable="true" enableMouse="true">
         <Size x="100" y="100" />
-        <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8" edgeSize="1">
-            <Color r="0" g="0" b="0" a="0.6" />
-            <BorderColor r="0.3" g="0.3" b="0.3" a="1" />
-        </Backdrop>
         <Layers>
             <Layer level="OVERLAY">
                 <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight">
@@ -45,6 +41,11 @@
             </Button>
         </Frames>
         <Scripts>
+            <OnLoad>
+                self:SetBackdrop({bgFile="Interface\ChatFrame\ChatFrameBackground", edgeFile="Interface\Buttons\WHITE8x8", edgeSize=1})
+                self:SetBackdropColor(0,0,0,0.6)
+                self:SetBackdropBorderColor(0.3,0.3,0.3,1)
+            </OnLoad>
             <OnShow>
                 if self.Update then self:Update() end
             </OnShow>
