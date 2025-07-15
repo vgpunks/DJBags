@@ -198,7 +198,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab3" inherits="PanelTabButtonTemplate" text="WARBAND_BANK">
+            <Button name="$parentTab3" inherits="PanelTabButtonTemplate" text="WARBAND BANK">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parentTab2" relativePoint="BOTTOMRIGHT" />
                 </Anchors>
@@ -368,7 +368,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="OVERLAY">
-                        <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight" text="WARBAND_BANK">
+                        <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight" text="WARBAND BANK">
                             <Anchors>
                                 <Anchor point="TOPLEFT">
                                     <Offset>

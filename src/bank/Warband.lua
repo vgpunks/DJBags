@@ -3,6 +3,11 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+-- Compatibility for new Warband bank container constant
+WARDBANK_CONTAINER = WARDBANK_CONTAINER
+    or (Enum.BagIndex and (Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
+    or 13
+
 function DJBagsRegisterWarbandBagContainer(self, bags)
         DJBagsRegisterBaseBagContainer(self, bags)
 
