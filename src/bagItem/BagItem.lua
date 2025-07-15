@@ -30,7 +30,7 @@ end
 
 function item:Update()
     local numBankSlots, full = GetNumBankSlots()
-    if self.slot - NUM_BAG_SLOTS > numBankSlots  then
+    if self.slot ~= REAGENTBAG_CONTAINER and self.slot - NUM_BAG_SLOTS > numBankSlots then
         local cost = GetBankSlotCost(self.slot-1)
         self:SetCost(cost)
         return

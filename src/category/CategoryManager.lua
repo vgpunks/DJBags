@@ -27,7 +27,8 @@ function categoryManager:GetTitle(item, filters)
             return setName
         end
 
-        if bag >= 0 and bag <= NUM_BAG_SLOTS and (C_NewItems.IsNewItem(bag, slot) or DJBags_DB_Char.newItems[item.id]) then
+        local isRegularBag = (bag >= 0 and bag <= NUM_BAG_SLOTS) or bag == REAGENTBAG_CONTAINER
+        if isRegularBag and (C_NewItems.IsNewItem(bag, slot) or DJBags_DB_Char.newItems[item.id]) then
           DJBags_DB_Char.newItems[item.id] = true
           return NEW
         end
