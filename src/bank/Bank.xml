@@ -155,8 +155,10 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        PanelTemplates_TabResize(self, 0);
-                        self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                        end
                         self.tab = 1
                     </OnLoad>
                     <OnClick>
@@ -170,8 +172,10 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        PanelTemplates_TabResize(self, 0);
-                        self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
+                        end
                         self.tab = 2
                     </OnLoad>
                     <OnClick>

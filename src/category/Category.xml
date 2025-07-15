@@ -19,7 +19,7 @@
             </Layer>
         </Layers>
         <Frames>
-            <EditBox name="$parentCategoryEdit" parentKey="edit">
+            <EditBox name="$parentCategoryEdit" parentKey="edit" inherits="BackdropTemplate">
                 <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
                     <EdgeSize>
                         <AbsValue val="1" />
