@@ -55,7 +55,13 @@ function bankFrame:BANKFRAME_OPENED()
         BankFrame:SetScript('OnShow', nil)
         if not self._bankFrameOrigPoint then
             local point, relativeTo, relativePoint, xOfs, yOfs = BankFrame:GetPoint()
-            self._bankFrameOrigPoint = {point, relativeTo, relativePoint, xOfs, yOfs}
+            self._bankFrameOrigPoint = {
+                point = point,
+                relativeTo = relativeTo,
+                relativePoint = relativePoint,
+                xOfs = xOfs,
+                yOfs = yOfs,
+            }
         end
         BankFrame:ClearAllPoints()
         BankFrame:SetPoint('TOPLEFT', UIParent, 'TOPLEFT', -10000, 10000)
@@ -67,6 +73,12 @@ function bankFrame:BANKFRAME_CLOSED()
         self:Hide()
         if BankFrame and self._bankFrameOrigPoint then
             BankFrame:ClearAllPoints()
-            BankFrame:SetPoint(unpack(self._bankFrameOrigPoint))
+            BankFrame:SetPoint(
+                self._bankFrameOrigPoint.point,
+                self._bankFrameOrigPoint.relativeTo,
+                self._bankFrameOrigPoint.relativePoint,
+                self._bankFrameOrigPoint.xOfs,
+                self._bankFrameOrigPoint.yOfs
+            )
         end
 end
