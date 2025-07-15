@@ -13,9 +13,13 @@ function DJBagsRegisterBagBagContainer(self, bags)
     ADDON.eventManager:Add("NewItemCleared", self)
 end
 
-function bag:SortBags()    
+function bag:SortBags()
     ADDON.eventManager:Remove('BAG_UPDATE', self)
-    SortBags()
+    if C_Container and C_Container.SortBags then
+        C_Container.SortBags()
+    elseif SortBags then
+        SortBags()
+    end
     ADDON.eventManager:Add('BAG_UPDATE', self)
 end
 
