@@ -50,37 +50,9 @@ function bankFrame:BANKFRAME_OPENED()
     if BankFrame_LoadUI then
         BankFrame_LoadUI()
     end
-    if BankFrame then
-        BankFrame:UnregisterAllEvents()
-        BankFrame:SetScript('OnShow', nil)
-        if not self._bankFrameOrigPoint then
-            local point, relativeTo, relativePoint, xOfs, yOfs = BankFrame:GetPoint(1)
-            if point and relativePoint then
-                self._bankFrameOrigPoint = {
-                    point = point,
-                    relativeTo = relativeTo,
-                    relativePoint = relativePoint,
-                    xOfs = xOfs,
-                    yOfs = yOfs,
-                }
-            end
-        end
-        BankFrame:ClearAllPoints()
-        BankFrame:SetPoint('TOPLEFT', UIParent, 'TOPLEFT', -10000, 10000)
-    end
     DJBagsBag:Show()
 end
 
 function bankFrame:BANKFRAME_CLOSED()
-        self:Hide()
-        if BankFrame and self._bankFrameOrigPoint and self._bankFrameOrigPoint.point then
-            BankFrame:ClearAllPoints()
-            BankFrame:SetPoint(
-                self._bankFrameOrigPoint.point,
-                self._bankFrameOrigPoint.relativeTo,
-                self._bankFrameOrigPoint.relativePoint,
-                self._bankFrameOrigPoint.xOfs,
-                self._bankFrameOrigPoint.yOfs
-            )
-        end
+    self:Hide()
 end

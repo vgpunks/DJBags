@@ -158,7 +158,7 @@
                     <Anchor point="RIGHT" relativeTo="$parentDepositReagent" relativePoint="LEFT" x="-5" />
                 </Anchors>
             </EditBox>
-            <Button name="$parentTab1" inherits="PanelTabButtonTemplate,BackdropTemplate,DJBagsBackgroundTemplate" text="BANK">
+            <Button name="$parentTab1" inherits="PanelTabButtonTemplate,BackdropTemplate" text="BANK">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="TOPLEFT" />
                 </Anchors>
@@ -172,13 +172,17 @@
                             end
                         end
                         self.tab = 1
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
                     </OnLoad>
                     <OnClick>
                         DJBagsBankTab_OnClick(self)
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab2" inherits="PanelTabButtonTemplate,BackdropTemplate,DJBagsBackgroundTemplate" text="REAGENT_BANK">
+            <Button name="$parentTab2" inherits="PanelTabButtonTemplate,BackdropTemplate" text="REAGENT_BANK">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parentTab1" relativePoint="BOTTOMRIGHT" />
                 </Anchors>
@@ -192,13 +196,17 @@
                             end
                         end
                         self.tab = 2
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
                     </OnLoad>
                     <OnClick>
                         DJBagsBankTab_OnClick(self)
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab3" inherits="PanelTabButtonTemplate,BackdropTemplate,DJBagsBackgroundTemplate" text="Warband Bank">
+            <Button name="$parentTab3" inherits="PanelTabButtonTemplate,BackdropTemplate" text="Warband Bank">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parentTab2" relativePoint="BOTTOMRIGHT" />
                 </Anchors>
@@ -212,6 +220,10 @@
                             end
                         end
                         self.tab = 3
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
                     </OnLoad>
                     <OnClick>
                         DJBagsBankTab_OnClick(self)
@@ -397,11 +409,6 @@
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
             <OnHide>
-                if CloseBankFrame then
-                    CloseBankFrame()
-                elseif BankFrame and BankFrame.Hide then
-                    BankFrame:Hide()
-                end
                 StaticPopup_Hide("CONFIRM_BUY_BANK_SLOT")
             </OnHide>
         </Scripts>
