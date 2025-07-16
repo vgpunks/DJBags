@@ -273,9 +273,17 @@ function item:Update()
             self.IconBorder:Show();
             self.IconBorder:SetVertexColor(1, 1, 1);
         elseif quality == Enum.ItemQuality.Poor then
-            local color = BAG_ITEM_QUALITY_COLORS[Enum.ItemQuality.Poor];
-            self.IconBorder:Show();
-            self.IconBorder:SetVertexColor(color.r, color.g, color.b);
+            local color
+            if BAG_ITEM_QUALITY_COLORS then
+                color = BAG_ITEM_QUALITY_COLORS[Enum.ItemQuality.Poor]
+            end
+            if color then
+                self.IconBorder:Show();
+                self.IconBorder:SetVertexColor(color.r, color.g, color.b);
+            else
+                self.IconBorder:Show();
+                self.IconBorder:SetVertexColor(0.62, 0.62, 0.62);
+            end
         end
         SetItemButtonCount(self, count)
         SetItemButtonDesaturated(self, locked)
