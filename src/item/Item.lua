@@ -257,7 +257,7 @@ function item:Update()
         self.hasItem = true
 
         if quality and MSQ then
-            if quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
+            if quality >= Enum.ItemQuality.Poor and BAG_ITEM_QUALITY_COLORS[quality] then
                 self.IconBorder:Show();
                 self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
             else
@@ -269,6 +269,14 @@ function item:Update()
 
         SetItemButtonTexture(self, texture)
         SetItemButtonQuality(self, quality, id)
+        if quality == Enum.ItemQuality.Common then
+            self.IconBorder:Show();
+            self.IconBorder:SetVertexColor(1, 1, 1);
+        elseif quality == Enum.ItemQuality.Poor then
+            local color = BAG_ITEM_QUALITY_COLORS[Enum.ItemQuality.Poor];
+            self.IconBorder:Show();
+            self.IconBorder:SetVertexColor(color.r, color.g, color.b);
+        end
         SetItemButtonCount(self, count)
         SetItemButtonDesaturated(self, locked)
         UpdateQuest(self, isQuestItem, questId, isActive)
