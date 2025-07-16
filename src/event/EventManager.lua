@@ -60,6 +60,10 @@ function eventManager:Remove(event, object)
     assert(event, 'Event required')
     assert(object, 'Object required')
 
+    if not self.events[event] then
+        return
+    end
+
     self.events[event][object] = nil
 
     if next(self.events[event]) == nil and Count(self.events[event]) == 0 then
