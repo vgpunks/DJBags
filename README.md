@@ -11,3 +11,4 @@ A bag addon that sorts items into categories defined by Blizzard or user specifi
 * All bags settings for columns and categories.
 * User defined settings for all chars or per char: press ALT + Left mouse button on an item to open dialogue.
 * Clear a single new item: ALT + Right mouse button on new item to remove it from new items list.
+* Clicking Blizzard alert toasts now opens DJBags instead of the default bags.
