@@ -78,6 +78,15 @@ CloseBackpack = function()
     DJBagsBag:Hide()
 end
 
+local oldOpenBag = OpenBag
+OpenBag = function(id)
+    if id < 5 and id > -1 then
+        DJBagsBag:Show()
+    elseif oldOpenBag then
+        oldOpenBag(id)
+    end
+end
+
 -- Bank API overrides
 local oldOpenBankFrame = OpenBankFrame
 OpenBankFrame = function(...)
