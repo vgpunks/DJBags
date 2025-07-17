@@ -144,9 +144,15 @@
                         if self:GetParent().bankSettingsMenu:IsVisible() then
                             self:GetParent().bankSettingsMenu:Hide()
                             self:GetParent().reagentsSettingsMenu:Hide()
+                            if self:GetParent().warbandSettingsMenu then
+                                self:GetParent().warbandSettingsMenu:Hide()
+                            end
                         else
                             self:GetParent().bankSettingsMenu:Show()
                             self:GetParent().reagentsSettingsMenu:Show()
+                            if self:GetParent().warbandSettingsMenu then
+                                self:GetParent().warbandSettingsMenu:Show()
+                            end
                         end
                     </OnClick>
                 </Scripts>
