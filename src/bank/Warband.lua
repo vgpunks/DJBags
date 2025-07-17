@@ -32,9 +32,48 @@ local function GetWarbandContainers()
     return containers
 end
 
+local function CreateContainers(self)
+    for _, bag in ipairs(self.bags) do
+        if not self.containers[bag] then
+            self.containers[bag] = CreateFrame("Frame", "DJBagsBagContainer_" .. bag, self)
+            self.containers[bag]:SetAllPoints()
+            self.containers[bag]:SetID(bag)
+            self.containers[bag].items = {}
+        end
+    end
+end
+
+local function KeyBasedBagList(bags)
+    local out = {}
+    for _, b in ipairs(bags) do
+        out[b] = true
+    end
+    return out
+end
+
+local function UpdateBagList(self)
+    local newBags = GetWarbandContainers()
+    local changed = (#newBags ~= #self.bags)
+    if not changed then
+        for i, v in ipairs(newBags) do
+            if self.bags[i] ~= v then
+                changed = true
+                break
+            end
+        end
+    end
+    if changed then
+        self.bags = newBags
+        self.bagsByKey = KeyBasedBagList(newBags)
+        CreateContainers(self)
+    end
+end
+
 function DJBagsRegisterWarbandBagContainer(self)
     local bags = GetWarbandContainers()
     DJBagsRegisterBaseBagContainer(self, bags)
+
+    self.BaseOnShow = self.OnShow
 
         for k, v in pairs(bank) do
                 self[k] = v
@@ -56,8 +95,16 @@ function bank:BANKFRAME_CLOSED()
 end
 
 function bank:PLAYERWARDBANKSLOTS_CHANGED()
+    UpdateBagList(self)
     for _, bag in ipairs(self.bags) do
         self:BAG_UPDATE(bag)
+    end
+end
+
+function bank:OnShow()
+    UpdateBagList(self)
+    if self.BaseOnShow then
+        self:BaseOnShow()
     end
 end
 
