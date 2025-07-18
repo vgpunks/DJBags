@@ -3,92 +3,6 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
--- Utility helpers for purchasing additional warband bank tabs. These
--- attempt to use whatever API is available on the current client.
-local function GetNextPurchaseCost()
-    if C_WarbandBank then
-        if C_WarbandBank.GetNextPurchaseCost then
-            return C_WarbandBank.GetNextPurchaseCost()
-        elseif C_WarbandBank.GetNextTabCost then
-            return C_WarbandBank.GetNextTabCost()
-        end
-    end
-    if C_AccountBank then
-        if C_AccountBank.GetNextPurchaseCost then
-            return C_AccountBank.GetNextPurchaseCost()
-        elseif C_AccountBank.GetNextTabCost then
-            return C_AccountBank.GetNextTabCost()
-        end
-    end
-    if GetNextWarbandBankTabCost then
-        return GetNextWarbandBankTabCost()
-    end
-end
-
-local function PurchaseTab()
-    if C_WarbandBank then
-        if C_WarbandBank.PurchaseTab then
-            C_WarbandBank.PurchaseTab()
-        elseif C_WarbandBank.PurchaseBankTab then
-            C_WarbandBank.PurchaseBankTab()
-        end
-    elseif C_AccountBank then
-        if C_AccountBank.PurchaseTab then
-            C_AccountBank.PurchaseTab()
-        elseif C_AccountBank.PurchaseBankTab then
-            C_AccountBank.PurchaseBankTab()
-        end
-    elseif PurchaseWarbandBankTab then
-        PurchaseWarbandBankTab()
-    end
-end
-
-StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
-    text = "Buy new warband bank tab for %s?",
-    button1 = ACCEPT,
-    button2 = CANCEL,
-    OnAccept = function()
-        PurchaseTab()
-    end,
-    whileDead = 1,
-    hideOnEscape = 1,
-}
-
-function DJBagsShowWarbandTabPopup(cost)
-    if cost == nil or cost < 0 then
-        cost = GetNextPurchaseCost()
-    end
-
-    -- Prefer the default Blizzard purchase prompt when available.
-    local panel = AccountBankPanel and AccountBankPanel.PurchasePrompt
-    if panel and panel.TabCostFrame then
-        -- Best effort attempt at showing the Blizzard prompt.  The API
-        -- differs slightly between clients, so try a few common methods.
-        if panel.ShowPurchasePrompt then
-            panel:ShowPurchasePrompt(cost)
-            return
-        elseif panel.StartPurchase then
-            panel:StartPurchase(cost)
-            return
-        elseif panel.TabCostFrame.Show then
-            -- Fallback: just show the frame and hope Blizzard handles the
-            -- cost update internally.
-            panel.TabCostFrame:Show()
-            return
-        end
-    end
-
-    -- Fallback to the addon specific popup if the Blizzard prompt isn't
-    -- available or we couldn't show it.
-    local arg
-    if cost ~= nil and cost >= 0 then
-        arg = GetCoinTextureString(cost)
-    else
-        arg = UNKNOWN or ""
-    end
-    StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", arg)
-end
-
 -- Compatibility for new Warband bank container constant
 WARDBANK_CONTAINER = WARDBANK_CONTAINER
     or (Enum.BagIndex and (Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
@@ -160,7 +74,6 @@ function DJBagsRegisterWarbandBagContainer(self)
     DJBagsRegisterBaseBagContainer(self, bags)
 
     self.BaseOnShow = self.OnShow
-    self.BaseOnHide = self.OnHide
 
         for k, v in pairs(bank) do
                 self[k] = v
@@ -202,29 +115,6 @@ function bank:OnShow()
     UpdateBagList(self)
     if self.BaseOnShow then
         self:BaseOnShow()
-    end
-    local btn = DJBagsBankBar and DJBagsBankBar.warbandPurchaseButton
-    if btn then
-        local cost = GetNextPurchaseCost()
-        if cost and cost >= 0 then
-            btn.cost = cost
-            btn:Show()
-        else
-            btn:Hide()
-        end
-    end
-    if DJBagsBankBar_UpdateButtons then
-        DJBagsBankBar_UpdateButtons(3)
-    end
-end
-
-function bank:OnHide()
-    local btn = DJBagsBankBar and DJBagsBankBar.warbandPurchaseButton
-    if btn then
-        btn:Hide()
-    end
-    if self.BaseOnHide then
-        self:BaseOnHide()
     end
 end
 
