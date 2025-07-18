@@ -34,7 +34,7 @@ StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
 
 function DJBagsShowWarbandTabPopup()
     local cost = GetNextPurchaseCost()
-    if cost and cost > 0 then
+    if cost and cost >= 0 then
         StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", GetCoinTextureString(cost))
     end
 end
@@ -156,7 +156,7 @@ function bank:OnShow()
     local btn = DJBagsBankBar and DJBagsBankBar.warbandPurchaseButton
     if btn then
         local cost = GetNextPurchaseCost()
-        if cost and cost > 0 then
+        if cost and cost >= 0 then
             btn.cost = cost
             btn:Show()
         else
