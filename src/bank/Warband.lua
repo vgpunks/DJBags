@@ -58,6 +58,28 @@ function DJBagsShowWarbandTabPopup(cost)
     if cost == nil or cost < 0 then
         cost = GetNextPurchaseCost()
     end
+
+    -- Prefer the default Blizzard purchase prompt when available.
+    local panel = AccountBankPanel and AccountBankPanel.PurchasePrompt
+    if panel and panel.TabCostFrame then
+        -- Best effort attempt at showing the Blizzard prompt.  The API
+        -- differs slightly between clients, so try a few common methods.
+        if panel.ShowPurchasePrompt then
+            panel:ShowPurchasePrompt(cost)
+            return
+        elseif panel.StartPurchase then
+            panel:StartPurchase(cost)
+            return
+        elseif panel.TabCostFrame.Show then
+            -- Fallback: just show the frame and hope Blizzard handles the
+            -- cost update internally.
+            panel.TabCostFrame:Show()
+            return
+        end
+    end
+
+    -- Fallback to the addon specific popup if the Blizzard prompt isn't
+    -- available or we couldn't show it.
     local arg
     if cost ~= nil and cost >= 0 then
         arg = GetCoinTextureString(cost)
