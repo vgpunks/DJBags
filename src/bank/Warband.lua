@@ -45,6 +45,11 @@ end
 
 StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
     text = "Buy new warband bank tab for %s?",
+    OnShow = function(self, data)
+        if data then
+            self.text:SetFormattedText(self.text:GetText(), data)
+        end
+    end,
     button1 = ACCEPT,
     button2 = CANCEL,
     OnAccept = function()
@@ -64,7 +69,7 @@ function DJBagsShowWarbandTabPopup(cost)
     else
         arg = UNKNOWN or ""
     end
-    StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", arg)
+    StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", nil, nil, arg)
 end
 
 -- Compatibility for new Warband bank container constant
