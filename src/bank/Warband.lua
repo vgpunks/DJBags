@@ -32,8 +32,10 @@ StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
     hideOnEscape = 1,
 }
 
-function DJBagsShowWarbandTabPopup()
-    local cost = GetNextPurchaseCost()
+function DJBagsShowWarbandTabPopup(cost)
+    if not cost then
+        cost = GetNextPurchaseCost()
+    end
     if cost and cost >= 0 then
         StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", GetCoinTextureString(cost))
     end

@@ -134,7 +134,8 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        DJBagsShowWarbandTabPopup();
+                        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION);
+                        DJBagsShowWarbandTabPopup(self.cost);
                     </OnClick>
                 </Scripts>
             </Button>
