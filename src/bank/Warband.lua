@@ -163,6 +163,9 @@ function bank:OnShow()
             btn:Hide()
         end
     end
+    if DJBagsBankBar_UpdateButtons then
+        DJBagsBankBar_UpdateButtons(3)
+    end
 end
 
 function bank:OnHide()

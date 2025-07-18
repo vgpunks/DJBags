@@ -57,10 +57,13 @@ function bank:OnShow()
 		end
 		self.purchaseButton:Show()
 		self:SetSize(125, 35)
-	else
-		if (self.purchaseButton) then
-			self.purchaseButton:Hide()
-		end
-		self:BaseOnShow()
-	end
+        else
+                if (self.purchaseButton) then
+                        self.purchaseButton:Hide()
+                end
+                self:BaseOnShow()
+        end
+        if DJBagsBankBar_UpdateButtons then
+                DJBagsBankBar_UpdateButtons(2)
+        end
 end
