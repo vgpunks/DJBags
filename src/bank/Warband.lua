@@ -3,6 +3,42 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+-- Utility helpers for purchasing additional warband bank tabs. These
+-- attempt to use whatever API is available on the current client.
+local function GetNextPurchaseCost()
+    if C_WarbandBank and C_WarbandBank.GetNextPurchaseCost then
+        return C_WarbandBank.GetNextPurchaseCost()
+    elseif GetNextWarbandBankTabCost then
+        return GetNextWarbandBankTabCost()
+    end
+end
+
+local function PurchaseTab()
+    if C_WarbandBank and C_WarbandBank.PurchaseTab then
+        C_WarbandBank.PurchaseTab()
+    elseif PurchaseWarbandBankTab then
+        PurchaseWarbandBankTab()
+    end
+end
+
+StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
+    text = "Buy new warband bank tab for %s?",
+    button1 = ACCEPT,
+    button2 = CANCEL,
+    OnAccept = function()
+        PurchaseTab()
+    end,
+    whileDead = 1,
+    hideOnEscape = 1,
+}
+
+function DJBagsShowWarbandTabPopup()
+    local cost = GetNextPurchaseCost()
+    if cost and cost > 0 then
+        StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", GetCoinTextureString(cost))
+    end
+end
+
 -- Compatibility for new Warband bank container constant
 WARDBANK_CONTAINER = WARDBANK_CONTAINER
     or (Enum.BagIndex and (Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
@@ -74,6 +110,7 @@ function DJBagsRegisterWarbandBagContainer(self)
     DJBagsRegisterBaseBagContainer(self, bags)
 
     self.BaseOnShow = self.OnShow
+    self.BaseOnHide = self.OnHide
 
         for k, v in pairs(bank) do
                 self[k] = v
@@ -115,6 +152,26 @@ function bank:OnShow()
     UpdateBagList(self)
     if self.BaseOnShow then
         self:BaseOnShow()
+    end
+    local btn = DJBagsBankBar and DJBagsBankBar.warbandPurchaseButton
+    if btn then
+        local cost = GetNextPurchaseCost()
+        if cost and cost > 0 then
+            btn.cost = cost
+            btn:Show()
+        else
+            btn:Hide()
+        end
+    end
+end
+
+function bank:OnHide()
+    local btn = DJBagsBankBar and DJBagsBankBar.warbandPurchaseButton
+    if btn then
+        btn:Hide()
+    end
+    if self.BaseOnHide then
+        self:BaseOnHide()
     end
 end
 
