@@ -6,16 +6,38 @@ bank.__index = bank
 -- Utility helpers for purchasing additional warband bank tabs. These
 -- attempt to use whatever API is available on the current client.
 local function GetNextPurchaseCost()
-    if C_WarbandBank and C_WarbandBank.GetNextPurchaseCost then
-        return C_WarbandBank.GetNextPurchaseCost()
-    elseif GetNextWarbandBankTabCost then
+    if C_WarbandBank then
+        if C_WarbandBank.GetNextPurchaseCost then
+            return C_WarbandBank.GetNextPurchaseCost()
+        elseif C_WarbandBank.GetNextTabCost then
+            return C_WarbandBank.GetNextTabCost()
+        end
+    end
+    if C_AccountBank then
+        if C_AccountBank.GetNextPurchaseCost then
+            return C_AccountBank.GetNextPurchaseCost()
+        elseif C_AccountBank.GetNextTabCost then
+            return C_AccountBank.GetNextTabCost()
+        end
+    end
+    if GetNextWarbandBankTabCost then
         return GetNextWarbandBankTabCost()
     end
 end
 
 local function PurchaseTab()
-    if C_WarbandBank and C_WarbandBank.PurchaseTab then
-        C_WarbandBank.PurchaseTab()
+    if C_WarbandBank then
+        if C_WarbandBank.PurchaseTab then
+            C_WarbandBank.PurchaseTab()
+        elseif C_WarbandBank.PurchaseBankTab then
+            C_WarbandBank.PurchaseBankTab()
+        end
+    elseif C_AccountBank then
+        if C_AccountBank.PurchaseTab then
+            C_AccountBank.PurchaseTab()
+        elseif C_AccountBank.PurchaseBankTab then
+            C_AccountBank.PurchaseBankTab()
+        end
     elseif PurchaseWarbandBankTab then
         PurchaseWarbandBankTab()
     end
@@ -33,11 +55,13 @@ StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
 }
 
 function DJBagsShowWarbandTabPopup(cost)
-    if not cost then
+    if not cost or cost < 0 then
         cost = GetNextPurchaseCost()
     end
-    if cost and cost >= 0 then
+    if cost and cost > 0 then
         StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", GetCoinTextureString(cost))
+    else
+        StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB")
     end
 end
 
