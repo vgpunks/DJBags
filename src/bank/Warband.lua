@@ -55,14 +55,16 @@ StaticPopupDialogs["DJBAGS_CONFIRM_BUY_WARBAND_TAB"] = {
 }
 
 function DJBagsShowWarbandTabPopup(cost)
-    if not cost or cost < 0 then
+    if cost == nil or cost < 0 then
         cost = GetNextPurchaseCost()
     end
-    if cost and cost > 0 then
-        StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", GetCoinTextureString(cost))
+    local arg
+    if cost ~= nil and cost >= 0 then
+        arg = GetCoinTextureString(cost)
     else
-        StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB")
+        arg = UNKNOWN or ""
     end
+    StaticPopup_Show("DJBAGS_CONFIRM_BUY_WARBAND_TAB", arg)
 end
 
 -- Compatibility for new Warband bank container constant
