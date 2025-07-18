@@ -127,18 +127,6 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentWarbandPurchase" parentKey="warbandPurchaseButton" inherits="UIPanelButtonTemplate" text="PURCHASE" hidden="true">
-                <Size x="100" y="25" />
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentRestackButton" relativePoint="RIGHT" x="3" />
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                        PlaySound(SOUNDKIT.IG_MAINMENU_OPTION);
-                        DJBagsShowWarbandTabPopup(self.cost);
-                    </OnClick>
-                </Scripts>
-            </Button>
             <Button name="$parentSettingsBtn">
                 <Size x="16" y="16"/>
                 <Anchors>
