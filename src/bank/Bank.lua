@@ -47,5 +47,15 @@ function bank:BAG_UPDATE_DELAYED()
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
-	self:BAG_UPDATE_DELAYED()
+        self:BAG_UPDATE_DELAYED()
+end
+
+function bank:SortBags()
+    ADDON.eventManager:Remove('BAG_UPDATE', self)
+    if C_Container and C_Container.SortBankBags then
+        C_Container.SortBankBags()
+    elseif SortBankBags then
+        SortBankBags()
+    end
+    ADDON.eventManager:Add('BAG_UPDATE', self)
 end

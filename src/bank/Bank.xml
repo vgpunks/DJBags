@@ -98,15 +98,19 @@
                         GameTooltip:Hide()
                     </OnLeave>
                     <OnClick>
-                        if C_Container.SortBankBags then
-                            C_Container.SortBankBags()
-                        else
-                            SortBankBags()
-                        end
-                        if C_Container.SortReagentBankBags then
-                            C_Container.SortReagentBankBags()
-                        else
-                            SortReagentBankBags()
+                        local tab = BankFrame.activeTabIndex or BankFrame.selectedTab or 1
+                        if tab == 1 then
+                            if DJBagsBank and DJBagsBank.SortBags then
+                                DJBagsBank:SortBags()
+                            end
+                        elseif tab == 2 then
+                            if DJBagsReagents and DJBagsReagents.SortBags then
+                                DJBagsReagents:SortBags()
+                            end
+                        elseif tab == 3 then
+                            if DJBagsWarband and DJBagsWarband.SortBags then
+                                DJBagsWarband:SortBags()
+                            end
                         end
                     </OnClick>
                 </Scripts>

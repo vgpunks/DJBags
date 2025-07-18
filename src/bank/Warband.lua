@@ -101,6 +101,16 @@ function bank:PLAYERWARDBANKSLOTS_CHANGED()
     end
 end
 
+function bank:SortBags()
+    ADDON.eventManager:Remove('BAG_UPDATE', self)
+    if C_Container and C_Container.SortBankBags then
+        C_Container.SortBankBags()
+    elseif SortBankBags then
+        SortBankBags()
+    end
+    ADDON.eventManager:Add('BAG_UPDATE', self)
+end
+
 function bank:OnShow()
     UpdateBagList(self)
     if self.BaseOnShow then
