@@ -28,7 +28,17 @@ function bank:BANKFRAME_CLOSED()
 end
 
 function bank:PLAYERREAGENTBANKSLOTS_CHANGED()
-	self:BAG_UPDATE(REAGENTBANK_CONTAINER)
+        self:BAG_UPDATE(REAGENTBANK_CONTAINER)
+end
+
+function bank:SortBags()
+    ADDON.eventManager:Remove('BAG_UPDATE', self)
+    if C_Container and C_Container.SortReagentBankBags then
+        C_Container.SortReagentBankBags()
+    elseif SortReagentBankBags then
+        SortReagentBankBags()
+    end
+    ADDON.eventManager:Add('BAG_UPDATE', self)
 end
 
 local function BuyReagentTab()
