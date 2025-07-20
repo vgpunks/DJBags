@@ -20,7 +20,7 @@ end
 local function CreateContainers(self)
     for _, tab in ipairs(self.bags) do
         if not self.containers[tab] then
-            self.containers[tab] = CreateFrame("Frame", "DJBagsBagContainer_" .. tab, self)
+            self.containers[tab] = CreateFrame("Frame", "DJBagsGuildBankContainer_" .. tab, self)
             self.containers[tab]:SetAllPoints()
             self.containers[tab]:SetID(50 + tab)
             self.containers[tab].items = {}
