@@ -142,6 +142,30 @@ else
     eventManager:Add('ADDON_LOADED', loader)
 end
 
+-- Override the default guild bank toggle functions so DJBags opens reliably
+local oldToggleGuildBank = ToggleGuildBankFrame or ToggleGuildBankUI
+if oldToggleGuildBank then
+    ToggleGuildBankFrame = function(...)
+        oldToggleGuildBank(...)
+        if DJBagsGuildBank and DJBagsGuildBank.GUILDBANKFRAME_OPENED then
+            DJBagsGuildBank:GUILDBANKFRAME_OPENED()
+        end
+        if GuildBankFrame then
+            GuildBankFrame:Hide()
+        end
+    end
+end
+
+local oldCloseGuildBank = CloseGuildBankFrame
+if oldCloseGuildBank then
+    CloseGuildBankFrame = function(...)
+        if DJBagsGuildBank and DJBagsGuildBank.GUILDBANKFRAME_CLOSED then
+            DJBagsGuildBank:GUILDBANKFRAME_CLOSED()
+        end
+        oldCloseGuildBank(...)
+    end
+end
+
 SLASH_DJBAGS1, SLASH_DJBAGS2, SLASH_DJBAGS3, SLASH_DJBAGS4 = '/djb', '/dj', '/djbags', '/db';
 function SlashCmdList.DJBAGS(msg, editbox)
     DJBagsBag:Show()
