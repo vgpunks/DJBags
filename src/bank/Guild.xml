@@ -1,0 +1,38 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="src/bank/Guild.lua"/>
+    <Frame name="DJBagsGuildBank" inherits="DJBagsBackgroundTemplate" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+        <Anchors>
+            <Anchor point="CENTER" />
+        </Anchors>
+        <Frames>
+            <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="CENTER" relativePoint="TOPRIGHT" x="-2" y="-2"/>
+                </Anchors>
+                <NormalTexture file="Interface\\Buttons\\UI-Panel-MinimizeButton-Disabled" />
+                <Scripts>
+                    <OnLoad> self:SetAlpha(0.2) </OnLoad>
+                    <OnEnter> self:SetAlpha(1) </OnEnter>
+                    <OnLeave> self:SetAlpha(0.2) </OnLeave>
+                </Scripts>
+            </Button>
+            <EditBox name="$parentSearch" parentKey="search" inherits="BagSearchBoxTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="5" y="-5"/>
+                    <Anchor point="TOPRIGHT" x="-5" y="-5"/>
+                </Anchors>
+            </EditBox>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                DJBagsRegisterGuildBankBagContainer(self)
+            </OnLoad>
+            <OnShow>
+                self:OnShow()
+            </OnShow>
+            <OnHide>
+                self:OnHide()
+            </OnHide>
+        </Scripts>
+    </Frame>
+</Ui>
