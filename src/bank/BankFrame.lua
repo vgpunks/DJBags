@@ -46,6 +46,9 @@ function DJBagsBankTab_OnClick(tab)
 end
 
 function bankFrame:BANKFRAME_OPENED()
+    if BankFrame then
+        BankFrame:Hide()
+    end
     self:Show()
     if BankFrame_LoadUI then
         BankFrame_LoadUI()
