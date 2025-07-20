@@ -92,6 +92,9 @@ local oldOpenBankFrame = OpenBankFrame
 OpenBankFrame = function(...)
     if oldOpenBankFrame then
         oldOpenBankFrame(...)
+        if BankFrame then
+            BankFrame:Hide()
+        end
     end
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
         DJBagsBankBar:BANKFRAME_OPENED()
