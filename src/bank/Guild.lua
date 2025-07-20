@@ -1,4 +1,5 @@
 local ADDON_NAME, ADDON = ...
+local C_Timer = C_Timer
 
 local guild = {}
 guild.__index = guild
@@ -96,9 +97,19 @@ function guild:GUILDBANKFRAME_OPENED()
         GuildBankFrame_LoadUI()
     end
 
-    for i = 1, GetNumGuildBankTabs() do
-        QueryGuildBankTab(i)
+    local tabs = GetNumGuildBankTabs()
+    local current = 1
+    local function queryNext()
+        if current <= tabs then
+            QueryGuildBankTab(current)
+            current = current + 1
+            if current <= tabs then
+                C_Timer.After(0.1, queryNext)
+            end
+        end
     end
+    queryNext()
+
     self:Show()
 end
 
@@ -107,7 +118,12 @@ function guild:GUILDBANKFRAME_CLOSED()
 end
 
 function guild:GUILDBANKBAGSLOTS_CHANGED()
-    self:Refresh()
+    if self.refreshQueued then return end
+    self.refreshQueued = true
+    C_Timer.After(0.1, function()
+        self.refreshQueued = false
+        self:Refresh()
+    end)
 end
 
 function guild:GUILDBANK_UPDATE_TABS()
