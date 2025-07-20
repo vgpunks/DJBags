@@ -56,24 +56,23 @@ local function InitItem(self, bag, slot)
     end
 end
 
-function ADDON:NewItem(parent, slot, template, guildTab)
+function ADDON:NewItem(parent, slot)
     local bag = parent:GetID()
-    assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
-    assert(slot and type(slot) == 'number', 'Slot required as integer value')
+	assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
+	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
-    local object = CreateFrame('ItemButton', string.format('DJBagsItem_%d_%d', bag, slot), parent,
-        template or (bag == BANK_CONTAINER and 'BankItemButtonGenericTemplate' or
-            (bag == REAGENTBANK_CONTAINER and 'ReagentBankItemButtonGenericTemplate') or
-            'ContainerFrameItemButtonTemplate'))
+	local object = CreateFrame('ItemButton', string.format('DJBagsItem_%d_%d', bag, slot), parent,
+		bag == BANK_CONTAINER and 'BankItemButtonGenericTemplate' or
+            bag == REAGENTBANK_CONTAINER and 'ReagentBankItemButtonGenericTemplate' or
+            'ContainerFrameItemButtonTemplate')
 
-    for k, v in pairs(item) do
-        object[k] = v
-    end
+	for k, v in pairs(item) do
+		object[k] = v
+	end
 
-    InitItem(object, bag, slot)
-    object.guildTab = guildTab
+	InitItem(object, bag, slot)
 
-    return object
+	return object
 end
 
 function item:OnClick(button)
@@ -192,26 +191,16 @@ local function OnItemUpdate(self, elapsed)
 end
 
 function item:Update()
-    local bag = self.guildTab or self:GetParent():GetID()
+    local info = Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
     local texture, count, locked, quality, link, filtered, id
-    if self.guildTab then
-        texture, count, locked = GetGuildBankItemInfo(self.guildTab, self:GetID())
-        link = GetGuildBankItemLink(self.guildTab, self:GetID())
-        if link then
-            id = GetItemInfoInstant(link)
-            _, _, quality = GetItemInfo(link)
-        end
-    else
-        local info = Container.GetContainerItemInfo(bag, self:GetID())
-        if info then
-            texture = info.iconFileID
-            count = info.stackCount
-            locked = info.isLocked
-            quality = info.quality
-            link = info.hyperlink
-            filtered = info.isFiltered
-            id = info.itemID
-        end
+    if info then
+        texture = info.iconFileID
+        count = info.stackCount
+        locked = info.isLocked
+        quality = info.quality
+        link = info.hyperlink
+        filtered = info.isFiltered
+        id = info.itemID
     end
     -- Only call IsEquippableItem when we have a valid item ID
     local equipable = id and IsEquippableItem(id)
@@ -221,6 +210,7 @@ function item:Update()
         name, _, _, level, _, class, subClass, _, _, _, _, classId = GetItemInfo(id)
     end
     local isEquipment = equipable or classId == LE_ITEM_CLASS_ARMOR or classId == LE_ITEM_CLASS_WEAPON
+    local bag = self:GetParent():GetID()
 
     self.id = id
     self.name = name or ''
@@ -240,19 +230,7 @@ function item:Update()
     end
 
     UpdateILevel(self, equipable, quality, level)
-    if self.guildTab then
-        if quality and BAG_ITEM_QUALITY_COLORS[quality] then
-            self.IconBorder:Show();
-            self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
-        else
-            self.IconBorder:Hide();
-        end
-        SetItemButtonTexture(self, texture)
-        SetItemButtonQuality(self, quality, id)
-        SetItemButtonCount(self, count)
-        SetItemButtonDesaturated(self, locked)
-        self.hasItem = id ~= nil
-    elseif bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
+    if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
         BankFrameItemButton_Update(self)
     else
         local questInfo1, questInfo2, questInfo3 = Container.GetContainerItemQuestInfo(bag, self:GetID())
@@ -319,28 +297,20 @@ function item:Update()
 end
 
 function item:UpdateCooldown()
-    if not self.guildTab then
-        UpdateCooldown(self)
-    end
+    UpdateCooldown(self)
 end
 
 function item:UpdateSearch()
-    if not self.guildTab then
-        local info = Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
-        local filtered = info and info.isFiltered
-        self:SetFiltered(filtered)
-    end
+    local info = Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+    local filtered = info and info.isFiltered
+    self:SetFiltered(filtered)
 end
 
 function item:UpdateLock(locked)
     local locked = locked
     if locked == nil then
-        if self.guildTab then
-            _, _, locked = GetGuildBankItemInfo(self.guildTab, self:GetID())
-        else
-            local info = Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
-            locked = info and info.isLocked
-        end
+        local info = Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+        locked = info and info.isLocked
     end
     SetItemButtonDesaturated(self, locked);
 end
@@ -358,5 +328,3 @@ function item:IncrementCount(count)
     self.count = self.count + count
     SetItemButtonCount(self, self.count)
 end
-
-ADDON.Item = item
