@@ -118,7 +118,12 @@ local function HookGuildBankFrame()
         if DJBagsGuildBank and DJBagsGuildBank.GUILDBANKFRAME_OPENED then
             DJBagsGuildBank:GUILDBANKFRAME_OPENED()
         end
-        GuildBankFrame:Hide()
+        -- Use HideUIPanel so the UI panel system knows the frame is closed
+        if HideUIPanel then
+            HideUIPanel(GuildBankFrame)
+        else
+            GuildBankFrame:Hide()
+        end
     end)
 
     GuildBankFrame:HookScript('OnHide', function()
@@ -151,7 +156,12 @@ if oldToggleGuildBank then
             DJBagsGuildBank:GUILDBANKFRAME_OPENED()
         end
         if GuildBankFrame then
-            GuildBankFrame:Hide()
+            -- Hide using HideUIPanel to ensure escape key works correctly
+            if HideUIPanel then
+                HideUIPanel(GuildBankFrame)
+            else
+                GuildBankFrame:Hide()
+            end
         end
     end
 end
