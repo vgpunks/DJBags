@@ -92,6 +92,10 @@ function guild:Refresh()
 end
 
 function guild:GUILDBANKFRAME_OPENED()
+    if not QueryGuildBankTab and GuildBankFrame_LoadUI then
+        GuildBankFrame_LoadUI()
+    end
+
     for i = 1, GetNumGuildBankTabs() do
         QueryGuildBankTab(i)
     end
