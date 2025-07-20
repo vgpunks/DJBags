@@ -109,27 +109,37 @@ CloseBankFrame = function(...)
 end
 
 -- Guild bank API overrides
-local oldToggleGuildBank = ToggleGuildBankFrame or ToggleGuildBankUI
-if oldToggleGuildBank then
-    ToggleGuildBankFrame = function(...)
-        oldToggleGuildBank(...)
+local function HookGuildBankFrame()
+    if not GuildBankFrame or GuildBankFrame.DJBagsHooked then return end
+
+    GuildBankFrame.DJBagsHooked = true
+
+    GuildBankFrame:HookScript('OnShow', function()
         if DJBagsGuildBank and DJBagsGuildBank.GUILDBANKFRAME_OPENED then
             DJBagsGuildBank:GUILDBANKFRAME_OPENED()
         end
-        if GuildBankFrame then
-            GuildBankFrame:Hide()
-        end
-    end
-end
+        GuildBankFrame:Hide()
+    end)
 
-local oldCloseGuildBank = CloseGuildBankFrame
-if oldCloseGuildBank then
-    CloseGuildBankFrame = function(...)
+    GuildBankFrame:HookScript('OnHide', function()
         if DJBagsGuildBank and DJBagsGuildBank.GUILDBANKFRAME_CLOSED then
             DJBagsGuildBank:GUILDBANKFRAME_CLOSED()
         end
-        oldCloseGuildBank(...)
+    end)
+end
+
+if GuildBankFrame then
+    HookGuildBankFrame()
+else
+    local loader = {}
+    function loader:ADDON_LOADED(name)
+        if name == 'Blizzard_GuildBankUI' then
+            HookGuildBankFrame()
+            eventManager:Remove('ADDON_LOADED', loader)
+        end
     end
+
+    eventManager:Add('ADDON_LOADED', loader)
 end
 
 SLASH_DJBAGS1, SLASH_DJBAGS2, SLASH_DJBAGS3, SLASH_DJBAGS4 = '/djb', '/dj', '/djbags', '/db';
