@@ -10,97 +10,80 @@
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
         <Frames>
-            <Button name="$parentTab1" parentKey="tab1">
-                <Size x="36" y="36" />
+            <ItemButton name="$parentBag1" parentKey="bag1">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="9" y="-9" />
                 </Anchors>
-                <NormalTexture file="Interface\Icons\INV_Misc_Bag_10" />
-                <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
                 <Scripts>
                     <OnLoad>
-                        self.tab = 1
-                        self:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-                        self:SetAlpha(0.5)
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 1, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 1))
                     </OnLoad>
-                    <OnClick>
-                        if button == 'RightButton' then
-                            local parent = self:GetParent()
-                            if parent.bankSettingsMenu:IsVisible() then
-                                parent.bankSettingsMenu:Hide()
-                            else
-                                parent.bankSettingsMenu:Show()
-                            end
-                            parent.reagentsSettingsMenu:Hide()
-                            if parent.warbandSettingsMenu then parent.warbandSettingsMenu:Hide() end
-                        else
-                            DJBagsBankTab_OnClick(self)
-                        end
-                    </OnClick>
                 </Scripts>
-            </Button>
-            <Button name="$parentTab2" parentKey="tab2">
-                <Size x="36" y="36" />
+            </ItemButton>
+            <ItemButton name="$parentBag2" parentKey="bag2">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentTab1" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
-                <NormalTexture file="Interface\Icons\inv_misc_enchanting_shardbrilliantsmall" />
-                <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
                 <Scripts>
                     <OnLoad>
-                        self.tab = 2
-                        self:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-                        self:SetAlpha(0.5)
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 2, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 2))
                     </OnLoad>
-                    <OnClick>
-                        if button == 'RightButton' then
-                            local parent = self:GetParent()
-                            if parent.reagentsSettingsMenu:IsVisible() then
-                                parent.reagentsSettingsMenu:Hide()
-                            else
-                                parent.reagentsSettingsMenu:Show()
-                            end
-                            parent.bankSettingsMenu:Hide()
-                            if parent.warbandSettingsMenu then parent.warbandSettingsMenu:Hide() end
-                        else
-                            DJBagsBankTab_OnClick(self)
-                        end
-                    </OnClick>
                 </Scripts>
-            </Button>
-            <Button name="$parentTab3" parentKey="tab3">
-                <Size x="36" y="36" />
+            </ItemButton>
+            <ItemButton name="$parentBag3" parentKey="bag3">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentTab2" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag2" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
-                <NormalTexture file="Interface\Icons\INV_Shield_06" />
-                <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
                 <Scripts>
                     <OnLoad>
-                        self.tab = 3
-                        self:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-                        self:SetAlpha(0.5)
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 3, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 3))
                     </OnLoad>
-                    <OnClick>
-                        if button == 'RightButton' then
-                            local parent = self:GetParent()
-                            if parent.warbandSettingsMenu:IsVisible() then
-                                parent.warbandSettingsMenu:Hide()
-                            else
-                                parent.warbandSettingsMenu:Show()
-                            end
-                            parent.bankSettingsMenu:Hide()
-                            parent.reagentsSettingsMenu:Hide()
-                        else
-                            DJBagsBankTab_OnClick(self)
-                        end
-                    </OnClick>
                 </Scripts>
-            </Button>
+            </ItemButton>
+            <ItemButton name="$parentBag4" parentKey="bag4">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag3" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 4, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 4))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentBag5" parentKey="bag5">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag4" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 5, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 5))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentBag6" parentKey="bag6">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag5" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 6, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 6))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentBag7" parentKey="bag7">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag6" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 7, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 7))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentTab3" relativePoint="BOTTOMRIGHT" y="-9.5" />
+                    <Anchor point="TOPRIGHT" relativeTo="$parentBag7" relativePoint="BOTTOMRIGHT" y="-9.5" />
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
@@ -144,13 +127,119 @@
                     </OnClick>
                 </Scripts>
             </Button>
+            <Button name="$parentSettingsBtn">
+                <Size x="16" y="16"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+                </Anchors>
+                <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled"/>
+                <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up"/>
+                <HighlightTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Up" alphaMode="ADD"/>
+                <Scripts>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, 'TOPRIGHT')
+                        GameTooltip:SetText(SETTINGS)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                    <OnClick>
+                        if self:GetParent().bankSettingsMenu:IsVisible() then
+                            self:GetParent().bankSettingsMenu:Hide()
+                            self:GetParent().reagentsSettingsMenu:Hide()
+                            if self:GetParent().warbandSettingsMenu then
+                                self:GetParent().warbandSettingsMenu:Hide()
+                            end
+                        else
+                            self:GetParent().bankSettingsMenu:Show()
+                            self:GetParent().reagentsSettingsMenu:Show()
+                            if self:GetParent().warbandSettingsMenu then
+                                self:GetParent().warbandSettingsMenu:Show()
+                            end
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
             <EditBox name="$parentSearchBar" inherits="BagSearchBoxTemplate">
                 <Size y="25" />
                 <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+                    <Anchor point="LEFT" relativeTo="$parentSettingsBtn" relativePoint="RIGHT" x="5"/>
                     <Anchor point="RIGHT" relativeTo="$parentDepositReagent" relativePoint="LEFT" x="-5" />
                 </Anchors>
             </EditBox>
+            <Button name="$parentTab1" inherits="PanelTabButtonTemplate,BackdropTemplate" text="BANK">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="TOPLEFT" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
+                        end
+                        self.tab = 1
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
+                    </OnLoad>
+                    <OnClick>
+                        DJBagsBankTab_OnClick(self)
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentTab2" inherits="PanelTabButtonTemplate,BackdropTemplate" text="REAGENT_BANK">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentTab1" relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
+                        end
+                        self.tab = 2
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
+                    </OnLoad>
+                    <OnClick>
+                        DJBagsBankTab_OnClick(self)
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentTab3" inherits="PanelTabButtonTemplate,BackdropTemplate" text="Warband Bank">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentTab2" relativePoint="BOTTOMRIGHT" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        if self.Text then
+                            PanelTemplates_TabResize(self, 0);
+                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
+                            if highlight then
+                                highlight:SetWidth(self:GetTextWidth() + 31);
+                            end
+                        end
+                        self.tab = 3
+                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
+                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
+                                        tile=true, tileSize=16, edgeSize=16})
+                        self:SetBackdropColor(0,0,0,0.8)
+                    </OnLoad>
+                    <OnClick>
+                        DJBagsBankTab_OnClick(self)
+                    </OnClick>
+                </Scripts>
+            </Button>
             <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
                    hidden="true" parent="DJBagsBankBar">
                 <Anchors>
@@ -326,9 +415,8 @@
         </Frames>
         <Scripts>
             <OnLoad>
-                self.tabs = { self.tab1, self.tab2, self.tab3 }
+                PanelTemplates_SetNumTabs(self, 3)
                 DJBagsRegisterBankFrame(self)
-                DJBagsBankTab_OnClick(self.tab1)
             </OnLoad>
             <OnHide>
                 StaticPopup_Hide("CONFIRM_BUY_BANK_SLOT")
