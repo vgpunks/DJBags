@@ -3,11 +3,7 @@ local ADDON_NAME, ADDON = ...
 function DJBagsTooltip:GetItemLevel(bag, slot)
     self:ClearLines()
     self:SetOwner(UIParent, "ANCHOR_NONE")
-    if bag < 0 then
-        self:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-    else
-        self:SetBagItem(bag, slot)
-    end
+    self:SetBagItem(bag, slot)
 
     for i = 2, self:NumLines() do
         local text = _G[self:GetName() .. "TextLeft" .. i]:GetText()
@@ -26,11 +22,7 @@ end
 function DJBagsTooltip:IsItemBOE(bag, slot)
     self:ClearLines()
     self:SetOwner(UIParent, "ANCHOR_NONE")
-    if bag < 0 then
-        self:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-    else
-        self:SetBagItem(bag, slot)
-    end
+    self:SetBagItem(bag, slot)
 
 
     for i = 2, self:NumLines() do
@@ -47,11 +39,7 @@ end
 function DJBagsTooltip:IsItemBOA(bag, slot)
     self:ClearLines()
     self:SetOwner(UIParent, "ANCHOR_NONE")
-    if bag < 0 then
-        self:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-    else
-        self:SetBagItem(bag, slot)
-    end
+    self:SetBagItem(bag, slot)
 
     for i = 2, self:NumLines() do
         local text = _G[self:GetName() .. "TextLeft" .. i]:GetText()
@@ -68,11 +56,7 @@ end
 function DJBagsTooltip:IsItemBOBA(bag, slot)
     self:ClearLines()
     self:SetOwner(UIParent, "ANCHOR_NONE")
-    if bag < 0 then
-        self:SetInventoryItem("player", BankButtonIDToInvSlotID(slot))
-    else
-        self:SetBagItem(bag, slot)
-    end
+    self:SetBagItem(bag, slot)
 
     for i = 2, self:NumLines() do
         local text = _G[self:GetName() .. "TextLeft" .. i]:GetText()
