@@ -2,6 +2,12 @@ local NAME, ADDON = ...
 
 local item = {}
 
+-- Retail clients call UpdateItemContextMatching from PaperDollItemSlotButton_Update.
+-- Older clients don't implement this; provide a no-op so the update doesn't error.
+function item:UpdateItemContextMatching()
+    -- Intentionally left blank; bag slots don't require special handling.
+end
+
 local function DJBagsGetNumBankSlots()
     if GetNumBankSlots then
         return GetNumBankSlots()
