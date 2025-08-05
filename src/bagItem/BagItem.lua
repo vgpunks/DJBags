@@ -2,6 +2,17 @@ local NAME, ADDON = ...
 
 local item = {}
 
+function DJBagsContainerIDToInventoryID(bagID)
+    if C_Container and C_Container.ContainerIDToInventoryID then
+        return C_Container.ContainerIDToInventoryID(bagID)
+    elseif ContainerIDToInventoryID then
+        return ContainerIDToInventoryID(bagID)
+    elseif BankButtonIDToInvSlotID then
+        return BankButtonIDToInvSlotID(bagID)
+    end
+    return bagID
+end
+
 function DJBagsBagItemLoad(button, slot, id)
     for k, v in pairs(item) do
         button[k] = v

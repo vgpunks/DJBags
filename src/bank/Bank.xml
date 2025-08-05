@@ -16,7 +16,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 1, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 1))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 1, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -26,7 +26,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 2, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 2))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 2, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 2))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -36,7 +36,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 3, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 3))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 3, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 3))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -46,7 +46,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 4, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 4))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 4, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 4))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -56,7 +56,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 5, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 5))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 5, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 5))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -66,7 +66,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 6, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 6))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 6, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 6))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -76,7 +76,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 7, C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + 7))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 7, DJBagsContainerIDToInventoryID(NUM_BAG_SLOTS + 7))
                     </OnLoad>
                 </Scripts>
             </ItemButton>

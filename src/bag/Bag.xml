@@ -10,7 +10,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, 1, C_Container.ContainerIDToInventoryID(1))
+                        DJBagsBagItemLoad(self, 1, DJBagsContainerIDToInventoryID(1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -20,7 +20,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, 2, C_Container.ContainerIDToInventoryID(2))
+                        DJBagsBagItemLoad(self, 2, DJBagsContainerIDToInventoryID(2))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -30,7 +30,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, 3, C_Container.ContainerIDToInventoryID(3))
+                        DJBagsBagItemLoad(self, 3, DJBagsContainerIDToInventoryID(3))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -40,7 +40,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, 4, C_Container.ContainerIDToInventoryID(4))
+                        DJBagsBagItemLoad(self, 4, DJBagsContainerIDToInventoryID(4))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -50,7 +50,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, REAGENTBAG_CONTAINER, C_Container.ContainerIDToInventoryID(REAGENTBAG_CONTAINER))
+                        DJBagsBagItemLoad(self, REAGENTBAG_CONTAINER, DJBagsContainerIDToInventoryID(REAGENTBAG_CONTAINER))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
