@@ -40,11 +40,6 @@ function bank:PLAYERBANKSLOTS_CHANGED()
 end
 
 function bank:BAG_UPDATE_DELAYED()
-    for _, bag in pairs(self.bags) do
-    	if bag ~= BANK_CONTAINER then
-			DJBagsBankBar['bag' .. bag - NUM_BAG_SLOTS]:Update()
-		end
-	end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
