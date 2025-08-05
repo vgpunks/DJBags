@@ -23,18 +23,7 @@ function DJBagsRegisterBankFrame(self, bags)
 end
 
 function DJBagsBankTab_OnClick(tab)
-    local bar = DJBagsBankBar
-    if bar and bar.tabs then
-        for _, t in ipairs(bar.tabs) do
-            t:SetAlpha(0.5)
-        end
-    end
-    tab:SetAlpha(1)
-    if bar then
-        bar.bankSettingsMenu:Hide()
-        bar.reagentsSettingsMenu:Hide()
-        if bar.warbandSettingsMenu then bar.warbandSettingsMenu:Hide() end
-    end
+        PanelTemplates_SetTab(DJBagsBankBar, tab.tab)
     if tab.tab == 1 then
         DJBagsBank:Show()
         DJBagsReagents:Hide()
