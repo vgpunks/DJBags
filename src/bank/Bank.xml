@@ -32,36 +32,71 @@
                 <Anchors>
                     <Anchor point="TOPLEFT" x="9" y="-9" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 5, DJBagsContainerIDToInventoryID(5))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab2" parentKey="bankTab2" inherits="DJBagsBankTabButtonTemplate" id="2">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab1" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 6, DJBagsContainerIDToInventoryID(6))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab3" parentKey="bankTab3" inherits="DJBagsBankTabButtonTemplate" id="3">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab2" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 7, DJBagsContainerIDToInventoryID(7))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab4" parentKey="bankTab4" inherits="DJBagsBankTabButtonTemplate" id="4">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab3" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 8, DJBagsContainerIDToInventoryID(8))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab5" parentKey="bankTab5" inherits="DJBagsBankTabButtonTemplate" id="5">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab4" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 9, DJBagsContainerIDToInventoryID(9))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab6" parentKey="bankTab6" inherits="DJBagsBankTabButtonTemplate" id="6">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab5" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 10, DJBagsContainerIDToInventoryID(10))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentBankTab7" parentKey="bankTab7" inherits="DJBagsBankTabButtonTemplate" id="7">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab6" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 11, DJBagsContainerIDToInventoryID(11))
+                    </OnLoad>
+                </Scripts>
             </Button>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
