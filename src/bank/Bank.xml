@@ -4,43 +4,53 @@
     <Script file="src/bank/Reagent.lua"/>
     <Script file="src/bank/Warband.lua"/>
 
+    <!--
+        BankTabButtonTemplate was removed from the default UI, which caused
+        the addon to error when attempting to inherit from it.  Define a
+        minimal replacement that mimics an item button so the bank bar can
+        create its tab buttons without relying on Blizzard's template.
+    -->
+    <Button name="DJBagsBankTabButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
+        <Size x="40" y="40" />
+    </Button>
+
     <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
         <Size x="307" y="85" />
         <Anchors>
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
         <Frames>
-            <Button name="$parentBankTab1" parentKey="bankTab1" inherits="BankTabButtonTemplate" id="1">
+            <Button name="$parentBankTab1" parentKey="bankTab1" inherits="DJBagsBankTabButtonTemplate" id="1">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="9" y="-9" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab2" parentKey="bankTab2" inherits="BankTabButtonTemplate" id="2">
+            <Button name="$parentBankTab2" parentKey="bankTab2" inherits="DJBagsBankTabButtonTemplate" id="2">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab1" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab3" parentKey="bankTab3" inherits="BankTabButtonTemplate" id="3">
+            <Button name="$parentBankTab3" parentKey="bankTab3" inherits="DJBagsBankTabButtonTemplate" id="3">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab2" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab4" parentKey="bankTab4" inherits="BankTabButtonTemplate" id="4">
+            <Button name="$parentBankTab4" parentKey="bankTab4" inherits="DJBagsBankTabButtonTemplate" id="4">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab3" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab5" parentKey="bankTab5" inherits="BankTabButtonTemplate" id="5">
+            <Button name="$parentBankTab5" parentKey="bankTab5" inherits="DJBagsBankTabButtonTemplate" id="5">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab4" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab6" parentKey="bankTab6" inherits="BankTabButtonTemplate" id="6">
+            <Button name="$parentBankTab6" parentKey="bankTab6" inherits="DJBagsBankTabButtonTemplate" id="6">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab5" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
             </Button>
-            <Button name="$parentBankTab7" parentKey="bankTab7" inherits="BankTabButtonTemplate" id="7">
+            <Button name="$parentBankTab7" parentKey="bankTab7" inherits="DJBagsBankTabButtonTemplate" id="7">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBankTab6" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
