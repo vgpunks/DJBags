@@ -17,6 +17,8 @@
                 <Texture name="$parentIconTexture" setAllPoints="true" />
             </Layer>
             <Layer level="OVERLAY">
+                <!-- Item buttons expect an IconBorder texture for quality coloring. -->
+                <Texture name="$parentIconBorder" parentKey="IconBorder" inherits="IconBorderTemplate" setAllPoints="true" hidden="true" />
                 <FontString name="$parentCount" parentKey="Count" setAllPoints="true" justifyH="RIGHT" justifyV="BOTTOM" inherits="NumberFontNormal"/>
             </Layer>
         </Layers>
