@@ -26,22 +26,14 @@ function DJBagsBankTab_OnClick(tab)
         PanelTemplates_SetTab(DJBagsBankBar, tab.tab)
     if tab.tab == 1 then
         DJBagsBank:Show()
-        DJBagsReagents:Hide()
         if DJBagsWarband then DJBagsWarband:Hide() end
         BankFrame.selectedTab = 1
         BankFrame.activeTabIndex = 1
-    elseif tab.tab == 2 then
-        DJBagsBank:Hide()
-        DJBagsReagents:Show()
-        if DJBagsWarband then DJBagsWarband:Hide() end
-        BankFrame.selectedTab = 2
-        BankFrame.activeTabIndex = 2
     else
         DJBagsBank:Hide()
-        DJBagsReagents:Hide()
         if DJBagsWarband then DJBagsWarband:Show() end
-        BankFrame.selectedTab = 3
-        BankFrame.activeTabIndex = 3
+        BankFrame.selectedTab = 2
+        BankFrame.activeTabIndex = 2
     end
 end
 

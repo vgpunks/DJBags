@@ -1,7 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="src/bank/BankFrame.lua"/>
     <Script file="src/bank/Bank.lua"/>
-    <Script file="src/bank/Reagent.lua"/>
     <Script file="src/bank/Warband.lua"/>
 
     <!--
@@ -126,11 +125,7 @@
                             if DJBagsBank and DJBagsBank.SortBags then
                                 DJBagsBank:SortBags()
                             end
-                        elseif tab == 2 then
-                            if DJBagsReagents and DJBagsReagents.SortBags then
-                                DJBagsReagents:SortBags()
-                            end
-                        elseif tab == 3 then
+                        else
                             if DJBagsWarband and DJBagsWarband.SortBags then
                                 DJBagsWarband:SortBags()
                             end
@@ -170,13 +165,11 @@
                     <OnClick>
                         if self:GetParent().bankSettingsMenu:IsVisible() then
                             self:GetParent().bankSettingsMenu:Hide()
-                            self:GetParent().reagentsSettingsMenu:Hide()
                             if self:GetParent().warbandSettingsMenu then
                                 self:GetParent().warbandSettingsMenu:Hide()
                             end
                         else
                             self:GetParent().bankSettingsMenu:Show()
-                            self:GetParent().reagentsSettingsMenu:Show()
                             if self:GetParent().warbandSettingsMenu then
                                 self:GetParent().warbandSettingsMenu:Show()
                             end
@@ -215,7 +208,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab2" inherits="PanelTabButtonTemplate,BackdropTemplate" text="REAGENT_BANK">
+            <Button name="$parentTab2" inherits="PanelTabButtonTemplate,BackdropTemplate" text="Warband Bank">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parentTab1" relativePoint="BOTTOMRIGHT" />
                 </Anchors>
@@ -229,30 +222,6 @@
                             end
                         end
                         self.tab = 2
-                        self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
-                                        edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
-                                        tile=true, tileSize=16, edgeSize=16})
-                        self:SetBackdropColor(0,0,0,0.8)
-                    </OnLoad>
-                    <OnClick>
-                        DJBagsBankTab_OnClick(self)
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentTab3" inherits="PanelTabButtonTemplate,BackdropTemplate" text="Warband Bank">
-                <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativeTo="$parentTab2" relativePoint="BOTTOMRIGHT" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        if self.Text then
-                            PanelTemplates_TabResize(self, 0);
-                            local highlight = self.HighlightTexture or self:GetHighlightTexture();
-                            if highlight then
-                                highlight:SetWidth(self:GetTextWidth() + 31);
-                            end
-                        end
-                        self.tab = 3
                         self:SetBackdrop({bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
                                         edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
                                         tile=true, tileSize=16, edgeSize=16})
@@ -280,23 +249,6 @@
                     </OnHide>
                 </Scripts>
             </Frame>
-            <Frame name="DJBagsReagents" inherits="DJBagsBackgroundTemplate" parentKey="reagentsBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
-                   hidden="true" parent="DJBagsBankBar">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsRegisterReagentBagContainer(self, {REAGENTBANK_CONTAINER})
-                    </OnLoad>
-                    <OnShow>
-                        self:OnShow()
-                    </OnShow>
-                    <OnHide>
-                        self:OnHide()
-                    </OnHide>
-                </Scripts>
-            </Frame>
             <Frame name="DJBagsWarband" inherits="DJBagsBackgroundTemplate" parentKey="warbandBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
                    hidden="true" parent="DJBagsBankBar">
                 <Anchors>
@@ -314,18 +266,6 @@
                     </OnHide>
                 </Scripts>
             </Frame>
-            <Button name="$parentReagentButton" parent="DJBagsReagents" parentKey="reagentButton" inherits="UIPanelButtonTemplate" text="BANKSLOTPURCHASE" hidden="true">
-                <Size x="100" y="25"/>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="DJBagsReagents" relativePoint="TOPLEFT" x="5" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnClick>
-                        -- PlaySound("igMainMenuOption");
-                        StaticPopup_Show("CONFIRM_BUY_REAGENTBANK_TAB");
-                    </OnClick>
-                </Scripts>
-            </Button>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
                 <Anchors>
                     <Anchor point="CENTER" relativePoint="TOPRIGHT" x="-2" y="-2"/>
@@ -371,41 +311,9 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
-            <Frame name="$parentSettingsReagents" parentKey="reagentsSettingsMenu" inherits="DJBagsSettings" hidden="true">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parentSettingsBank" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension y="-10"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="OVERLAY">
-                        <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight" text="REAGENT_BANK">
-                            <Anchors>
-                                <Anchor point="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="10"/>
-                                    </Offset>
-                                </Anchor>
-                                <Anchor point="TOPRIGHT">
-                                    <Offset>
-                                        <AbsDimension x="0" y="10"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Scripts>
-                    <OnLoad>
-                        self.bag = self:GetParent().reagentsBag
-                    </OnLoad>
-                </Scripts>
-            </Frame>
             <Frame name="$parentSettingsWarband" parentKey="warbandSettingsMenu" inherits="DJBagsSettings" hidden="true">
                 <Anchors>
-                    <Anchor point="TOP" relativeTo="$parentSettingsReagents" relativePoint="BOTTOM">
+                    <Anchor point="TOP" relativeTo="$parentSettingsBank" relativePoint="BOTTOM">
                         <Offset>
                             <AbsDimension y="-10"/>
                         </Offset>
@@ -438,7 +346,7 @@
         </Frames>
         <Scripts>
             <OnLoad>
-                PanelTemplates_SetNumTabs(self, 3)
+                PanelTemplates_SetNumTabs(self, 2)
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
             <OnHide>
