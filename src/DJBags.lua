@@ -93,6 +93,9 @@ OpenBankFrame = function(...)
     if oldOpenBankFrame then
         oldOpenBankFrame(...)
     end
+    if BankFrame and BankFrame:IsShown() then
+        BankFrame:Hide()
+    end
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
         DJBagsBankBar:BANKFRAME_OPENED()
     end
