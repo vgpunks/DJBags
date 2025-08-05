@@ -18,7 +18,7 @@
             </Layer>
             <Layer level="OVERLAY">
                 <!-- Item buttons expect an IconBorder texture for quality coloring. -->
-                <Texture name="$parentIconBorder" parentKey="IconBorder" inherits="IconBorderTemplate" setAllPoints="true" hidden="true" />
+                <Texture name="$parentIconBorder" parentKey="IconBorder" file="Interface\\Buttons\\UI-ActionButton-Border" blendMode="ADD" setAllPoints="true" hidden="true" />
                 <FontString name="$parentCount" parentKey="Count" setAllPoints="true" justifyH="RIGHT" justifyV="BOTTOM" inherits="NumberFontNormal"/>
             </Layer>
         </Layers>
