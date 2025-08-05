@@ -10,8 +10,16 @@
         minimal replacement that mimics an item button so the bank bar can
         create its tab buttons without relying on Blizzard's template.
     -->
-    <Button name="DJBagsBankTabButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
+    <Button name="DJBagsBankTabButtonTemplate" virtual="true">
         <Size x="40" y="40" />
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentIconTexture" setAllPoints="true" />
+            </Layer>
+        </Layers>
+        <NormalTexture file="Interface\Buttons\UI-Quickslot2" />
+        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" />
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
     </Button>
 
     <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
