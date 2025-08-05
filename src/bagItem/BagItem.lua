@@ -2,6 +2,24 @@ local NAME, ADDON = ...
 
 local item = {}
 
+local function DJBagsGetNumBankSlots()
+    if GetNumBankSlots then
+        return GetNumBankSlots()
+    elseif C_Bank and C_Bank.GetNumBankSlots then
+        return C_Bank.GetNumBankSlots()
+    end
+    return 0, true
+end
+
+local function DJBagsGetBankSlotCost(slot)
+    if GetBankSlotCost then
+        return GetBankSlotCost(slot)
+    elseif C_Bank and C_Bank.GetBankSlotCost then
+        return C_Bank.GetBankSlotCost(slot)
+    end
+    return -1
+end
+
 function DJBagsContainerIDToInventoryID(bagID)
     if C_Container and C_Container.ContainerIDToInventoryID then
         return C_Container.ContainerIDToInventoryID(bagID)
@@ -40,9 +58,9 @@ function item:Init(id, slot)
 end
 
 function item:Update()
-    local numBankSlots, full = GetNumBankSlots()
+    local numBankSlots = DJBagsGetNumBankSlots()
     if self.slot ~= REAGENTBAG_CONTAINER and self.slot - NUM_BAG_SLOTS > numBankSlots then
-        local cost = GetBankSlotCost(self.slot-1)
+        local cost = DJBagsGetBankSlotCost(self.slot - 1)
         self:SetCost(cost)
         return
     end
