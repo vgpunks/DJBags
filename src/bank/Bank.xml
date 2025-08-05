@@ -17,9 +17,7 @@
                 <Texture name="$parentIconTexture" setAllPoints="true" />
             </Layer>
             <Layer level="OVERLAY">
-                <FontString name="$parentCount" parentKey="Count" setAllPoints="true" justifyH="RIGHT" justifyV="BOTTOM">
-                    <Font height="13">NumberFontNormal</Font>
-                </FontString>
+                <FontString name="$parentCount" parentKey="Count" setAllPoints="true" justifyH="RIGHT" justifyV="BOTTOM" inherits="NumberFontNormal"/>
             </Layer>
         </Layers>
         <NormalTexture file="Interface\Buttons\UI-Quickslot2" />
