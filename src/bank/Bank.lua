@@ -40,7 +40,13 @@ function bank:PLAYERBANKSLOTS_CHANGED()
 end
 
 function bank:BAG_UPDATE_DELAYED()
-    -- Bank tabs handle their own updates; no bag slot buttons to refresh.
+    local bar = self:GetParent()
+    for i = 1, (NUM_BANKBAGSLOTS or 7) do
+        local button = bar['bankTab' .. i]
+        if button and button.Update then
+            button:Update()
+        end
+    end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
