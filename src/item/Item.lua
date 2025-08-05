@@ -292,7 +292,9 @@ function item:Update()
         UpdateFiltered(self, filtered)
         UpdateCooldown(self)
         UpdateUpgrade(self)
-        self:UpdateItemContextMatching()
+        if self.UpdateItemContextMatching then
+            self:UpdateItemContextMatching()
+        end
     end
 end
 
