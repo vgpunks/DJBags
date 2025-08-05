@@ -18,9 +18,10 @@ function DJBagsRegisterReagentBagContainer(self, bags)
 end
 
 function bank:BANKFRAME_OPENED()
-	if BankFrame.selectedTab == 2 then
-		self:Show()
-	end
+    local tab = BankFrame.activeTabIndex or BankFrame.selectedTab
+    if tab == 2 then
+        self:Show()
+    end
 end
 
 function bank:BANKFRAME_CLOSED()
