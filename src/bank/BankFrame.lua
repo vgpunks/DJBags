@@ -10,8 +10,6 @@ function DJBagsRegisterBankFrame(self, bags)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
-    ADDON.eventManager:Add('BANK_OPENED', self)
-    ADDON.eventManager:Add('BANK_CLOSED', self)
 
     table.insert(UISpecialFrames, self:GetName())
     self:RegisterForDrag("LeftButton")
@@ -46,9 +44,7 @@ function bankFrame:BANKFRAME_OPENED()
     end
     DJBagsBag:Show()
 end
-bankFrame.BANK_OPENED = bankFrame.BANKFRAME_OPENED
 
 function bankFrame:BANKFRAME_CLOSED()
     self:Hide()
 end
-bankFrame.BANK_CLOSED = bankFrame.BANKFRAME_CLOSED
