@@ -96,15 +96,23 @@ OpenBankFrame = function(...)
     if BankFrame and BankFrame:IsShown() then
         BankFrame:Hide()
     end
-    if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
-        DJBagsBankBar:BANKFRAME_OPENED()
+    if DJBagsBankBar then
+        if DJBagsBankBar.BANK_OPENED then
+            DJBagsBankBar:BANK_OPENED()
+        elseif DJBagsBankBar.BANKFRAME_OPENED then
+            DJBagsBankBar:BANKFRAME_OPENED()
+        end
     end
 end
 
 local oldCloseBankFrame = CloseBankFrame
 CloseBankFrame = function(...)
-    if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
-        DJBagsBankBar:BANKFRAME_CLOSED()
+    if DJBagsBankBar then
+        if DJBagsBankBar.BANK_CLOSED then
+            DJBagsBankBar:BANK_CLOSED()
+        elseif DJBagsBankBar.BANKFRAME_CLOSED then
+            DJBagsBankBar:BANKFRAME_CLOSED()
+        end
     end
     if oldCloseBankFrame then
         oldCloseBankFrame(...)
@@ -118,6 +126,7 @@ end
 -- bank to be opened again without reloading the UI.
 local bankEvents = CreateFrame('Frame')
 bankEvents:RegisterEvent('BANKFRAME_CLOSED')
+bankEvents:RegisterEvent('BANK_CLOSED')
 bankEvents:SetScript('OnEvent', function()
     if oldCloseBankFrame then
         oldCloseBankFrame()
