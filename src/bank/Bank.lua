@@ -20,7 +20,7 @@ function DJBagsRegisterBankBagContainer(self, bags)
     end
     if BankFrame then
         BankFrame:UnregisterAllEvents()
-        BankFrame:SetScript('OnShow', nil)
+        BankFrame:SetScript('OnShow', BankFrame.Hide)
     end
 end
 
