@@ -130,9 +130,38 @@ end
 -- opened again without reloading the UI.
 local bankEvents = CreateFrame('Frame')
 bankEvents:RegisterEvent('BANKFRAME_CLOSED')
-bankEvents:SetScript('OnEvent', function()
-    if not closingBankFrame then
-        CloseBankFrame()
+bankEvents:RegisterEvent('PLAYER_INTERACTION_MANAGER_FRAME_SHOW')
+bankEvents:RegisterEvent('PLAYER_INTERACTION_MANAGER_FRAME_HIDE')
+
+local bankerInteractions = {
+    Enum.PlayerInteractionType and Enum.PlayerInteractionType.Banker,
+    Enum.PlayerInteractionType and Enum.PlayerInteractionType.AccountBanker,
+    Enum.PlayerInteractionType and Enum.PlayerInteractionType.WarbandBanker,
+}
+
+local function IsBankerInteraction(interactionType)
+    for _, v in ipairs(bankerInteractions) do
+        if v and interactionType == v then
+            return true
+        end
+    end
+end
+
+bankEvents:SetScript('OnEvent', function(_, event, ...)
+    if event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW' then
+        local interactionType = ...
+        if IsBankerInteraction(interactionType) then
+            OpenBankFrame()
+        end
+    elseif event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE' then
+        local interactionType = ...
+        if IsBankerInteraction(interactionType) and not closingBankFrame then
+            CloseBankFrame()
+        end
+    elseif event == 'BANKFRAME_CLOSED' then
+        if not closingBankFrame then
+            CloseBankFrame()
+        end
     end
 end)
 
