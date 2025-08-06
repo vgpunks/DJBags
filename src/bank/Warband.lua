@@ -81,8 +81,6 @@ function DJBagsRegisterWarbandBagContainer(self)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
-    ADDON.eventManager:Add('BANK_OPENED', self)
-    ADDON.eventManager:Add('BANK_CLOSED', self)
     ADDON.eventManager:Add('PLAYERWARDBANKSLOTS_CHANGED', self)
 end
 
@@ -92,12 +90,10 @@ function bank:BANKFRAME_OPENED()
         self:Show()
     end
 end
-bank.BANK_OPENED = bank.BANKFRAME_OPENED
 
 function bank:BANKFRAME_CLOSED()
         self:Hide()
 end
-bank.BANK_CLOSED = bank.BANKFRAME_CLOSED
 
 function bank:PLAYERWARDBANKSLOTS_CHANGED()
     UpdateBagList(self)

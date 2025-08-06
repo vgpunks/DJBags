@@ -12,8 +12,6 @@ function DJBagsRegisterBankBagContainer(self, bags)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
-    ADDON.eventManager:Add('BANK_OPENED', self)
-    ADDON.eventManager:Add('BANK_CLOSED', self)
     ADDON.eventManager:Add('PLAYERBANKSLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERBANKBAGSLOTS_CHANGED', self)
 
@@ -32,12 +30,10 @@ function bank:BANKFRAME_OPENED()
         self:Show()
     end
 end
-bank.BANK_OPENED = bank.BANKFRAME_OPENED
 
 function bank:BANKFRAME_CLOSED()
         self:Hide()
 end
-bank.BANK_CLOSED = bank.BANKFRAME_CLOSED
 
 function bank:PLAYERBANKSLOTS_CHANGED()
 	self:BAG_UPDATE(BANK_CONTAINER)
