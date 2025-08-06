@@ -30,7 +30,11 @@ function DJBagsRegisterBankFrame(self, bags)
                 BankFrame:SetScript('OnShow', nil)
                 BankFrame:Show()
             end
-            CloseBankFrame()
+            if type(CloseBankFrame) == 'function' then
+                CloseBankFrame()
+            elseif BankFrame then
+                BankFrame:Hide()
+            end
             if restoreOnShow then
                 BankFrame:SetScript('OnShow', BankFrame.Hide)
             end
