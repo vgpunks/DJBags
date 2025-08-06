@@ -141,33 +141,15 @@ bankEvents:SetScript('OnEvent', function(_, event, ...)
     if event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW' then
         local interactionType = ...
         if IsBankerInteraction(interactionType) then
-            if type(OpenBankFrame) == 'function' then
-                OpenBankFrame()
-            elseif BankFrame then
-                BankFrame:Show()
-            end
+            HandleBankOpen()
         end
     elseif event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE' then
         local interactionType = ...
-        if IsBankerInteraction(interactionType) and not ADDON.closingBankFrame then
-            ADDON.closingBankFrame = true
-            if type(CloseBankFrame) == 'function' then
-                CloseBankFrame()
-            elseif BankFrame then
-                BankFrame:Hide()
-            end
-            ADDON.closingBankFrame = false
+        if IsBankerInteraction(interactionType) then
+            HandleBankClose()
         end
     elseif event == 'BANKFRAME_CLOSED' then
-        if not ADDON.closingBankFrame then
-            ADDON.closingBankFrame = true
-            if type(CloseBankFrame) == 'function' then
-                CloseBankFrame()
-            elseif BankFrame then
-                BankFrame:Hide()
-            end
-            ADDON.closingBankFrame = false
-        end
+        HandleBankClose()
     end
 end)
 
