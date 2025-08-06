@@ -22,7 +22,9 @@ function DJBagsRegisterBankFrame(self, bags)
     self:SetUserPlaced(true)
 
     self:HookScript("OnHide", function()
-        CloseBankFrame()
+        if not ADDON.closingBankFrame then
+            CloseBankFrame()
+        end
     end)
 end
 
