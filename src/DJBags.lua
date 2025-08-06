@@ -111,6 +111,19 @@ CloseBankFrame = function(...)
     end
 end
 
+-- When the bank is closed by the game (e.g. walking away from the banker),
+-- the default UI still expects CloseBankFrame to run so its internal state is
+-- reset.  Since DJBags suppresses the default frame, listen for the
+-- BANKFRAME_CLOSED event and invoke the original CloseBankFrame to allow the
+-- bank to be opened again without reloading the UI.
+local bankEvents = CreateFrame('Frame')
+bankEvents:RegisterEvent('BANKFRAME_CLOSED')
+bankEvents:SetScript('OnEvent', function()
+    if oldCloseBankFrame then
+        oldCloseBankFrame()
+    end
+end)
+
 SLASH_DJBAGS1, SLASH_DJBAGS2, SLASH_DJBAGS3, SLASH_DJBAGS4 = '/djb', '/dj', '/djbags', '/db';
 function SlashCmdList.DJBAGS(msg, editbox)
     DJBagsBag:Show()
