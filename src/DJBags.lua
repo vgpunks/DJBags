@@ -89,21 +89,32 @@ end
 
 -- Bank API hooks
 ADDON.closingBankFrame = false
-
-hooksecurefunc('OpenBankFrame', function(...)
+local function HandleBankOpen(...)
     if BankFrame and BankFrame:IsShown() then
         BankFrame:Hide()
     end
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
         DJBagsBankBar:BANKFRAME_OPENED()
     end
-end)
+end
 
-hooksecurefunc('CloseBankFrame', function(...)
+local function HandleBankClose(...)
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
         DJBagsBankBar:BANKFRAME_CLOSED()
     end
-end)
+end
+
+if type(OpenBankFrame) == 'function' then
+    hooksecurefunc('OpenBankFrame', HandleBankOpen)
+elseif BankFrame then
+    BankFrame:HookScript('OnShow', HandleBankOpen)
+end
+
+if type(CloseBankFrame) == 'function' then
+    hooksecurefunc('CloseBankFrame', HandleBankClose)
+elseif BankFrame then
+    BankFrame:HookScript('OnHide', HandleBankClose)
+end
 
 -- When the bank is closed by the game (e.g. walking away from the banker),
 -- ensure the default API runs so the bank can reopen without reloading.
@@ -130,19 +141,31 @@ bankEvents:SetScript('OnEvent', function(_, event, ...)
     if event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW' then
         local interactionType = ...
         if IsBankerInteraction(interactionType) then
-            OpenBankFrame()
+            if type(OpenBankFrame) == 'function' then
+                OpenBankFrame()
+            elseif BankFrame then
+                BankFrame:Show()
+            end
         end
     elseif event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE' then
         local interactionType = ...
         if IsBankerInteraction(interactionType) and not ADDON.closingBankFrame then
             ADDON.closingBankFrame = true
-            CloseBankFrame()
+            if type(CloseBankFrame) == 'function' then
+                CloseBankFrame()
+            elseif BankFrame then
+                BankFrame:Hide()
+            end
             ADDON.closingBankFrame = false
         end
     elseif event == 'BANKFRAME_CLOSED' then
         if not ADDON.closingBankFrame then
             ADDON.closingBankFrame = true
-            CloseBankFrame()
+            if type(CloseBankFrame) == 'function' then
+                CloseBankFrame()
+            elseif BankFrame then
+                BankFrame:Hide()
+            end
             ADDON.closingBankFrame = false
         end
     end
