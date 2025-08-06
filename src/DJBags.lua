@@ -102,25 +102,37 @@ OpenBankFrame = function(...)
 end
 
 local oldCloseBankFrame = CloseBankFrame
+local closingBankFrame = false
 CloseBankFrame = function(...)
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
         DJBagsBankBar:BANKFRAME_CLOSED()
     end
     if oldCloseBankFrame then
+        closingBankFrame = true
+        local restoreOnShow
+        if BankFrame and not BankFrame:IsShown() then
+            restoreOnShow = true
+            BankFrame:SetScript('OnShow', nil)
+            BankFrame:Show()
+        end
         oldCloseBankFrame(...)
+        if restoreOnShow then
+            BankFrame:SetScript('OnShow', BankFrame.Hide)
+        end
+        closingBankFrame = false
     end
 end
 
 -- When the bank is closed by the game (e.g. walking away from the banker),
 -- the default UI still expects CloseBankFrame to run so its internal state is
--- reset.  Since DJBags suppresses the default frame, listen for the
--- BANKFRAME_CLOSED event and invoke the original CloseBankFrame to allow the
--- bank to be opened again without reloading the UI.
+-- reset. Since DJBags suppresses the default frame, listen for the
+-- BANKFRAME_CLOSED event and invoke CloseBankFrame to allow the bank to be
+-- opened again without reloading the UI.
 local bankEvents = CreateFrame('Frame')
 bankEvents:RegisterEvent('BANKFRAME_CLOSED')
 bankEvents:SetScript('OnEvent', function()
-    if oldCloseBankFrame then
-        oldCloseBankFrame()
+    if not closingBankFrame then
+        CloseBankFrame()
     end
 end)
 
