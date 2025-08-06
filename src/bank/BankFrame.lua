@@ -20,6 +20,10 @@ function DJBagsRegisterBankFrame(self, bags)
         self:StopMovingOrSizing(...)
     end)
     self:SetUserPlaced(true)
+
+    self:HookScript("OnHide", function()
+        CloseBankFrame()
+    end)
 end
 
 function DJBagsBankTab_OnClick(tab)
