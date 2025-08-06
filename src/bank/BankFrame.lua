@@ -23,7 +23,18 @@ function DJBagsRegisterBankFrame(self, bags)
 
     self:HookScript("OnHide", function()
         if not ADDON.closingBankFrame then
+            ADDON.closingBankFrame = true
+            local restoreOnShow
+            if BankFrame and not BankFrame:IsShown() then
+                restoreOnShow = true
+                BankFrame:SetScript('OnShow', nil)
+                BankFrame:Show()
+            end
             CloseBankFrame()
+            if restoreOnShow then
+                BankFrame:SetScript('OnShow', BankFrame.Hide)
+            end
+            ADDON.closingBankFrame = false
         end
     end)
 end

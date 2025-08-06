@@ -87,48 +87,26 @@ OpenBag = function(id)
     end
 end
 
--- Bank API overrides
-local oldOpenBankFrame = OpenBankFrame
-OpenBankFrame = function(...)
-    if oldOpenBankFrame then
-        oldOpenBankFrame(...)
-    end
+-- Bank API hooks
+ADDON.closingBankFrame = false
+
+hooksecurefunc('OpenBankFrame', function(...)
     if BankFrame and BankFrame:IsShown() then
         BankFrame:Hide()
     end
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_OPENED then
         DJBagsBankBar:BANKFRAME_OPENED()
     end
-end
+end)
 
-local oldCloseBankFrame = CloseBankFrame
-ADDON.closingBankFrame = false
-CloseBankFrame = function(...)
-    if ADDON.closingBankFrame then return end
-    ADDON.closingBankFrame = true
+hooksecurefunc('CloseBankFrame', function(...)
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
         DJBagsBankBar:BANKFRAME_CLOSED()
     end
-    if oldCloseBankFrame then
-        local restoreOnShow
-        if BankFrame and not BankFrame:IsShown() then
-            restoreOnShow = true
-            BankFrame:SetScript('OnShow', nil)
-            BankFrame:Show()
-        end
-        oldCloseBankFrame(...)
-        if restoreOnShow then
-            BankFrame:SetScript('OnShow', BankFrame.Hide)
-        end
-    end
-    ADDON.closingBankFrame = false
-end
+end)
 
 -- When the bank is closed by the game (e.g. walking away from the banker),
--- the default UI still expects CloseBankFrame to run so its internal state is
--- reset. Since DJBags suppresses the default frame, listen for the
--- BANKFRAME_CLOSED event and invoke CloseBankFrame to allow the bank to be
--- opened again without reloading the UI.
+-- ensure the default API runs so the bank can reopen without reloading.
 local bankEvents = CreateFrame('Frame')
 bankEvents:RegisterEvent('BANKFRAME_CLOSED')
 bankEvents:RegisterEvent('PLAYER_INTERACTION_MANAGER_FRAME_SHOW')
@@ -157,11 +135,15 @@ bankEvents:SetScript('OnEvent', function(_, event, ...)
     elseif event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE' then
         local interactionType = ...
         if IsBankerInteraction(interactionType) and not ADDON.closingBankFrame then
+            ADDON.closingBankFrame = true
             CloseBankFrame()
+            ADDON.closingBankFrame = false
         end
     elseif event == 'BANKFRAME_CLOSED' then
         if not ADDON.closingBankFrame then
+            ADDON.closingBankFrame = true
             CloseBankFrame()
+            ADDON.closingBankFrame = false
         end
     end
 end)
