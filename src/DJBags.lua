@@ -102,13 +102,14 @@ OpenBankFrame = function(...)
 end
 
 local oldCloseBankFrame = CloseBankFrame
-local closingBankFrame = false
+ADDON.closingBankFrame = false
 CloseBankFrame = function(...)
+    if ADDON.closingBankFrame then return end
+    ADDON.closingBankFrame = true
     if DJBagsBankBar and DJBagsBankBar.BANKFRAME_CLOSED then
         DJBagsBankBar:BANKFRAME_CLOSED()
     end
     if oldCloseBankFrame then
-        closingBankFrame = true
         local restoreOnShow
         if BankFrame and not BankFrame:IsShown() then
             restoreOnShow = true
@@ -119,8 +120,8 @@ CloseBankFrame = function(...)
         if restoreOnShow then
             BankFrame:SetScript('OnShow', BankFrame.Hide)
         end
-        closingBankFrame = false
     end
+    ADDON.closingBankFrame = false
 end
 
 -- When the bank is closed by the game (e.g. walking away from the banker),
@@ -155,11 +156,11 @@ bankEvents:SetScript('OnEvent', function(_, event, ...)
         end
     elseif event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE' then
         local interactionType = ...
-        if IsBankerInteraction(interactionType) and not closingBankFrame then
+        if IsBankerInteraction(interactionType) and not ADDON.closingBankFrame then
             CloseBankFrame()
         end
     elseif event == 'BANKFRAME_CLOSED' then
-        if not closingBankFrame then
+        if not ADDON.closingBankFrame then
             CloseBankFrame()
         end
     end
