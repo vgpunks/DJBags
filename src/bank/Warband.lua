@@ -86,7 +86,12 @@ end
 
 function bank:BANKFRAME_OPENED()
     local tab = BankFrame.activeTabIndex or BankFrame.selectedTab
-    if tab == 3 then
+    -- The warband bank is represented by the second tab in the custom
+    -- bank frame. The previous check against tab index 3 prevented the
+    -- warband container from showing when it was the active tab,
+    -- leaving the frame hidden until the user reselected the tab. Use
+    -- the correct tab index so the warband bank loads reliably.
+    if tab == 2 then
         self:Show()
     end
 end
