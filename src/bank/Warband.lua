@@ -90,8 +90,11 @@ function bank:BANKFRAME_OPENED()
     -- bank frame. The previous check against tab index 3 prevented the
     -- warband container from showing when it was the active tab,
     -- leaving the frame hidden until the user reselected the tab. Use
-    -- the correct tab index so the warband bank loads reliably.
+    -- the correct tab index so the warband bank loads reliably. When the
+    -- warband tab is active on open, refresh the bag list before showing so
+    -- the items populate immediately.
     if tab == 2 then
+        UpdateBagList(self)
         self:Show()
     end
 end
