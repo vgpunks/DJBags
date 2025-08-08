@@ -2,6 +2,15 @@ local ADDON_NAME, ADDON = ...
 
 local bankFrame = {}
 bankFrame.__index = bankFrame
+local bankInteractions = {}
+if Enum and Enum.PlayerInteractionType then
+	if Enum.PlayerInteractionType.Banker then
+		bankInteractions[Enum.PlayerInteractionType.Banker] = true
+	end
+	if Enum.PlayerInteractionType.AccountBanker then
+		bankInteractions[Enum.PlayerInteractionType.AccountBanker] = true
+	end
+end
 
 function DJBagsRegisterBankFrame(self, bags)
 	for k, v in pairs(bankFrame) do
@@ -10,6 +19,8 @@ function DJBagsRegisterBankFrame(self, bags)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_SHOW', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_HIDE', self)
 
     table.insert(UISpecialFrames, self:GetName())
     self:RegisterForDrag("LeftButton")
@@ -74,5 +85,17 @@ function bankFrame:BANKFRAME_OPENED()
 end
 
 function bankFrame:BANKFRAME_CLOSED()
-    self:Hide()
+	self:Hide()
+end
+
+function bankFrame:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_OPENED()
+	end
+end
+
+function bankFrame:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_CLOSED()
+	end
 end

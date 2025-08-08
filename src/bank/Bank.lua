@@ -3,6 +3,16 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+local bankInteractions = {}
+if Enum and Enum.PlayerInteractionType then
+    if Enum.PlayerInteractionType.Banker then
+        bankInteractions[Enum.PlayerInteractionType.Banker] = true
+    end
+    if Enum.PlayerInteractionType.AccountBanker then
+        bankInteractions[Enum.PlayerInteractionType.AccountBanker] = true
+    end
+end
+
 function DJBagsRegisterBankBagContainer(self, bags)
 	DJBagsRegisterBaseBagContainer(self, bags)
 
@@ -12,6 +22,8 @@ function DJBagsRegisterBankBagContainer(self, bags)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_SHOW', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_HIDE', self)
     ADDON.eventManager:Add('PLAYERBANKSLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERBANKBAGSLOTS_CHANGED', self)
 
@@ -61,4 +73,16 @@ function bank:SortBags()
         SortBankBags()
     end
     ADDON.eventManager:Add('BAG_UPDATE', self)
+end
+
+function bank:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_OPENED()
+	end
+end
+
+function bank:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_CLOSED()
+	end
 end
