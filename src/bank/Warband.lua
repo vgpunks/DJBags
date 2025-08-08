@@ -21,17 +21,40 @@ end
 
 local function GetWarbandContainers()
     local containers = {}
-    local bag = WARDBANK_CONTAINER
+
+    -- Newer clients expose explicit bag index constants for each warband
+    -- bank tab (e.g. Enum.BagIndex.AccountBankTab1).  Use those when
+    -- available so the container list matches the actual API values rather
+    -- than assuming sequential indices.  This mirrors the behaviour
+    -- described on the Warcraft wiki API reference.
+    if Enum and Enum.BagIndex then
+        local indices = {}
+        for name, value in pairs(Enum.BagIndex) do
+            if type(name) == "string" and (name:find("AccountBank") or name:find("Warband")) then
+                table.insert(indices, value)
+            end
+        end
+        table.sort(indices)
+        for _, bag in ipairs(indices) do
+            local slots = C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerNumSlots(bag)
+            if slots and slots > 0 then
+                table.insert(containers, bag)
+            end
+        end
+    end
 
     -- Some clients expose additional tabs as sequential containers. Iterate
     -- through all available containers until the API reports zero slots.
-    while true do
-        local slots = C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerNumSlots(bag)
-        if not slots or slots == 0 then
-            break
+    if #containers == 0 then
+        local bag = WARDBANK_CONTAINER
+        while true do
+            local slots = C_Container and C_Container.GetContainerNumSlots and C_Container.GetContainerNumSlots(bag)
+            if not slots or slots == 0 then
+                break
+            end
+            table.insert(containers, bag)
+            bag = bag + 1
         end
-        table.insert(containers, bag)
-        bag = bag + 1
     end
 
     -- Fallback in case the API didn't return any slots for the first container
