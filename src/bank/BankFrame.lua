@@ -64,6 +64,13 @@ function bankFrame:BANKFRAME_OPENED()
         BankFrame_LoadUI()
     end
     DJBagsBag:Show()
+    -- Select the main bank tab by default when the bank opens so that the
+    -- contents are visible without requiring an additional click.  This also
+    -- ensures other tabs (such as the Warband bank) start hidden and only show
+    -- when explicitly selected.
+    if DJBagsBankBarTab1 and DJBagsBankTab_OnClick then
+        DJBagsBankTab_OnClick(DJBagsBankBarTab1)
+    end
 end
 
 function bankFrame:BANKFRAME_CLOSED()
