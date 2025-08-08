@@ -5,7 +5,7 @@ bank.__index = bank
 
 -- Compatibility for new Warband bank container constant
 WARDBANK_CONTAINER = WARDBANK_CONTAINER
-    or (Enum.BagIndex and (Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
+    or (Enum.BagIndex and (Enum.BagIndex.AccountBankTab1 or Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
     or 13
 
 
