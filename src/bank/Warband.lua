@@ -9,6 +9,16 @@ WARDBANK_CONTAINER = WARDBANK_CONTAINER
     or 13
 
 
+local function FetchWarbandBank()
+    -- Some clients require explicitly requesting the warband bank data
+    -- before the slots become available.  Try to fetch the data whenever
+    -- the container is shown so the items populate immediately.
+    if C_Bank and C_Bank.FetchAccountBank then
+        C_Bank.FetchAccountBank()
+    end
+end
+
+
 local function GetWarbandContainers()
     local containers = {}
     local bag = WARDBANK_CONTAINER
@@ -94,6 +104,7 @@ function bank:BANKFRAME_OPENED()
     -- warband tab is active on open, refresh the bag list before showing so
     -- the items populate immediately.
     if tab == 2 then
+        FetchWarbandBank()
         UpdateBagList(self)
         self:Show()
     end
@@ -121,6 +132,7 @@ function bank:SortBags()
 end
 
 function bank:OnShow()
+    FetchWarbandBank()
     UpdateBagList(self)
     if self.BaseOnShow then
         self:BaseOnShow()
