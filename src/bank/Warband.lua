@@ -3,6 +3,16 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+local bankInteractions = {}
+if Enum and Enum.PlayerInteractionType then
+	if Enum.PlayerInteractionType.Banker then
+		bankInteractions[Enum.PlayerInteractionType.Banker] = true
+	end
+	if Enum.PlayerInteractionType.AccountBanker then
+		bankInteractions[Enum.PlayerInteractionType.AccountBanker] = true
+	end
+end
+
 -- Compatibility for new Warband bank container constant
 WARDBANK_CONTAINER = WARDBANK_CONTAINER
     or (Enum.BagIndex and (Enum.BagIndex.AccountBankTab1 or Enum.BagIndex.WarbandBank or Enum.BagIndex.AccountBank))
@@ -115,6 +125,8 @@ function DJBagsRegisterWarbandBagContainer(self)
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
     ADDON.eventManager:Add('PLAYERWARDBANKSLOTS_CHANGED', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_SHOW', self)
+    ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_HIDE', self)
 end
 
 function bank:BANKFRAME_OPENED()
@@ -155,10 +167,22 @@ function bank:SortBags()
 end
 
 function bank:OnShow()
-    FetchWarbandBank()
-    UpdateBagList(self)
-    if self.BaseOnShow then
-        self:BaseOnShow()
-    end
+	FetchWarbandBank()
+	UpdateBagList(self)
+	if self.BaseOnShow then
+		self:BaseOnShow()
+	end
+end
+
+function bank:PLAYER_INTERACTION_MANAGER_FRAME_SHOW(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_OPENED()
+	end
+end
+
+function bank:PLAYER_INTERACTION_MANAGER_FRAME_HIDE(interactionType)
+	if bankInteractions[interactionType] then
+		self:BANKFRAME_CLOSED()
+	end
 end
 
