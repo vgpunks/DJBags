@@ -63,7 +63,14 @@ function DJBagsBankTab_OnClick(tab)
         BankFrame.activeTabIndex = 1
     else
         DJBagsBank:Hide()
-        if DJBagsWarband then DJBagsWarband:Show() end
+        if DJBagsWarband then
+            DJBagsWarband:Show()
+            -- Explicitly refresh the warband bank when its tab is selected so
+            -- the container and items populate immediately.
+            if DJBagsWarband.BANKFRAME_OPENED then
+                DJBagsWarband:BANKFRAME_OPENED()
+            end
+        end
         BankFrame.selectedTab = 2
         BankFrame.activeTabIndex = 2
     end
