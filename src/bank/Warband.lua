@@ -124,7 +124,15 @@ function DJBagsRegisterWarbandBagContainer(self)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
+
+    -- Different game versions have used several names for the event that
+    -- signals warband/account bank slot updates.  Listen for all known
+    -- variants so the container refreshes regardless of which one is
+    -- fired by the client.
+    ADDON.eventManager:Add('PLAYERACCOUNTBANKSLOTS_CHANGED', self)
+    ADDON.eventManager:Add('PLAYER_ACCOUNT_BANK_SLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERWARDBANKSLOTS_CHANGED', self)
+
     ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_SHOW', self)
     ADDON.eventManager:Add('PLAYER_INTERACTION_MANAGER_FRAME_HIDE', self)
 end
@@ -149,12 +157,18 @@ function bank:BANKFRAME_CLOSED()
         self:Hide()
 end
 
-function bank:PLAYERWARDBANKSLOTS_CHANGED()
+-- Handle warband/account bank slot updates.  The same logic is used for all
+-- supported event names, so define the function once and alias it for each
+-- variant the game might emit.
+function bank:PLAYERACCOUNTBANKSLOTS_CHANGED()
     UpdateBagList(self)
     for _, bag in ipairs(self.bags) do
         self:BAG_UPDATE(bag)
     end
 end
+
+bank.PLAYER_ACCOUNT_BANK_SLOTS_CHANGED = bank.PLAYERACCOUNTBANKSLOTS_CHANGED
+bank.PLAYERWARDBANKSLOTS_CHANGED = bank.PLAYERACCOUNTBANKSLOTS_CHANGED
 
 function bank:SortBags()
     ADDON.eventManager:Remove('BAG_UPDATE', self)
