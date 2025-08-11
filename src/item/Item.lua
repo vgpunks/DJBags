@@ -218,7 +218,12 @@ function item:Update()
     else
         local isQuestItem, questId, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
         local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
-        local isBattlePayItem = IsBattlePayItem(bag, self:GetID())
+        local isBattlePayItem = false
+        if C_Item and C_Item.IsBattlePayItem then
+            isBattlePayItem = C_Item.IsBattlePayItem(bag, self:GetID())
+        elseif IsBattlePayItem then
+            isBattlePayItem = IsBattlePayItem(bag, self:GetID())
+        end
 
         self.hasItem = true
 
