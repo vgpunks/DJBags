@@ -46,33 +46,27 @@ function eventManager:Fire(event, ...)
     end
 end
 
-local function Count(table)
-    local cnt = 0;
-
-    for _ in pairs(table) do
-        cnt = cnt + 1
-    end
-
-    return cnt
-end
-
 function eventManager:Remove(event, object)
     assert(event, 'Event required')
     assert(object, 'Object required')
 
+    if not self.events[event] or not self.events[event][object] then
+        return
+    end
+
     self.events[event][object] = nil
 
-    if next(self.events[event]) == nil and Count(self.events[event]) == 0 then
+    if not next(self.events[event]) then
         self.events[event] = nil
 
         try(
-            function() 
+            function()
                 self:UnregisterEvent(event)
             end,
             function(_)
                 -- do nothing for now
             end
         ) -- use pcall so that blizzard doesnt stop my personal events
-        
+
     end
 end
