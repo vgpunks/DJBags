@@ -155,6 +155,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
+                        self.Text = self:GetFontString();
                         PanelTemplates_TabResize(self, 0);
                         self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
                         self.tab = 1
@@ -170,6 +171,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
+                        self.Text = self:GetFontString();
                         PanelTemplates_TabResize(self, 0);
                         self.HighlightTexture:SetWidth(self:GetTextWidth() + 31);
                         self.tab = 2
