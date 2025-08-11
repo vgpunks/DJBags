@@ -192,7 +192,8 @@ function item:Update()
         filtered = info.isFiltered
         id = info.itemID
     end
-    local equipable = IsEquippableItem(id)
+    -- prevent errors on empty slots where id is nil
+    local equipable = id and IsEquippableItem(id)
 
     local name, level, classId, class, subClass
     if id then
