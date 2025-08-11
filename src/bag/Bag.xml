@@ -244,7 +244,7 @@
         </Scripts>
     </Frame>
 
-    <Frame name="DJBagsBag2" inhertis="DJBagsBackgroundTemplate" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
+    <Frame name="DJBagsBag2" inherits="DJBagsBackgroundTemplate" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
            hidden="true" parent="UIParent">
         <Size x="100" y="100" />
         <Anchors>
