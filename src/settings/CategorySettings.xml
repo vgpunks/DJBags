@@ -3,11 +3,11 @@
 
     <Frame name="DJBagsCategorySettings" virtual="true" movable="true" enableMouse="true" inherits="BackdropTemplate">
         <Size x="100" y="100" />
-        <BackdropInfo bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
+        <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>
                 <AbsValue val="1" />
             </EdgeSize>
-        </BackdropInfo>
+        </Backdrop>
         <BackdropColor r="0" g="0" b="0" a="0.6" />
         <BackdropBorderColor r="0.3" g="0.3" b="0.3" a="1" />
         <Layers>
