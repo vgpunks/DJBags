@@ -85,10 +85,12 @@ function item:OnEnter()
     end
 
     if (not IsInventoryItemProfessionBag("player", self:GetID())) then
-        for i = LE_BAG_FILTER_FLAG_EQUIPMENT, NUM_LE_BAG_FILTER_FLAGS do
-            if ( GetBankBagSlotFlag(self:GetID(), i) ) then
-                GameTooltip:AddLine(BAG_FILTER_ASSIGNED_TO:format(BAG_FILTER_LABELS[i]))
-                break;
+        if BAG_FILTER_LABELS then
+            for i, label in ipairs(BAG_FILTER_LABELS) do
+                if ( GetBankBagSlotFlag(self:GetID(), i) ) then
+                    GameTooltip:AddLine(BAG_FILTER_ASSIGNED_TO:format(label))
+                    break;
+                end
             end
         end
     end
