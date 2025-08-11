@@ -1,7 +1,7 @@
 <Ui xsi:schemaLocation="http://www.blizzard.com/wow/ui/  http://wowprogramming.com/FrameXML/UI.xsd">
     <Script file="src/settings/CategorySettings.lua"/>
 
-    <Frame name="DJBagsCategorySettings" virtual="true" movable="true" enableMouse="true">
+    <Frame name="DJBagsCategorySettings" virtual="true" movable="true" enableMouse="true" inherits="BackdropTemplate">
         <Size x="100" y="100" />
         <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>

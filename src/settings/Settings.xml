@@ -2,7 +2,7 @@
 	<Script file="src/settings/Settings.lua"/>
     <Include file="src/settings/CategorySettings.xml"/>
 
-	<Frame name="DJBagsNumberSelectTemplate" virtual="true">
+    <Frame name="DJBagsNumberSelectTemplate" virtual="true" inherits="BackdropTemplate">
 		<Size y="29" />
 		<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>
@@ -66,7 +66,7 @@
 			</Button>
 		</Frames>
 	</Frame>
-    <Frame name="DJBagsSettings" inherits="DJBagsBackgroundTemplate" virtual="true" movable="true" enableMouse="true">
+    <Frame name="DJBagsSettings" inherits="DJBagsBackgroundTemplate, BackdropTemplate" virtual="true" movable="true" enableMouse="true">
     	<Size x="150" y="105" />
     	<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>
