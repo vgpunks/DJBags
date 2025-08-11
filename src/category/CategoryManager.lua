@@ -17,7 +17,7 @@ function categoryManager:GetTitle(item, filters)
     local slot = item:GetID()
 
     if item.id then
-        local isInSet, setName = GetContainerItemEquipmentSetInfo(bag, slot)
+        local isInSet, setName = C_Container.GetContainerItemEquipmentSetInfo(bag, slot)
 
         if item.quality == Enum.ItemQuality.Poor then
             return BAG_FILTER_JUNK

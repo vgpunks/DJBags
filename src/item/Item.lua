@@ -1,5 +1,7 @@
 local ADDON_NAME, ADDON = ...
 
+local C_Container = C_Container
+
 local item = {}
 item.__index = item
 
@@ -135,12 +137,12 @@ local function UpdateILevel(self, equipable, quality, level)
 end
 
 local function UpdateCooldown(self)
-    if not GetContainerItemID(self:GetParent():GetID(), self:GetID()) then
+    if not C_Container.GetContainerItemID(self:GetParent():GetID(), self:GetID()) then
         self.cooldown:Hide()
         return
     end
 
-    local start, duration, enable = GetContainerItemCooldown(self:GetParent():GetID(), self:GetID());
+    local start, duration, enable = C_Container.GetContainerItemCooldown(self:GetParent():GetID(), self:GetID());
     CooldownFrame_Set(self.cooldown, start, duration, enable);
     if (duration > 0 and enable == 0) then
         SetItemButtonTextureVertexColor(self, 0.4, 0.4, 0.4)
@@ -152,7 +154,7 @@ end
 local function UpdateUpgrade(self)
     self.timeSinceUpgradeCheck = 0;
     
-    local itemIsUpgrade = IsContainerItemAnUpgrade(self:GetParent():GetID(), self:GetID());
+    local itemIsUpgrade = C_Container.IsContainerItemAnUpgrade(self:GetParent():GetID(), self:GetID());
     if ( itemIsUpgrade == nil ) then -- nil means not all the data was available to determine if this is an upgrade.
         self.UpgradeIcon:SetShown(false);
         self:SetScript("OnUpdate", OnItemUpdate);
@@ -172,7 +174,19 @@ local function OnItemUpdate(self, elapsed)
 end
 
 function item:Update()
-    local texture, count, locked, quality, _, _, link, filtered, _, id = GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+    local bag = self:GetParent():GetID()
+    local slot = self:GetID()
+    local info = C_Container.GetContainerItemInfo(bag, slot)
+    local texture, count, locked, quality, link, filtered, id
+    if info then
+        texture = info.iconFileID
+        count = info.stackCount
+        locked = info.isLocked
+        quality = info.quality
+        link = info.hyperlink
+        filtered = info.isFiltered
+        id = info.itemID
+    end
     local equipable = IsEquippableItem(id)
 
     local name, level, classId, class, subClass
@@ -180,7 +194,6 @@ function item:Update()
         name, _, _, level, _, class, subClass, _, _, _, _, classId = GetItemInfo(id)
     end
     local isEquipment = equipable or classId == LE_ITEM_CLASS_ARMOR or classId == LE_ITEM_CLASS_WEAPON
-    local bag = self:GetParent():GetID()
 
     self.id = id
     self.name = name or ''
@@ -194,7 +207,7 @@ function item:Update()
     self.hasItem = nil
 
     if isEquipment then
-        level = DJBagsTooltip:GetItemLevel(bag, self:GetID()) or level
+        level = DJBagsTooltip:GetItemLevel(bag, slot) or level
     elseif classId == LE_ITEM_CLASS_CONTAINER then
         -- TODO set count to number of slots
     end
@@ -203,7 +216,7 @@ function item:Update()
     if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
         BankFrameItemButton_Update(self)
     else
-        local isQuestItem, questId, isActive = GetContainerItemQuestInfo(bag, self:GetID())
+        local isQuestItem, questId, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
         local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
         local isBattlePayItem = IsBattlePayItem(bag, self:GetID())
 
@@ -238,12 +251,14 @@ function item:UpdateCooldown()
 end
 
 function item:UpdateSearch()
-    local _, _, _, _, _, _, _, filtered, _, id = GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+    local info = C_Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+    local filtered = info and info.isFiltered
     self:SetFiltered(filtered)
 end
 
 function item:UpdateLock(locked)
-    local locked = locked or select(3, GetContainerItemInfo(self:GetParent():GetID(), self:GetID()))
+    local info = C_Container.GetContainerItemInfo(self:GetParent():GetID(), self:GetID())
+    local locked = locked or (info and info.isLocked)
     SetItemButtonDesaturated(self, locked);
 end
 
