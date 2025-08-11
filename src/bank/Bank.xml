@@ -149,7 +149,7 @@
                     <Anchor point="RIGHT" relativeTo="$parentDepositReagent" relativePoint="LEFT" x="-5" />
                 </Anchors>
             </EditBox>
-            <Button name="$parentTab1" inherits="TabButtonTemplate" text="BANK">
+            <Button name="$parentTab1" inherits="PanelTabButtonTemplate" text="BANK">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="TOPLEFT" />
                 </Anchors>
@@ -165,7 +165,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab2" inherits="TabButtonTemplate" text="REAGENT_BANK">
+            <Button name="$parentTab2" inherits="PanelTabButtonTemplate" text="REAGENT_BANK">
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="$parentTab1" relativePoint="BOTTOMRIGHT" />
                 </Anchors>
