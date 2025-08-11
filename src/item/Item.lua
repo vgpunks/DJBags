@@ -153,7 +153,12 @@ end
 
 local function UpdateUpgrade(self)
     self.timeSinceUpgradeCheck = 0;
-    
+    if not C_Container or not C_Container.IsContainerItemAnUpgrade then
+        self.UpgradeIcon:SetShown(false);
+        self:SetScript("OnUpdate", nil);
+        return;
+    end
+
     local itemIsUpgrade = C_Container.IsContainerItemAnUpgrade(self:GetParent():GetID(), self:GetID());
     if ( itemIsUpgrade == nil ) then -- nil means not all the data was available to determine if this is an upgrade.
         self.UpgradeIcon:SetShown(false);
