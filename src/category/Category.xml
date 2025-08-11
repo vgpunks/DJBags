@@ -20,13 +20,6 @@
         </Layers>
         <Frames>
             <EditBox name="$parentCategoryEdit" parentKey="edit" inherits="BackdropTemplate">
-                <Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
-                    <EdgeSize>
-                        <AbsValue val="1" />
-                    </EdgeSize>
-                    <Color r="0" g="0" b="0" a="0.6" />
-                    <BorderColor r="0.3" g="0.3" b="0.3" a="1" />
-                </Backdrop>
                 <Size x="300" y="25" />
                 <Anchors>
                     <Anchor point="TOPLEFT" x="5" y="-25" />
@@ -35,6 +28,14 @@
                 <Scripts>
                     <OnLoad>
                         self:SetAutoFocus(false)
+                        local backdrop = {
+                            bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+                            edgeFile = "Interface\\Buttons\\WHITE8x8",
+                            edgeSize = 1,
+                        }
+                        self:SetBackdrop(backdrop)
+                        self:SetBackdropColor(0, 0, 0, 0.6)
+                        self:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
                     </OnLoad>
                     <OnEscapePressed>
                         self:ClearFocus()
