@@ -29,9 +29,22 @@ function item:Init(id, slot)
 end
 
 function item:Update()
-    local numBankSlots, full = GetNumBankSlots()
-    if self.slot - NUM_BAG_SLOTS > numBankSlots  then
-        local cost = GetBankSlotCost(self.slot-1)
+    local numBankSlots, full
+    if type(GetNumBankSlots) == "function" then
+        numBankSlots, full = GetNumBankSlots()
+    elseif C_Bank and type(C_Bank.GetNumBankSlots) == "function" then
+        numBankSlots, full = C_Bank.GetNumBankSlots()
+    else
+        numBankSlots, full = 0, true
+    end
+
+    if self.slot - NUM_BAG_SLOTS > numBankSlots then
+        local cost = -1
+        if type(GetBankSlotCost) == "function" then
+            cost = GetBankSlotCost(self.slot - 1)
+        elseif C_Bank and type(C_Bank.GetBankSlotCost) == "function" then
+            cost = C_Bank.GetBankSlotCost(self.slot - 1)
+        end
         self:SetCost(cost)
         return
     end
