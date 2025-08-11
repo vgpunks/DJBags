@@ -36,7 +36,7 @@ function item:Update()
         return
     end
     PaperDollItemSlotButton_Update(self)
-    local slotcount = GetContainerNumSlots(self.slot)
+    local slotcount = C_Container.GetContainerNumSlots(self.slot)
     if slotcount > 0 then
         self.Count:SetText(tostring(slotcount))
         self.Count:Show()
