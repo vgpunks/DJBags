@@ -4,13 +4,13 @@
 
     <Frame name="DJBagsNumberSelectTemplate" virtual="true" inherits="BackdropTemplate">
 		<Size y="29" />
-		<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
+		<BackdropInfo bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>
                 <AbsValue val="1" />
             </EdgeSize>
-            <Color r="0" g="0" b="0" a="0" />
-            <BorderColor r="0.3" g="0.3" b="0.3" a="1" />
-        </Backdrop>
+        </BackdropInfo>
+        <BackdropColor r="0" g="0" b="0" a="0" />
+        <BackdropBorderColor r="0.3" g="0.3" b="0.3" a="1" />
 		<Layers>
             <Layer level="OVERLAY">
                 <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight">
@@ -68,13 +68,13 @@
 	</Frame>
     <Frame name="DJBagsSettings" inherits="DJBagsBackgroundTemplate, BackdropTemplate" virtual="true" movable="true" enableMouse="true">
     	<Size x="150" y="105" />
-    	<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
+    	<BackdropInfo bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Buttons\WHITE8x8">
             <EdgeSize>
                 <AbsValue val="1" />
             </EdgeSize>
-            <Color r="0" g="0" b="0" a="0.6" />
-            <BorderColor r="0.3" g="0.3" b="0.3" a="1" />
-        </Backdrop>
+        </BackdropInfo>
+        <BackdropColor r="0" g="0" b="0" a="0.6" />
+        <BackdropBorderColor r="0.3" g="0.3" b="0.3" a="1" />
         <Frames>
         	<Frame name="$parentColumnsSettings" parentKey="columns" inherits="DJBagsNumberSelectTemplate">
         		<Anchors>
