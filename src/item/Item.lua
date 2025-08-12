@@ -203,7 +203,8 @@ function item:Update()
     local info = C_Container.GetContainerItemInfo(bag, slot)
     local texture, count, locked, quality, link, filtered, id
     if info then
-        texture = info.iconFileID
+        -- iconFileID was renamed to icon in 11.0, keep both for compatibility
+        texture = info.icon or info.iconFileID
         count = info.stackCount
         locked = info.isLocked
         quality = info.quality
@@ -218,7 +219,7 @@ function item:Update()
     if id then
         name, _, _, level, _, class, subClass, _, _, _, _, classId = GetItemInfo(id)
     end
-    local isEquipment = equipable or classId == LE_ITEM_CLASS_ARMOR or classId == LE_ITEM_CLASS_WEAPON
+    local isEquipment = equipable or classId == Enum.ItemClass.Armor or classId == Enum.ItemClass.Weapon
 
     self.id = id
     self.name = name or ''
@@ -233,7 +234,7 @@ function item:Update()
 
     if isEquipment then
         level = DJBagsTooltip:GetItemLevel(bag, slot) or level
-    elseif classId == LE_ITEM_CLASS_CONTAINER then
+    elseif classId == Enum.ItemClass.Container then
         -- TODO set count to number of slots
     end
 
