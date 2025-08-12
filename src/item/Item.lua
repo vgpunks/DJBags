@@ -75,10 +75,15 @@ function item:OnClick(button)
 end
 
 local function UpdateQuest(self, isQuestItem, questId, isActive)
-    if (questId and not isActive) then
+    -- questId can be 0 when there is no quest associated with the item, which
+    -- still evaluates to true in Lua. Only treat the item as a quest item when
+    -- the questId is a positive number.
+    local hasQuest = questId and questId > 0
+
+    if (hasQuest and not isActive) then
         self.quest:SetTexture(TEXTURE_ITEM_QUEST_BANG)
         self.quest:Show()
-    elseif (questId or isQuestItem) then
+    elseif (hasQuest or isQuestItem) then
         self.quest:SetTexture(TEXTURE_ITEM_QUEST_BORDER)
         self.quest:Show()
     else
@@ -123,19 +128,21 @@ local function UpdateFiltered(self, filtered)
 end
 
 local function UpdateBorder(self, quality, isQuestItem, questId)
-    if isQuestItem or questId then
+    -- questId may be 0 when the item is not related to a quest. Ensure we only
+    -- highlight quest borders when a valid questId is present or the flag is set.
+    if isQuestItem or (questId and questId > 0) then
         self.IconBorder:SetVertexColor(1, 0.82, 0)
         self.IconBorder:Show()
         return
     end
 
-    if quality and quality > Enum.ItemQuality.Common then
+    -- Apply a colored border based on item quality (rarity). BAG_ITEM_QUALITY_COLORS
+    -- contains entries for every valid quality index, including poor quality items.
+    if quality and BAG_ITEM_QUALITY_COLORS[quality] then
         local color = BAG_ITEM_QUALITY_COLORS[quality]
-        if color then
-            self.IconBorder:SetVertexColor(color.r, color.g, color.b)
-            self.IconBorder:Show()
-            return
-        end
+        self.IconBorder:SetVertexColor(color.r, color.g, color.b)
+        self.IconBorder:Show()
+        return
     end
 
     self.IconBorder:Hide()
