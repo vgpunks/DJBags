@@ -249,7 +249,19 @@ function item:Update()
     if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
         BankFrameItemButton_Update(self)
     else
-        local questId, isQuestItem, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
+        -- GetContainerItemQuestInfo changed in Dragonflight to return a table.
+        -- Support both the old and new return formats.
+        local questInfo, questIdOld, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
+        local isQuestItem, questId
+        if type(questInfo) == "table" then
+            isQuestItem = questInfo.isQuestItem
+            questId = questInfo.questID
+            isActive = questInfo.isActive
+        else
+            isQuestItem = questInfo
+            questId = questIdOld
+        end
+
         local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
         local isBattlePayItem = false
         if C_Item and C_Item.IsBattlePayItem then
