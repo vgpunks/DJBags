@@ -244,13 +244,11 @@ function item:Update()
         UpdateUpgrade(self)
         self:UpdateItemContextMatching()
 
-        if MSQ then
-            if quality and quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
-                self.IconBorder:Show();
-                self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
-            else
-                self.IconBorder:Hide();
-            end
+        if quality and quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
+            self.IconBorder:Show()
+            self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
+        else
+            self.IconBorder:Hide()
         end
     end
 end
