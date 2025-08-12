@@ -317,7 +317,11 @@
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
             <OnHide>
-                CloseBankFrame()
+                if CloseBankFrame then
+                    CloseBankFrame()
+                elseif CloseBank then
+                    CloseBank()
+                end
                 StaticPopup_Hide("CONFIRM_BUY_BANK_SLOT")
             </OnHide>
         </Scripts>
