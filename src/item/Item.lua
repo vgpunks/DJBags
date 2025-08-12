@@ -136,13 +136,27 @@ local function UpdateBorder(self, quality, isQuestItem, questId)
         return
     end
 
-    -- Apply a colored border based on item quality (rarity). BAG_ITEM_QUALITY_COLORS
-    -- contains entries for every valid quality index, including poor quality items.
-    if quality and BAG_ITEM_QUALITY_COLORS[quality] then
-        local color = BAG_ITEM_QUALITY_COLORS[quality]
-        self.IconBorder:SetVertexColor(color.r, color.g, color.b)
-        self.IconBorder:Show()
-        return
+    -- Apply a colored border based on item quality (rarity). The default
+    -- BAG_ITEM_QUALITY_COLORS table does not include entries for poor (0) and
+    -- common (1) quality items, so handle those explicitly to ensure their
+    -- borders use gray and white respectively.
+    if quality then
+        if quality == Enum.ItemQuality.Common then
+            -- Common items should have a white border.
+            self.IconBorder:SetVertexColor(1, 1, 1)
+            self.IconBorder:Show()
+            return
+        elseif quality == Enum.ItemQuality.Poor then
+            -- Poor items should have a gray border.
+            self.IconBorder:SetVertexColor(0.62, 0.62, 0.62)
+            self.IconBorder:Show()
+            return
+        elseif BAG_ITEM_QUALITY_COLORS[quality] then
+            local color = BAG_ITEM_QUALITY_COLORS[quality]
+            self.IconBorder:SetVertexColor(color.r, color.g, color.b)
+            self.IconBorder:Show()
+            return
+        end
     end
 
     self.IconBorder:Hide()
