@@ -243,18 +243,9 @@ function item:Update()
         UpdateUpgrade(self)
         self:UpdateItemContextMatching()
 
-        local r, g, b
+        SetItemButtonQuality(self, quality, id)
         if isQuestItem or questId then
-            r, g, b = 1, 0.82, 0
-        elseif quality and BAG_ITEM_QUALITY_COLORS[quality] then
-            r, g, b = BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b
-        end
-
-        if r then
-            self.IconBorder:Show()
-            self.IconBorder:SetVertexColor(r, g, b)
-        else
-            self.IconBorder:Hide()
+            self.IconBorder:SetVertexColor(1, 0.82, 0)
         end
     end
 end
