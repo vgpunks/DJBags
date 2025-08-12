@@ -233,17 +233,6 @@ function item:Update()
 
         self.hasItem = true
 
-        if quality and MSQ then
-            if quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
-                self.IconBorder:Show();
-                self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
-            else
-                self.IconBorder:Hide();
-            end
-        else
-            self.IconBorder:Hide();
-        end
-
         SetItemButtonTexture(self, texture)
         SetItemButtonQuality(self, quality, id)
         SetItemButtonCount(self, count)
@@ -254,6 +243,15 @@ function item:Update()
         UpdateCooldown(self)
         UpdateUpgrade(self)
         self:UpdateItemContextMatching()
+
+        if MSQ then
+            if quality and quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
+                self.IconBorder:Show();
+                self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b);
+            else
+                self.IconBorder:Hide();
+            end
+        end
     end
 end
 
