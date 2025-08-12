@@ -200,6 +200,14 @@
             <OnLoad>
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
+            <OnShow>
+                if OpenBankFrame and not BankFrame:IsShown() then
+                    OpenBankFrame()
+                end
+                if BankFrame:IsShown() then
+                    DJBagsHideBlizzardBank()
+                end
+            </OnShow>
             <OnHide>
                 if CloseBankFrame then
                     CloseBankFrame()
