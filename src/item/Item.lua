@@ -50,9 +50,8 @@ function ADDON:NewItem(parent, slot)
 	assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
 	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
-	local object = CreateFrame('ItemButton', string.format('DJBagsItem_%d_%d', bag, slot), parent,
-		bag == BANK_CONTAINER and 'BankItemButtonGenericTemplate' or
-            bag == REAGENTBANK_CONTAINER and 'ReagentBankItemButtonGenericTemplate' or
+        local object = CreateFrame('ItemButton', string.format('DJBagsItem_%d_%d', bag, slot), parent,
+                bag == BANK_CONTAINER and 'BankItemButtonGenericTemplate' or
             'ContainerFrameItemButtonTemplate')
 
 	for k, v in pairs(item) do
@@ -260,7 +259,7 @@ function item:Update()
     end
 
     UpdateILevel(self, equipable, quality, level)
-    if bag == BANK_CONTAINER or bag == REAGENTBANK_CONTAINER then
+    if bag == BANK_CONTAINER then
         BankFrameItemButton_Update(self)
     else
         -- GetContainerItemQuestInfo changed in Dragonflight to return a table.

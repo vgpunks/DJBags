@@ -96,7 +96,4 @@ function dialog:RefreshBags()
     if (DJBagsBank:IsVisible()) then
         DJBagsBank:Refresh()
     end
-    if (DJBagsReagents:IsVisible()) then
-        DJBagsReagents:Refresh()
-    end
 end

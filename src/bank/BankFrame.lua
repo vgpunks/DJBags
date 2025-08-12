@@ -22,23 +22,8 @@ function DJBagsRegisterBankFrame(self, bags)
     self:SetUserPlaced(true)
 end
 
-function DJBagsBankTab_OnClick(tab)
-	PanelTemplates_SetTab(DJBagsBankBar, tab.tab)
-    if tab.tab == 1 then
-        DJBagsBank:Show()
-        DJBagsReagents:Hide()
-        BankFrame.selectedTab = 1
-        BankFrame.activeTabIndex = 1
-    else
-        DJBagsBank:Hide()
-        DJBagsReagents:Show()
-        BankFrame.selectedTab = 2
-        BankFrame.activeTabIndex = 2
-    end
-end
-
 function bankFrame:BANKFRAME_OPENED()
-	self:Show()
+        self:Show()
     DJBagsBag:Show()
 end
 
