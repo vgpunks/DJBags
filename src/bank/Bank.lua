@@ -3,8 +3,16 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+function DJBagsHideBlizzardBank()
+    BankFrame:SetAlpha(0)
+    BankFrame:EnableMouse(false)
+    BankFrame:SetScale(0.0001)
+    BankFrame:ClearAllPoints()
+    BankFrame:SetPoint('TOPLEFT', UIParent, 'TOPLEFT', -9999, -9999)
+end
+
 function DJBagsRegisterBankBagContainer(self, bags)
-	DJBagsRegisterBaseBagContainer(self, bags)
+    DJBagsRegisterBaseBagContainer(self, bags)
 
 	for k, v in pairs(bank) do
 		self[k] = v
@@ -16,7 +24,8 @@ function DJBagsRegisterBankBagContainer(self, bags)
     ADDON.eventManager:Add('PLAYERBANKBAGSLOTS_CHANGED', self)
 
     BankFrame:UnregisterAllEvents()
-    BankFrame:SetScript('OnShow', nil)
+    BankFrame:SetScript('OnShow', DJBagsHideBlizzardBank)
+    DJBagsHideBlizzardBank()
 end
 
 function bank:BANKFRAME_OPENED()
