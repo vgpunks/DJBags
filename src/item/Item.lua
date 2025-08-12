@@ -122,6 +122,25 @@ local function UpdateFiltered(self, filtered)
     end
 end
 
+local function UpdateBorder(self, quality, isQuestItem, questId)
+    if isQuestItem or questId then
+        self.IconBorder:SetVertexColor(1, 0.82, 0)
+        self.IconBorder:Show()
+        return
+    end
+
+    if quality and quality > Enum.ItemQuality.Common then
+        local color = BAG_ITEM_QUALITY_COLORS[quality]
+        if color then
+            self.IconBorder:SetVertexColor(color.r, color.g, color.b)
+            self.IconBorder:Show()
+            return
+        end
+    end
+
+    self.IconBorder:Hide()
+end
+
 local function UpdateILevel(self, equipable, quality, level)
     if equipable then
         if quality and quality >= Enum.ItemQuality.Common then
@@ -243,10 +262,7 @@ function item:Update()
         UpdateUpgrade(self)
         self:UpdateItemContextMatching()
 
-        SetItemButtonQuality(self, quality, id)
-        if isQuestItem or questId then
-            self.IconBorder:SetVertexColor(1, 0.82, 0)
-        end
+        UpdateBorder(self, quality, isQuestItem, questId)
     end
 end
 
