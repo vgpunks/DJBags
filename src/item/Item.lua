@@ -234,7 +234,6 @@ function item:Update()
         self.hasItem = true
 
         SetItemButtonTexture(self, texture)
-        SetItemButtonQuality(self, quality, id)
         SetItemButtonCount(self, count)
         SetItemButtonDesaturated(self, locked)
         UpdateQuest(self, isQuestItem, questId, isActive)
@@ -244,9 +243,16 @@ function item:Update()
         UpdateUpgrade(self)
         self:UpdateItemContextMatching()
 
-        if quality and quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS[quality] then
+        local r, g, b
+        if isQuestItem or questId then
+            r, g, b = 1, 0.82, 0
+        elseif quality and BAG_ITEM_QUALITY_COLORS[quality] then
+            r, g, b = BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b
+        end
+
+        if r then
             self.IconBorder:Show()
-            self.IconBorder:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
+            self.IconBorder:SetVertexColor(r, g, b)
         else
             self.IconBorder:Hide()
         end
