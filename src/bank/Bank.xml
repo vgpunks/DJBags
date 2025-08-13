@@ -14,19 +14,17 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 1, BankButtonIDToInvSlotID(1))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 1, BankButtonIDToInvSlotID(1, 1))
                     </OnLoad>
                 </Scripts>
-                </ItemButton>
+            </ItemButton>
             <ItemButton name="$parentBag2" parentKey="bag2">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="TOPRIGHT" x="5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 2, BankButtonIDToInvSlotID(2))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 2, BankButtonIDToInvSlotID(2, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -36,8 +34,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 3, BankButtonIDToInvSlotID(3))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 3, BankButtonIDToInvSlotID(3, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -47,8 +44,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 4, BankButtonIDToInvSlotID(4))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 4, BankButtonIDToInvSlotID(4, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -58,8 +54,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 5, BankButtonIDToInvSlotID(5))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 5, BankButtonIDToInvSlotID(5, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -69,8 +64,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 6, BankButtonIDToInvSlotID(6))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 6, BankButtonIDToInvSlotID(6, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -80,8 +74,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-                        DJBagsBagItemLoad(self, offset + 7, BankButtonIDToInvSlotID(7))
+                        DJBagsBagItemLoad(self, NUM_BAG_SLOTS + 7, BankButtonIDToInvSlotID(7, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
