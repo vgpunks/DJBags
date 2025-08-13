@@ -51,8 +51,19 @@ function ADDON:NewItem(parent, slot)
 	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
         local isBankItem = bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_6
-        local template = isBankItem and 'BankItemButtonGenericTemplate' or 'ContainerFrameItemButtonTemplate'
-        local object = CreateFrame('ItemButton', string.format('DJBagsItem_%d_%d', bag, slot), parent, template)
+        local frameName = string.format('DJBagsItem_%d_%d', bag, slot)
+        local object
+
+        if isBankItem then
+                local ok, frame = pcall(CreateFrame, 'ItemButton', frameName, parent, 'BankItemButtonGenericTemplate')
+                if ok then
+                        object = frame
+                else
+                        object = CreateFrame('ItemButton', frameName, parent, 'ContainerFrameItemButtonTemplate')
+                end
+        else
+                object = CreateFrame('ItemButton', frameName, parent, 'ContainerFrameItemButtonTemplate')
+        end
 
 	for k, v in pairs(item) do
 		object[k] = v
