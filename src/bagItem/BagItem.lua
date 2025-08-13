@@ -14,6 +14,9 @@ function item:Init(id, slot)
     self:SetID(id)
     self.slot = slot
 
+    -- Allow both left and right button clicks so we can open bank tab settings
+    self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
     self:SetScript('OnDragStart', self.DragItem)
     self:SetScript('OnReceiveDrag', self.PlaceOrPickup)
     self:SetScript('OnClick', function (self, button, ...)
