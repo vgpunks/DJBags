@@ -2,7 +2,7 @@
     <Script file="src/bag/bag.lua"/>
 
     <Frame name="DJBagsBagBarTemplate" inherits="DJBagsBackgroundTemplate" virtual="true" movable="true" enableMouse="true">
-        <Size x="183" y="58" />
+        <Size x="230" y="58" />
         <Frames>
             <ItemButton name="$parentBag1" parentKey="bag1">
                 <Anchors>
@@ -41,6 +41,16 @@
                 <Scripts>
                     <OnLoad>
                         DJBagsBagItemLoad(self, 4, C_Container.ContainerIDToInventoryID(4))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentBag5" parentKey="bag5">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag4" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, 5, C_Container.ContainerIDToInventoryID(5))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -233,7 +243,7 @@
         </Frames>
         <Scripts>
             <OnLoad>
-                DJBagsRegisterBagBagContainer(self, {0, 1, 2, 3, 4})
+                DJBagsRegisterBagBagContainer(self, {0, 1, 2, 3, 4, 5})
             </OnLoad>
             <OnShow>
                 self:OnShow()
