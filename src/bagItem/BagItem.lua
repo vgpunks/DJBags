@@ -41,7 +41,7 @@ function item:Init(id, slot)
             end
 
             if isBankTab then
-                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot)
+                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot, self)
                 PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
                 return
             end
