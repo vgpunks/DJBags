@@ -16,14 +16,12 @@ function item:Init(id, slot)
 
     self:SetScript('OnDragStart', self.DragItem)
     self:SetScript('OnReceiveDrag', self.PlaceOrPickup)
-    self:SetScript('OnClick', function (self, button, ...)
+    self:SetScript('OnClick', function (self, ...)
         if self.buy then
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             StaticPopup_Show("CONFIRM_BUY_BANK_SLOT")
-        elseif button == "RightButton" and BankItemButtonBag_OnClick then
-            BankItemButtonBag_OnClick(self, button, ...)
         else
-            self:PlaceOrPickup(button, ...)
+            self:PlaceOrPickup(...)
         end
     end)
     self:SetScript('OnEnter', self.OnEnter)
@@ -51,14 +49,6 @@ function item:Update()
         return
     end
     PaperDollItemSlotButton_Update(self)
-
-    local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-    if C_Bank and C_Bank.GetBankTabInfo and self.slot > offset then
-        local tabInfo = C_Bank.GetBankTabInfo(self.slot - offset)
-        local icon = tabInfo and (tabInfo.iconFileID or tabInfo.iconTexture)
-        SetItemButtonTexture(self, icon)
-    end
-
     local slotcount = C_Container.GetContainerNumSlots(self.slot)
     if slotcount > 0 then
         self.Count:SetText(tostring(slotcount))
