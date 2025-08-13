@@ -1,13 +1,22 @@
 local ADDON_NAME, ADDON = ...
 
 if not BankButtonIDToInvSlotID then
-	if C_Container and C_Container.ContainerIDToInventoryID then
-                function BankButtonIDToInvSlotID(buttonID)
-                        return C_Container.ContainerIDToInventoryID(NUM_TOTAL_EQUIPPED_BAG_SLOTS + buttonID)
+        local function GetContainerID(buttonID, bankType)
+                bankType = bankType or Enum.BankType.Character
+                if bankType == Enum.BankType.Account then
+                        return Enum.BagIndex.AccountBankTab_1 + buttonID - 1
+                else
+                        return Enum.BagIndex.CharacterBankTab_1 + buttonID - 1
+                end
+        end
+
+        if C_Container and C_Container.ContainerIDToInventoryID then
+                function BankButtonIDToInvSlotID(buttonID, bankType)
+                        return C_Container.ContainerIDToInventoryID(GetContainerID(buttonID, bankType))
                 end
         elseif ContainerIDToInventoryID then
-                function BankButtonIDToInvSlotID(buttonID)
-                        return ContainerIDToInventoryID(NUM_TOTAL_EQUIPPED_BAG_SLOTS + buttonID)
+                function BankButtonIDToInvSlotID(buttonID, bankType)
+                        return ContainerIDToInventoryID(GetContainerID(buttonID, bankType))
                 end
         end
 end
