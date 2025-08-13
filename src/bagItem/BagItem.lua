@@ -26,8 +26,21 @@ function item:Init(id, slot)
         -- Right-clicking a bank tab should open the default bank tab settings menu
         if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and BankPanelTabSettingsMenuMixin then
             local slot = self.slot
-            local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
-            if isCharacterBankTab then
+            local isBankTab = false
+
+            -- Character bank tabs
+            if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
+                isBankTab = true
+            end
+
+            -- Account bank tabs (The War Within)
+            if not isBankTab and Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6 then
+                if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_6 then
+                    isBankTab = true
+                end
+            end
+
+            if isBankTab then
                 BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot)
                 PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
                 return
