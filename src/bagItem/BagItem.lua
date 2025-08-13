@@ -16,40 +16,89 @@ function item:Init(id, slot)
 
     self:SetScript('OnDragStart', self.DragItem)
     self:SetScript('OnReceiveDrag', self.PlaceOrPickup)
-    self:SetScript('OnClick', function (self, ...)
+    self:SetScript('OnClick', function (self, button, ...)
         if self.buy then
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             StaticPopup_Show("CONFIRM_BUY_BANK_SLOT")
-        else
-            self:PlaceOrPickup(...)
+            return
         end
+
+        -- Right-clicking a bank tab should open the default bank tab settings menu
+        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu then
+            local slot = self.slot
+            local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
+            if isCharacterBankTab then
+                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot)
+                return
+            end
+        end
+
+        self:PlaceOrPickup(button, ...)
     end)
     self:SetScript('OnEnter', self.OnEnter)
     self:SetScript('OnLeave', self.OnLeave)
 end
 
 function item:Update()
-    local numBankSlots, full
-    if type(GetNumBankSlots) == "function" then
-        numBankSlots, full = GetNumBankSlots()
-    elseif C_Bank and type(C_Bank.GetNumBankSlots) == "function" then
-        numBankSlots, full = C_Bank.GetNumBankSlots()
-    else
-        numBankSlots, full = 0, true
-    end
+    local slot = self.slot
+    local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
 
-    if self.slot - NUM_TOTAL_EQUIPPED_BAG_SLOTS > numBankSlots then
-        local cost = -1
-        if type(GetBankSlotCost) == "function" then
-            cost = GetBankSlotCost(self.slot - 1)
-        elseif C_Bank and type(C_Bank.GetBankSlotCost) == "function" then
-            cost = C_Bank.GetBankSlotCost(self.slot - 1)
+    if C_Bank and isCharacterBankTab then
+        -- Determine if this tab has been purchased
+        local purchasedIDs = C_Bank.FetchPurchasedBankTabIDs(Enum.BankType.Character)
+        local purchased = false
+        if purchasedIDs then
+            for _, id in ipairs(purchasedIDs) do
+                if id == slot then
+                    purchased = true
+                    break
+                end
+            end
         end
-        self:SetCost(cost)
+
+        if not purchased then
+            local cost = -1
+            if C_Bank.FetchNextPurchasableBankTabData then
+                local data = C_Bank.FetchNextPurchasableBankTabData(Enum.BankType.Character)
+                if data and data.tabCost then
+                    cost = data.tabCost
+                end
+            end
+            self:SetCost(cost)
+            return
+        end
+
+        -- Tab is purchased, fetch its icon
+        local icon
+        if C_Bank.FetchPurchasedBankTabData then
+            local tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
+            if tabData then
+                for _, info in ipairs(tabData) do
+                    if info.ID == slot then
+                        icon = info.icon
+                        break
+                    end
+                end
+            end
+        end
+        if icon then
+            SetItemButtonTexture(self, icon)
+        end
+
+        local slotcount = C_Container.GetContainerNumSlots(slot)
+        if slotcount > 0 then
+            self.Count:SetText(tostring(slotcount))
+            self.Count:Show()
+        else
+            self.Count:Hide()
+        end
+        self.buy = nil
         return
     end
+
+    -- Fallback to default behavior for non-bank tabs
     PaperDollItemSlotButton_Update(self)
-    local slotcount = C_Container.GetContainerNumSlots(self.slot)
+    local slotcount = C_Container.GetContainerNumSlots(slot)
     if slotcount > 0 then
         self.Count:SetText(tostring(slotcount))
         self.Count:Show()
