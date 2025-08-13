@@ -14,16 +14,9 @@ end
 function DJBagsRegisterBankBagContainer(self, bags)
     DJBagsRegisterBaseBagContainer(self, bags)
 
-    -- Save the original BAG_UPDATE implementation so we can gate updates
-    -- while the warband bank is active.
-    self.baseBAG_UPDATE = self.BAG_UPDATE
-
-    for k, v in pairs(bank) do
-        self[k] = v
-    end
-
-    -- Default to the character bank being active until told otherwise.
-    self.isCharacterBank = true
+	for k, v in pairs(bank) do
+		self[k] = v
+	end
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
@@ -36,35 +29,20 @@ function DJBagsRegisterBankBagContainer(self, bags)
 end
 
 function bank:BANKFRAME_OPENED()
-    local bankType = BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-    self.isCharacterBank = not bankType or bankType == Enum.BankType.Character
-    if self.isCharacterBank then
-        self:Show()
-    else
-        self:Hide()
-    end
+	if (BankFrame.selectedTab or 1) == 1 then
+		self:Show()
+	end
 end
 
 function bank:BANKFRAME_CLOSED()
 	self:Hide()
 end
 
-function bank:BAG_UPDATE(bag)
-    if self.isCharacterBank then
-        self:baseBAG_UPDATE(bag)
-    end
-end
-
 function bank:PLAYERBANKSLOTS_CHANGED()
-    if self.isCharacterBank then
-        self:BAG_UPDATE(BANK_CONTAINER)
-    end
+	self:BAG_UPDATE(BANK_CONTAINER)
 end
 
 function bank:BAG_UPDATE_DELAYED()
-    if not self.isCharacterBank then
-        return
-    end
     for _, bag in pairs(self.bags) do
         if bag ~= BANK_CONTAINER then
             local barItem = DJBagsBankBar['bag' .. (bag - NUM_TOTAL_EQUIPPED_BAG_SLOTS)]
@@ -76,7 +54,5 @@ function bank:BAG_UPDATE_DELAYED()
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
-    if self.isCharacterBank then
-        self:BAG_UPDATE_DELAYED()
-    end
+	self:BAG_UPDATE_DELAYED()
 end

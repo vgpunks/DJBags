@@ -82,16 +82,6 @@ local function GetAllItems(self, bags)
                 updateOccured = true
             end
         end
-
-        -- Hide leftover slots when the bag shrinks (e.g., switching
-        -- from the larger account bank to the smaller character bank).
-        for slot = bagSlots + 1, #container.items do
-            local item = container.items[slot]
-            if item then
-                item.id = nil
-                item:Hide()
-            end
-        end
     end
     if updateOccured then
         self:Format()
