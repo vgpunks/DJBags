@@ -44,10 +44,13 @@ end
 
 function bank:BAG_UPDATE_DELAYED()
     for _, bag in pairs(self.bags) do
-    	if bag ~= BANK_CONTAINER then
-			DJBagsBankBar['bag' .. bag - NUM_BAG_SLOTS]:Update()
-		end
-	end
+        if bag ~= BANK_CONTAINER then
+            local barItem = DJBagsBankBar['bag' .. (bag - NUM_TOTAL_EQUIPPED_BAG_SLOTS)]
+            if barItem then
+                barItem:Update()
+            end
+        end
+    end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
