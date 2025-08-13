@@ -43,11 +43,15 @@ function bank:PLAYERBANKSLOTS_CHANGED()
 end
 
 function bank:BAG_UPDATE_DELAYED()
+    local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
     for _, bag in pairs(self.bags) do
-    	if bag ~= BANK_CONTAINER then
-			DJBagsBankBar['bag' .. bag - NUM_BAG_SLOTS]:Update()
-		end
-	end
+        if bag ~= BANK_CONTAINER then
+            local button = DJBagsBankBar['bag' .. (bag - offset)]
+            if button then
+                button:Update()
+            end
+        end
+    end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
