@@ -24,11 +24,11 @@ function item:Init(id, slot)
         end
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
-        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu then
+        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.OpenTabSettingsMenu then
             local slot = self.slot
             local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
             if isCharacterBankTab then
-                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot)
+                BankFrame.BankPanel:OpenTabSettingsMenu(slot)
                 return
             end
         end
