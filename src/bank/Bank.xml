@@ -14,7 +14,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1, BankButtonIDToInvSlotID(1, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_1, BankButtonIDToInvSlotID(1, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -24,7 +24,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 2, BankButtonIDToInvSlotID(2, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_2, BankButtonIDToInvSlotID(2, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -34,7 +34,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 3, BankButtonIDToInvSlotID(3, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_3, BankButtonIDToInvSlotID(3, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -44,7 +44,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 4, BankButtonIDToInvSlotID(4, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_4, BankButtonIDToInvSlotID(4, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -54,7 +54,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 5, BankButtonIDToInvSlotID(5, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_5, BankButtonIDToInvSlotID(5, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -64,24 +64,14 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 6, BankButtonIDToInvSlotID(6, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag7" parentKey="bag7">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag6" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, NUM_TOTAL_EQUIPPED_BAG_SLOTS + 7, BankButtonIDToInvSlotID(7, 1))
+                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_6, BankButtonIDToInvSlotID(6, 1))
                     </OnLoad>
                 </Scripts>
             </ItemButton>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentBag7" relativePoint="BOTTOMRIGHT" y="-9.5" />
+                    <Anchor point="TOPRIGHT" relativeTo="$parentBag6" relativePoint="BOTTOMRIGHT" y="-9.5" />
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
@@ -140,14 +130,13 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsRegisterBankBagContainer(self, {BANK_CONTAINER,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 1,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 2,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 3,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 4,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 5,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 6,
-                                NUM_TOTAL_EQUIPPED_BAG_SLOTS + 7})
+                        DJBagsRegisterBankBagContainer(self, {
+                                Enum.BagIndex.CharacterBankTab_1,
+                                Enum.BagIndex.CharacterBankTab_2,
+                                Enum.BagIndex.CharacterBankTab_3,
+                                Enum.BagIndex.CharacterBankTab_4,
+                                Enum.BagIndex.CharacterBankTab_5,
+                                Enum.BagIndex.CharacterBankTab_6})
                     </OnLoad>
                     <OnShow>
                         self:OnShow()
