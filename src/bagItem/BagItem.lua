@@ -49,18 +49,6 @@ function item:Update()
         return
     end
     PaperDollItemSlotButton_Update(self)
-
-    if (self.icon or self.Icon) and not (self.icon or self.Icon):GetTexture() then
-        local offset = (NUM_BAG_SLOTS or 0) + (NUM_REAGENTBAG_SLOTS or 0)
-        if C_Bank and C_Bank.GetBankTabInfo and self.slot > offset then
-            local tabInfo = C_Bank.GetBankTabInfo(self.slot - offset)
-            local icon = tabInfo and (tabInfo.iconFileID or tabInfo.iconTexture)
-            if icon then
-                SetItemButtonTexture(self, icon)
-            end
-        end
-    end
-
     local slotcount = C_Container.GetContainerNumSlots(self.slot)
     if slotcount > 0 then
         self.Count:SetText(tostring(slotcount))
