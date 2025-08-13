@@ -38,7 +38,7 @@ function item:Update()
         numBankSlots, full = 0, true
     end
 
-    if self.slot - NUM_BAG_SLOTS > numBankSlots then
+    if self.slot - NUM_TOTAL_EQUIPPED_BAG_SLOTS > numBankSlots then
         local cost = -1
         if type(GetBankSlotCost) == "function" then
             cost = GetBankSlotCost(self.slot - 1)

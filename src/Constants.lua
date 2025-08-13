@@ -2,14 +2,14 @@ local ADDON_NAME, ADDON = ...
 
 if not BankButtonIDToInvSlotID then
 	if C_Container and C_Container.ContainerIDToInventoryID then
-		function BankButtonIDToInvSlotID(buttonID)
-			return C_Container.ContainerIDToInventoryID(NUM_BAG_SLOTS + buttonID)
-		end
-	elseif ContainerIDToInventoryID then
-		function BankButtonIDToInvSlotID(buttonID)
-			return ContainerIDToInventoryID(NUM_BAG_SLOTS + buttonID)
-		end
-	end
+                function BankButtonIDToInvSlotID(buttonID)
+                        return C_Container.ContainerIDToInventoryID(NUM_TOTAL_EQUIPPED_BAG_SLOTS + buttonID)
+                end
+        elseif ContainerIDToInventoryID then
+                function BankButtonIDToInvSlotID(buttonID)
+                        return ContainerIDToInventoryID(NUM_TOTAL_EQUIPPED_BAG_SLOTS + buttonID)
+                end
+        end
 end
 
 -- Formatter types
