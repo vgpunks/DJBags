@@ -29,11 +29,9 @@ function DJBagsRegisterBankBagContainer(self, bags)
 end
 
 function bank:BANKFRAME_OPENED()
-    if BankFrame.GetActiveBankType and BankFrame:GetActiveBankType() == Enum.BankType.Character then
-        self:Show()
-    else
-        self:Hide()
-    end
+	if (BankFrame.selectedTab or 1) == 1 then
+		self:Show()
+	end
 end
 
 function bank:BANKFRAME_CLOSED()
