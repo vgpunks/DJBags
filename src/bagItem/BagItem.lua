@@ -28,7 +28,8 @@ function item:Init(id, slot)
             local slot = self.slot
             local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
             if isCharacterBankTab then
-                BankFrame.BankPanel:OpenTabSettingsMenu(slot)
+                local tabIndex = slot - Enum.BagIndex.CharacterBankTab_1 + 1
+                BankFrame.BankPanel:OpenTabSettingsMenu(tabIndex, self)
                 return
             end
         end
