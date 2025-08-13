@@ -271,43 +271,45 @@ function item:Update()
 
     UpdateILevel(self, equipable, quality, level)
     if bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_6 then
-        BankFrameItemButton_Update(self)
-    else
-        -- GetContainerItemQuestInfo changed in Dragonflight to return a table.
-        -- Support both the old and new return formats.
-        local questInfo, questIdOld, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
-        local isQuestItem, questId
-        if type(questInfo) == "table" then
-            isQuestItem = questInfo.isQuestItem
-            questId = questInfo.questID
-            isActive = questInfo.isActive
-        else
-            isQuestItem = questInfo
-            questId = questIdOld
+        if BankFrameItemButton_Update then
+            BankFrameItemButton_Update(self)
         end
-
-        local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
-        local isBattlePayItem = false
-        if C_Item and C_Item.IsBattlePayItem then
-            isBattlePayItem = C_Item.IsBattlePayItem(bag, self:GetID())
-        elseif IsBattlePayItem then
-            isBattlePayItem = IsBattlePayItem(bag, self:GetID())
-        end
-
-        self.hasItem = true
-
-        SetItemButtonTexture(self, texture)
-        SetItemButtonCount(self, count)
-        SetItemButtonDesaturated(self, locked)
-        UpdateQuest(self, isQuestItem, questId, isActive)
-        UpdateNewItemAnimations(self, isNewItem, isBattlePayItem, quality)
-        UpdateFiltered(self, filtered)
-        UpdateCooldown(self)
-        UpdateUpgrade(self)
-        self:UpdateItemContextMatching()
-
-        UpdateBorder(self, quality, isQuestItem, questId)
     end
+
+    -- GetContainerItemQuestInfo changed in Dragonflight to return a table.
+    -- Support both the old and new return formats.
+    local questInfo, questIdOld, isActive = C_Container.GetContainerItemQuestInfo(bag, slot)
+    local isQuestItem, questId
+    if type(questInfo) == "table" then
+        isQuestItem = questInfo.isQuestItem
+        questId = questInfo.questID
+        isActive = questInfo.isActive
+    else
+        isQuestItem = questInfo
+        questId = questIdOld
+    end
+
+    local isNewItem = C_NewItems.IsNewItem(bag, self:GetID())
+    local isBattlePayItem = false
+    if C_Item and C_Item.IsBattlePayItem then
+        isBattlePayItem = C_Item.IsBattlePayItem(bag, self:GetID())
+    elseif IsBattlePayItem then
+        isBattlePayItem = IsBattlePayItem(bag, self:GetID())
+    end
+
+    self.hasItem = true
+
+    SetItemButtonTexture(self, texture)
+    SetItemButtonCount(self, count)
+    SetItemButtonDesaturated(self, locked)
+    UpdateQuest(self, isQuestItem, questId, isActive)
+    UpdateNewItemAnimations(self, isNewItem, isBattlePayItem, quality)
+    UpdateFiltered(self, filtered)
+    UpdateCooldown(self)
+    UpdateUpgrade(self)
+    self:UpdateItemContextMatching()
+
+    UpdateBorder(self, quality, isQuestItem, questId)
 end
 
 function item:UpdateCooldown()
