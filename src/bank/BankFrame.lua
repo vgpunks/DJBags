@@ -20,13 +20,29 @@ function DJBagsRegisterBankFrame(self, bags)
         self:StopMovingOrSizing(...)
     end)
     self:SetUserPlaced(true)
+
+    -- Update our visibility when the bank switches between character and account tabs.
+    hooksecurefunc(BankFrame, "SetTab", function()
+        self:UpdateBankType()
+    end)
+end
+
+function bankFrame:UpdateBankType()
+    local bankType = BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
+    if not bankType or bankType == Enum.BankType.Character then
+        self.bankBag:Show()
+        self:Show()
+    else
+        self.bankBag:Hide()
+        self:Hide()
+    end
 end
 
 function bankFrame:BANKFRAME_OPENED()
-        self:Show()
+    self:UpdateBankType()
     DJBagsBag:Show()
 end
 
 function bankFrame:BANKFRAME_CLOSED()
-	self:Hide()
+    self:Hide()
 end
