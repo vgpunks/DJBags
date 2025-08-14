@@ -43,7 +43,14 @@ function item:Init(id, slot)
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
         if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and isBankTabSlot(self.slot) then
-            BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, self.slot)
+            -- When our bank tabs are arranged along the top, the default
+            -- settings menu anchors to the right of the tab which places it
+            -- off screen.  Explicitly anchor the menu below the clicked tab so
+            -- it remains visible regardless of tab orientation.
+            local menu = BankFrame.BankPanel.TabSettingsMenu
+            menu:ClearAllPoints()
+            menu:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
+            menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, self.slot)
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, self.slot)
             return
