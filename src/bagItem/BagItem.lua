@@ -2,6 +2,21 @@ local NAME, ADDON = ...
 
 local item = {}
 
+local OPEN_TAB_SETTINGS_EVENT = BankPanelTabSettingsMenuMixin and BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested or "OpenTabSettingsRequested"
+local BANK_TAB_CLICKED_EVENT = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
+
+local function isBankTabSlot(slot)
+    if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
+        return true
+    end
+    if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6 then
+        if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_6 then
+            return true
+        end
+    end
+    return false
+end
+
 function DJBagsBagItemLoad(button, slot, id)
     for k, v in pairs(item) do
         button[k] = v
@@ -27,30 +42,11 @@ function item:Init(id, slot)
         end
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
-        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu then
-            local slot = self.slot
-            local isBankTab = false
-
-            -- Character bank tabs
-            if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
-                isBankTab = true
-            end
-
-            -- Account bank tabs (The War Within)
-            if not isBankTab and Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6 then
-                if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_6 then
-                    isBankTab = true
-                end
-            end
-
-            if isBankTab then
-                local openEvent = BankPanelTabSettingsMenuMixin and BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested or "OpenTabSettingsRequested"
-                local clickEvent = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
-                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(openEvent, slot)
-                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-                BankFrame.BankPanel:TriggerEvent(clickEvent, slot)
-                return
-            end
+        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and isBankTabSlot(self.slot) then
+            BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, self.slot)
+            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+            BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, self.slot)
+            return
         end
 
         self:PlaceOrPickup(button, ...)
