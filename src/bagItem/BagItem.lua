@@ -27,7 +27,7 @@ function item:Init(id, slot)
         end
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
-        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and BankPanelTabSettingsMenuMixin then
+        if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu then
             local slot = self.slot
             local isBankTab = false
 
@@ -44,8 +44,11 @@ function item:Init(id, slot)
             end
 
             if isBankTab then
-                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested, slot, self)
+                local openEvent = BankPanelTabSettingsMenuMixin and BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested or "OpenTabSettingsRequested"
+                local clickEvent = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
+                BankFrame.BankPanel.TabSettingsMenu:TriggerEvent(openEvent, slot)
                 PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+                BankFrame.BankPanel:TriggerEvent(clickEvent, slot)
                 return
             end
         end
