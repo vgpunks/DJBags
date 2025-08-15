@@ -6,11 +6,11 @@ local OPEN_TAB_SETTINGS_EVENT = BankPanelTabSettingsMenuMixin and BankPanelTabSe
 local BANK_TAB_CLICKED_EVENT = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
 
 local function isBankTabSlot(slot)
-    if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
+    if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_8 then
         return true
     end
-    if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6 then
-        if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_6 then
+    if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_8 then
+        if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_8 then
             return true
         end
     end
@@ -64,7 +64,7 @@ end
 
 function item:Update()
     local slot = self.slot
-    local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
+    local isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_8
 
     if C_Bank and isCharacterBankTab then
         -- Determine if this tab has been purchased
