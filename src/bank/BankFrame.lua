@@ -25,6 +25,19 @@ function DJBagsRegisterBankFrame(self, bags)
     hooksecurefunc(BankFrame, "SetTab", function()
         self:UpdateBankType()
     end)
+
+    -- Move the default Blizzard bank tab bar to our bank frame.
+    if BankFrame.BankPanel and BankFrame.BankPanel.TabBar then
+        local tabBar = BankFrame.BankPanel.TabBar
+        tabBar:SetParent(self.bankBag)
+        tabBar:ClearAllPoints()
+        tabBar:SetPoint("TOPLEFT", self.bankBag, "TOPRIGHT", 5, -20)
+        tabBar:SetPoint("BOTTOMLEFT", self.bankBag, "BOTTOMRIGHT", 5, 20)
+        tabBar:SetScale(1)
+        tabBar:SetAlpha(1)
+        tabBar:Show()
+        self.tabBar = tabBar
+    end
 end
 
 function bankFrame:UpdateBankType()
