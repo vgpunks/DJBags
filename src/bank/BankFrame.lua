@@ -25,6 +25,27 @@ function DJBagsRegisterBankFrame(self, bags)
     hooksecurefunc(BankFrame, "SetTab", function()
         self:UpdateBankType()
     end)
+
+    self:AttachTabBar()
+end
+
+function bankFrame:AttachTabBar()
+    if self.tabBar then
+        return
+    end
+
+    local tabBar = BankFrame.BankPanel and BankFrame.BankPanel.TabBar
+    if not tabBar then
+        return
+    end
+
+    tabBar:SetParent(self)
+    tabBar:ClearAllPoints()
+    tabBar:SetPoint("TOPLEFT", self, "TOPRIGHT", 0, -20)
+    tabBar:SetScale(1)
+    tabBar:SetAlpha(1)
+    tabBar:Show()
+    self.tabBar = tabBar
 end
 
 function bankFrame:UpdateBankType()
@@ -42,6 +63,7 @@ function bankFrame:UpdateBankType()
 end
 
 function bankFrame:BANKFRAME_OPENED()
+    self:AttachTabBar()
     self:UpdateBankType()
     DJBagsBag:Show()
 end
