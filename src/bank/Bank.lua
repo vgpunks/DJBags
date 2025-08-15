@@ -66,7 +66,7 @@ function bank:BAG_UPDATE_DELAYED()
         return
     end
     for _, bag in pairs(self.bags) do
-        local barIndex = bag - Enum.BagIndex.CharacterBankTab_1 + 1
+        local barIndex = Enum.BagIndex.CharacterBankTab_1 and (bag - Enum.BagIndex.CharacterBankTab_1 + 1) or bag
         local barItem = DJBagsBankBar['bag' .. barIndex]
         if barItem then
             barItem:Update()
