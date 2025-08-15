@@ -50,7 +50,9 @@ function ADDON:NewItem(parent, slot)
 	assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
 	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
-        local isBankItem = bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_8
+        local firstBankBag = Enum.BagIndex.CharacterBankTab_1 or Enum.BagIndex.BankBag_1 or (NUM_BAG_SLOTS + 1)
+        local lastBankBag = Enum.BagIndex.CharacterBankTab_8 or Enum.BagIndex.BankBag_7 or (NUM_BAG_SLOTS + NUM_BANKBAGSLOTS)
+        local isBankItem = bag >= firstBankBag and bag <= lastBankBag
         local frameName = string.format('DJBagsItem_%d_%d', bag, slot)
         local object
 
