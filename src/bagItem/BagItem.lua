@@ -70,6 +70,13 @@ end
 
 function item:Update()
     local slot = self.slot
+    if not slot then
+        PaperDollItemSlotButton_Update(self)
+        self.Count:Hide()
+        self.buy = nil
+        return
+    end
+
     local isCharacterBankTab = false
     if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_8 then
         isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_8
