@@ -274,7 +274,12 @@ function item:Update()
     end
 
     UpdateILevel(self, equipable, quality, level)
-    if bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_8 then
+
+    -- Character bank tab enums were introduced in later game versions.  Guard
+    -- against them being nil on older clients before comparing bag indices.
+    local bankTabStart = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1
+    local bankTabEnd = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_8
+    if bankTabStart and bankTabEnd and bag >= bankTabStart and bag <= bankTabEnd then
         if BankFrameItemButton_Update then
             BankFrameItemButton_Update(self)
         end
