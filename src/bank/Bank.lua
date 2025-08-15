@@ -62,7 +62,16 @@ function bank:PLAYERBANKSLOTS_CHANGED()
 end
 
 function bank:BAG_UPDATE_DELAYED()
-    -- No bank bar items to update; the default Blizzard tab bar handles its own updates.
+    if not self.isCharacterBank then
+        return
+    end
+    for _, bag in pairs(self.bags) do
+        local barIndex = bag - Enum.BagIndex.CharacterBankTab_1 + 1
+        local barItem = DJBagsBankBar['bag' .. barIndex]
+        if barItem then
+            barItem:Update()
+        end
+    end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
