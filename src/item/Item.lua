@@ -50,7 +50,7 @@ function ADDON:NewItem(parent, slot)
 	assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
 	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
-        local isBankItem = bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_6
+        local isBankItem = bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_8
         local frameName = string.format('DJBagsItem_%d_%d', bag, slot)
         local object
 
@@ -270,7 +270,7 @@ function item:Update()
     end
 
     UpdateILevel(self, equipable, quality, level)
-    if bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_6 then
+    if bag >= Enum.BagIndex.CharacterBankTab_1 and bag <= Enum.BagIndex.CharacterBankTab_8 then
         if BankFrameItemButton_Update then
             BankFrameItemButton_Update(self)
         end
