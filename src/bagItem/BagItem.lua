@@ -45,16 +45,20 @@ function item:Init(id, slot)
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
         if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and isBankTabSlot(self.slot) then
+            local tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
             -- When our bank tabs are arranged along the top, the default
             -- settings menu anchors to the right of the tab which places it
             -- off screen.  Explicitly anchor the menu below the clicked tab so
             -- it remains visible regardless of tab orientation.
             local menu = BankFrame.BankPanel.TabSettingsMenu
+            menu:SetParent(UIParent)
+            menu:SetScale(1)
             menu:ClearAllPoints()
             menu:SetPoint("TOPLEFT", self, "BOTTOMLEFT")
-            menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, self.slot)
+            menu:Show()
+            menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-            BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, self.slot)
+            BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
             return
         end
 
@@ -72,12 +76,14 @@ function item:Update()
     end
 
     if C_Bank and isCharacterBankTab then
+        local tabIndex = slot - Enum.BagIndex.CharacterBankTab_1 + 1
+
         -- Determine if this tab has been purchased
         local purchasedIDs = C_Bank.FetchPurchasedBankTabIDs(Enum.BankType.Character)
         local purchased = false
         if purchasedIDs then
             for _, id in ipairs(purchasedIDs) do
-                if id == slot then
+                if id == tabIndex or id == slot then
                     purchased = true
                     break
                 end
@@ -85,24 +91,21 @@ function item:Update()
         end
 
         if not purchased then
-            local cost = -1
-            if C_Bank.FetchNextPurchasableBankTabData then
-                local data = C_Bank.FetchNextPurchasableBankTabData(Enum.BankType.Character)
-                if data and data.tabCost then
-                    cost = data.tabCost
-                end
-            end
-            self:SetCost(cost)
+            self:Hide()
+            self.buy = nil
             return
         end
 
+        self:Show()
+
         -- Tab is purchased, fetch its icon
-        local icon
-        if C_Bank.FetchPurchasedBankTabData then
+        local icon = GetInventoryItemTexture("player", self:GetID())
+        if not icon and C_Bank.FetchPurchasedBankTabData then
             local tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
             if tabData then
                 for _, info in ipairs(tabData) do
-                    if info.ID == slot then
+                    local infoID = info.ID or info.bankTabID
+                    if infoID == tabIndex or infoID == slot then
                         icon = info.icon
                         break
                     end

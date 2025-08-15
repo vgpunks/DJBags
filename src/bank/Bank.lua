@@ -65,11 +65,24 @@ function bank:BAG_UPDATE_DELAYED()
     if not self.isCharacterBank then
         return
     end
-    for _, bag in pairs(self.bags) do
-        local barIndex = bag - Enum.BagIndex.CharacterBankTab_1 + 1
-        local barItem = DJBagsBankBar['bag' .. barIndex]
+    for i = 1, 8 do
+        local barItem = DJBagsBankBar['bag' .. i]
         if barItem then
             barItem:Update()
+        end
+    end
+
+    local prev
+    for i = 1, 8 do
+        local barItem = DJBagsBankBar['bag' .. i]
+        if barItem and barItem:IsShown() then
+            barItem:ClearAllPoints()
+            if prev then
+                barItem:SetPoint('TOPLEFT', prev, 'TOPRIGHT', 5, 0)
+            else
+                barItem:SetPoint('TOPLEFT', DJBagsBankBar, 'TOPLEFT', 9, -9)
+            end
+            prev = barItem
         end
     end
 end
