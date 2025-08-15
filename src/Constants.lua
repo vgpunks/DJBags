@@ -2,11 +2,13 @@ local ADDON_NAME, ADDON = ...
 
 if not BankButtonIDToInvSlotID then
         local function GetContainerID(buttonID, bankType)
-                bankType = bankType or Enum.BankType.Character
-                if bankType == Enum.BankType.Account then
+                bankType = bankType or (Enum.BankType and Enum.BankType.Character)
+                if bankType == (Enum.BankType and Enum.BankType.Account) and Enum.BagIndex.AccountBankTab_1 then
                         return Enum.BagIndex.AccountBankTab_1 + buttonID - 1
-                else
+                elseif Enum.BagIndex.CharacterBankTab_1 then
                         return Enum.BagIndex.CharacterBankTab_1 + buttonID - 1
+                else
+                        return 4 + buttonID
                 end
         end
 
