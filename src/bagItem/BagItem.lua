@@ -105,20 +105,50 @@ function item:Update()
 
         self:Show()
 
-        -- Tab is purchased, fetch its icon
-        local icon = GetInventoryItemTexture("player", self:GetID())
-        if not icon and C_Bank.FetchPurchasedBankTabData then
-            local tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
-            if tabData then
-                for _, info in ipairs(tabData) do
-                    local infoID = info.ID or info.bankTabID
-                    if infoID == tabIndex or infoID == slot then
-                        icon = info.icon
-                        break
+        -- Tab is purchased, fetch its icon from the bank data.  The icon
+        -- chosen for a bank tab is not tied to the inventory item placed in
+        -- the slot, so prefer the information returned by the C_Bank API and
+        -- only fall back to the inventory texture as a last resort.
+        local icon
+
+        if C_Bank then
+            -- Newer API builds may expose tab data directly via a helper
+            -- function.  Attempt to use it first.
+            if C_Bank.GetBankTabInfo then
+                local info = C_Bank.GetBankTabInfo(Enum.BankType.Character, tabIndex)
+                if info then
+                    icon = info.icon or info.iconFileID or info.iconTexture
+                end
+            end
+
+            -- If the direct call was unavailable or returned nothing, fall
+            -- back to iterating the purchased tab data.
+            if not icon and C_Bank.FetchPurchasedBankTabData then
+                local tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
+                if tabData then
+                    local info = tabData[tabIndex] or tabData[slot]
+                    if not info then
+                        for _, data in ipairs(tabData) do
+                            local infoID = data.ID or data.bankTabID
+                            if infoID == tabIndex or infoID == slot then
+                                info = data
+                                break
+                            end
+                        end
+                    end
+                    if info then
+                        icon = info.icon or info.iconFileID or info.iconTexture
                     end
                 end
             end
         end
+
+        -- As a final fallback, use the icon of the item placed in the bank
+        -- tab slot if one exists.
+        if not icon then
+            icon = GetInventoryItemTexture("player", self:GetID())
+        end
+
         if icon then
             SetItemButtonTexture(self, icon)
         end
