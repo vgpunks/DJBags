@@ -58,16 +58,39 @@ function item:Init(id, slot)
             menu:ClearAllPoints()
             menu:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
             menu:Show()
+
+            -- Trigger the tab settings menu to load details for the correct bank tab.
+            -- Some client builds expect the request via the global EventRegistry
+            -- rather than the menu frame itself, so attempt both for compatibility.
             if bankType then
-                menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
+                if EventRegistry and EventRegistry.TriggerEvent then
+                    EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
+                else
+                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
+                end
             else
-                menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
+                if EventRegistry and EventRegistry.TriggerEvent then
+                    EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
+                else
+                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
+                end
             end
+
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+
+            -- Notify the bank panel which tab was selected so the menu becomes interactive.
             if bankType then
-                BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
+                if EventRegistry and EventRegistry.TriggerEvent then
+                    EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
+                else
+                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
+                end
             else
-                BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
+                if EventRegistry and EventRegistry.TriggerEvent then
+                    EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
+                else
+                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
+                end
             end
             return
         end
