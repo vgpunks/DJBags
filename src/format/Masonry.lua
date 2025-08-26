@@ -2,18 +2,22 @@ local ADDON_NAME, ADDON = ...
 
 ADDON.formatter = ADDON.formatter or {}
 
--- Sort category names alphabetically while ensuring empty slots are
--- always displayed last.  Previously categories like "New" and "Junk"
--- were given priority, which caused the bank and bag to show different
--- ordering.  By only handling empty slots specially we keep the layout
--- compact and consistent between containers.
+-- Sort categories by the number of columns they occupy so wider groups
+-- are placed first.  Empty slots are always displayed last.  This keeps
+-- the layout compact by prioritising categories that take more space
+-- instead of using alphabetical order.
 local typeSorter = function(A, B)
     if A == EMPTY then
         return false
     elseif B == EMPTY then
         return true
     else
-        return A < B
+        local aSize = (ADDON.typeSizes and ADDON.typeSizes[A]) or 0
+        local bSize = (ADDON.typeSizes and ADDON.typeSizes[B]) or 0
+        if aSize == bSize then
+            return A < B
+        end
+        return aSize > bSize
     end
 end
 
@@ -34,14 +38,26 @@ local itemSorter = function(A, B)
 end
 
 ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
-    table.sort(bag.items, itemSorter)
-    for _, container in pairs(bag.titleContainers) do
-        container:Hide()
-    end
     local padding = bag.settings.padding
     local containerSpacing = bag.settings.containerSpacing
     local itemSpacing = bag.settings.itemSpacing
     local maxCols = bag.settings.maxColumns > 0 and bag.settings.maxColumns or 1
+
+    -- Determine how much horizontal space each category will require so we
+    -- can order them by size rather than name for better packing.
+    local typeSizes = {}
+    for _, item in pairs(bag.items) do
+        typeSizes[item.type] = (typeSizes[item.type] or 0) + 1
+    end
+    for t, count in pairs(typeSizes) do
+        typeSizes[t] = t == EMPTY and 1 or math.min(count, maxCols)
+    end
+    ADDON.typeSizes = typeSizes
+
+    table.sort(bag.items, itemSorter)
+    for _, container in pairs(bag.titleContainers) do
+        container:Hide()
+    end
 
     -- Format the containers
     local containers = {}
