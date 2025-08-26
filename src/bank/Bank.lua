@@ -65,7 +65,7 @@ function bank:BAG_UPDATE_DELAYED()
     if not self.isCharacterBank then
         return
     end
-    for i = 1, 8 do
+    for i = 1, 6 do
         local barItem = DJBagsBankBar['bag' .. i]
         if barItem then
             barItem:Update()
@@ -73,7 +73,7 @@ function bank:BAG_UPDATE_DELAYED()
     end
 
     local prev
-    for i = 1, 8 do
+    for i = 1, 6 do
         local barItem = DJBagsBankBar['bag' .. i]
         if barItem and barItem:IsShown() then
             barItem:ClearAllPoints()

@@ -53,7 +53,7 @@ function ADDON:NewItem(parent, slot)
         local numBags = NUM_BAG_SLOTS or 4
         local numBankBags = NUM_BANKBAGSLOTS or 7
         local firstBankBag = Enum.BagIndex.CharacterBankTab_1 or Enum.BagIndex.BankBag_1 or (numBags + 1)
-        local lastBankBag = Enum.BagIndex.CharacterBankTab_8 or Enum.BagIndex.BankBag_7 or (numBags + numBankBags)
+        local lastBankBag = Enum.BagIndex.CharacterBankTab_6 or Enum.BagIndex.BankBag_6 or (numBags + numBankBags)
         local isBankItem = bag >= firstBankBag and bag <= lastBankBag
         local frameName = string.format('DJBagsItem_%d_%d', bag, slot)
         local object
@@ -278,7 +278,7 @@ function item:Update()
     -- Character bank tab enums were introduced in later game versions.  Guard
     -- against them being nil on older clients before comparing bag indices.
     local bankTabStart = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1
-    local bankTabEnd = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_8
+    local bankTabEnd = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_6
     if bankTabStart and bankTabEnd and bag >= bankTabStart and bag <= bankTabEnd then
         if BankFrameItemButton_Update then
             BankFrameItemButton_Update(self)

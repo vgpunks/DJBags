@@ -6,13 +6,13 @@ local OPEN_TAB_SETTINGS_EVENT = BankPanelTabSettingsMenuMixin and BankPanelTabSe
 local BANK_TAB_CLICKED_EVENT = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
 
 local function isBankTabSlot(slot)
-    if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_8 then
-        if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_8 then
+    if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_6 then
+        if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
             return true
         end
     end
-    if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_8 then
-        if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_8 then
+    if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6 then
+        if slot >= Enum.BagIndex.AccountBankTab_1 and slot <= Enum.BagIndex.AccountBankTab_6 then
             return true
         end
     end
@@ -78,8 +78,8 @@ function item:Update()
     end
 
     local isCharacterBankTab = false
-    if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_8 then
-        isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_8
+    if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_6 then
+        isCharacterBankTab = slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6
     end
 
     if C_Bank and isCharacterBankTab then

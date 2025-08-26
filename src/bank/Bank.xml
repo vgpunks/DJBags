@@ -3,7 +3,7 @@
     <Script file="src/bank/Bank.lua"/>
 
     <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
-        <Size x="407" y="85" />
+        <Size x="323" y="85" />
         <Anchors>
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
@@ -68,30 +68,10 @@
                     </OnLoad>
                 </Scripts>
             </ItemButton>
-            <ItemButton name="$parentBag7" parentKey="bag7">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag6" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_7, BankButtonIDToInvSlotID(7, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag8" parentKey="bag8">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag7" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_8, BankButtonIDToInvSlotID(8, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentBag8" relativePoint="BOTTOMRIGHT" y="-9.5" />
+                    <Anchor point="TOPRIGHT" relativeTo="$parentBag6" relativePoint="BOTTOMRIGHT" y="-9.5" />
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
@@ -156,9 +136,7 @@
                                 Enum.BagIndex.CharacterBankTab_3,
                                 Enum.BagIndex.CharacterBankTab_4,
                                 Enum.BagIndex.CharacterBankTab_5,
-                                Enum.BagIndex.CharacterBankTab_6,
-                                Enum.BagIndex.CharacterBankTab_7,
-                                Enum.BagIndex.CharacterBankTab_8})
+                                Enum.BagIndex.CharacterBankTab_6})
                     </OnLoad>
                     <OnShow>
                         self:OnShow()
