@@ -46,6 +46,7 @@ function item:Init(id, slot)
         -- Right-clicking a bank tab should open the default bank tab settings menu
         if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and isBankTabSlot(self.slot) then
             local tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
+            local bankType = Enum.BankType and Enum.BankType.Character
             -- When our bank tabs are contained within the bank frame, anchoring
             -- the settings menu to the tab causes it to appear behind the frame.
             -- Show the menu above the bank frame and position it to the right
@@ -57,9 +58,17 @@ function item:Init(id, slot)
             menu:ClearAllPoints()
             menu:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
             menu:Show()
-            menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
+            if bankType then
+                menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
+            else
+                menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
+            end
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-            BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
+            if bankType then
+                BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
+            else
+                BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
+            end
             return
         end
 
