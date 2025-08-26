@@ -5,9 +5,9 @@ function DJBagsSettingsColumnsLoad(self)
 		self.name:SetText(ADDON.locale.COLUMNS:format(self:GetParent().bag.settings.maxColumns))
 	end
 	self.up.process = function() 
-		local currentCount = self:GetParent().bag.settings.maxColumns
-		if (currentCount < 20) then
-			self:GetParent().bag.settings.maxColumns = currentCount + 1
+                local currentCount = self:GetParent().bag.settings.maxColumns
+                if (currentCount < 30) then
+                        self:GetParent().bag.settings.maxColumns = currentCount + 1
 
 			self:Update()
 			self:GetParent().bag:Refresh()
