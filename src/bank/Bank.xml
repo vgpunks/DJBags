@@ -86,7 +86,11 @@
                         GameTooltip:Hide()
                     </OnLeave>
                     <OnClick>
-                        SortBankBags()
+                        if C_Container and C_Container.SortBankBags then
+                            C_Container.SortBankBags()
+                        elseif SortBankBags then
+                            SortBankBags()
+                        end
                     </OnClick>
                 </Scripts>
             </Button>
