@@ -2,19 +2,16 @@ local ADDON_NAME, ADDON = ...
 
 ADDON.formatter = ADDON.formatter or {}
 
+-- Sort category names alphabetically while ensuring empty slots are
+-- always displayed last.  Previously categories like "New" and "Junk"
+-- were given priority, which caused the bank and bag to show different
+-- ordering.  By only handling empty slots specially we keep the layout
+-- compact and consistent between containers.
 local typeSorter = function(A, B)
     if A == EMPTY then
         return false
     elseif B == EMPTY then
         return true
-    elseif A == NEW then
-        return true
-    elseif B == NEW then
-        return false
-    elseif A == BAG_FILTER_JUNK then
-        return true
-    elseif B == BAG_FILTER_JUNK then
-        return false
     else
         return A < B
     end
