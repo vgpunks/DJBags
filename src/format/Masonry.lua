@@ -68,8 +68,8 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
             currentType = item.type
             container = bag.titleContainers[currentType]
             cnt = 0
-            x = 4 + padding
-            y = 4 + padding + padding + container.name:GetHeight()
+            x = padding
+            y = padding + padding + container.name:GetHeight()
             tinsert(containers, container)
         end
 
@@ -85,7 +85,7 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
             x = x + itemSpacing + item:GetWidth()
             cnt = cnt + 1
             if cnt % maxCols == 0 then
-                x = 4 + padding
+                x = padding
                 y = y + itemSpacing + item:GetHeight()
             end
         else
@@ -96,7 +96,7 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
         local rows = item.type == EMPTY and 1 or math.ceil(cnt / maxCols)
         local width = padding * 2 + cols * item:GetWidth() + (cols - 1) * itemSpacing
         local height = padding * 3 + container.name:GetHeight() + rows * item:GetHeight() + (rows - 1) * itemSpacing
-        container:SetSize(width+8, height+8)
+        container:SetSize(width, height)
         container.cols = cols
     end
 
