@@ -7,7 +7,11 @@ ADDON.formatter = ADDON.formatter or {}
 -- the layout compact by prioritising categories that take more space
 -- instead of using alphabetical order.
 local typeSorter = function(A, B)
-    if A == EMPTY then
+    if A == NEW then
+        return true
+    elseif B == NEW then
+        return false
+    elseif A == EMPTY then
         return false
     elseif B == EMPTY then
         return true
