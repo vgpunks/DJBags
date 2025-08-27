@@ -6,7 +6,7 @@ bag.__index = bag
 local settings = {
     padding = 5,
     scale = 1,
-    containerSpacing = 5,
+    containerSpacing = 2,
     itemSpacing = 5,
     maxColumns = 10,
 }

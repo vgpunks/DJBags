@@ -66,8 +66,17 @@
         </Layers>
     </Frame>
 
-    <Frame name="DJBagsTitleContainerTemplate" inherits="DJBagsBackgroundTemplate" virtual="true">
+    <Frame name="DJBagsTitleContainerTemplate" virtual="true">
         <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Background">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <Color r="0" g="0" b="0" a="0.8"/>
+                </Texture>
+            </Layer>
             <Layer level="OVERLAY">
                 <FontString name="$parentName" parentKey="name" inherits="GameFontHighlight">
                     <Anchors>
