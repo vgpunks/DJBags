@@ -45,8 +45,18 @@ function item:Init(id, slot)
 
         -- Right-clicking a bank tab should open the default bank tab settings menu
         if button == "RightButton" and BankFrame and BankFrame.BankPanel and BankFrame.BankPanel.TabSettingsMenu and isBankTabSlot(self.slot) then
-            local tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
-            local bankType = Enum.BankType and Enum.BankType.Character
+            local tabIndex, bankType
+
+            if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6
+                and self.slot >= Enum.BagIndex.AccountBankTab_1
+                and self.slot <= Enum.BagIndex.AccountBankTab_6
+            then
+                tabIndex = self.slot - Enum.BagIndex.AccountBankTab_1 + 1
+                bankType = Enum.BankType and Enum.BankType.Account
+            else
+                tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
+                bankType = Enum.BankType and Enum.BankType.Character
+            end
             -- When our bank tabs are contained within the bank frame, anchoring
             -- the settings menu to the tab causes it to appear behind the frame.
             -- Show the menu above the bank frame and position it to the right
