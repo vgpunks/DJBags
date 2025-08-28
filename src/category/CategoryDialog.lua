@@ -26,9 +26,10 @@ local function DropDownClick(self)
 end
 
 function dialog:DisplayForItem(id, name)
-	self.name:SetText(name)
-	self.id = id
-	self:Show()
+        self.name:SetText(name)
+        self.name.text = name
+        self.id = id
+        self:Show()
 
     local current = DJBags_DB_Char.categories[id] or DJBags_DB.categories[id]
     local categories = ADDON:GetAllPlayerDefinedCategories()
