@@ -8,11 +8,25 @@ function ADDON:GetBankTabSettingsMenu()
     if not self.bankTabSettingsMenu then
         if BankPanelTabSettingsMenuMixin then
             self.bankTabSettingsMenu = CreateFrame("Frame", nil, UIParent, "BankPanelTabSettingsMenuTemplate")
+            if BankFrame and BankFrame.BankPanel then
+                if self.bankTabSettingsMenu.SetBankPanel then
+                    self.bankTabSettingsMenu:SetBankPanel(BankFrame.BankPanel)
+                else
+                    self.bankTabSettingsMenu.BankPanel = BankFrame.BankPanel
+                end
+            end
         else
             -- Fallback to a basic frame if the template is unavailable; this
             -- preserves backward compatibility even though the menu will have
             -- no functionality.
             self.bankTabSettingsMenu = CreateFrame("Frame", nil, UIParent)
+        end
+    end
+    if BankFrame and BankFrame.BankPanel then
+        if self.bankTabSettingsMenu.SetBankPanel then
+            self.bankTabSettingsMenu:SetBankPanel(BankFrame.BankPanel)
+        else
+            self.bankTabSettingsMenu.BankPanel = BankFrame.BankPanel
         end
     end
     return self.bankTabSettingsMenu
