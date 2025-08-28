@@ -8,6 +8,13 @@ function ADDON:GetBankTabSettingsMenu()
     if not self.bankTabSettingsMenu then
         if BankPanelTabSettingsMenuMixin then
             self.bankTabSettingsMenu = CreateFrame("Frame", nil, UIParent, "BankPanelTabSettingsMenuTemplate")
+            -- Frames created with CreateFrame do not automatically run their
+            -- OnLoad handler.  The Blizzard menu relies on its OnLoad to
+            -- register for events and become interactive, so manually invoke it
+            -- after creation.
+            if self.bankTabSettingsMenu.OnLoad then
+                self.bankTabSettingsMenu:OnLoad()
+            end
             if BankFrame and BankFrame.BankPanel then
                 if self.bankTabSettingsMenu.SetBankPanel then
                     self.bankTabSettingsMenu:SetBankPanel(BankFrame.BankPanel)
