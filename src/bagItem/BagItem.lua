@@ -73,33 +73,29 @@ function item:Init(id, slot)
                 if bankType then
                     if EventRegistry and EventRegistry.TriggerEvent then
                         EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
-                    else
-                        BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
                     end
+                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
                 else
                     if EventRegistry and EventRegistry.TriggerEvent then
                         EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
-                    else
-                        BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
                     end
+                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
                 end
 
                 -- Trigger the tab settings menu to load details for the correct
                 -- bank tab.  Some client builds expect the request via the global
-                -- EventRegistry rather than the menu frame itself, so attempt both
-                -- for compatibility.
+                -- EventRegistry and the menu frame itself, so send the event
+                -- through both for compatibility.
                 if bankType then
                     if EventRegistry and EventRegistry.TriggerEvent then
                         EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
-                    else
-                        menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
                     end
+                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
                 else
                     if EventRegistry and EventRegistry.TriggerEvent then
                         EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
-                    else
-                        menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
                     end
+                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
                 end
             end
 
