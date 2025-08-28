@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Script file="src/bank/BankFrame.lua"/>
     <Script file="src/bank/Bank.lua"/>
+    <Script file="src/bank/BankTabSettingsMenu.lua"/>
 
     <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
         <Size x="323" y="85" />
