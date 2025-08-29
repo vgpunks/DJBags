@@ -65,6 +65,13 @@ local function CreateSettingsMenu()
         frame:OnLoad()
     end
 
+    -- Child frames defined in the template also need to run their own
+    -- initialization logic so the icon selector has the data provider
+    -- required for filtering icons.
+    if frame.IconSelector and frame.IconSelector.OnLoad then
+        frame.IconSelector:OnLoad()
+    end
+
     frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
 
     -- Track the currently selected icon.
