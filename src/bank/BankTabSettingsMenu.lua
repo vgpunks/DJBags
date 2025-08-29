@@ -100,6 +100,16 @@ local function CreateSettingsMenu()
         self.bankType = bankType
         self.tabIndex = tabIndex
 
+        -- The icon selector's data provider is cleared whenever the popup
+        -- frame is hidden. Reinitialize the child frame as needed and wire
+        -- the provider so filtering works when the menu is reopened.
+        if self.IconSelector then
+            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                self.IconSelector:OnLoad()
+            end
+            self.iconDataProvider = self.IconSelector.iconDataProvider
+        end
+
         local name, icon = FetchTabInfo(bankType, tabIndex)
 
         self.BorderBox.IconSelectorEditBox:SetText(name or "")
