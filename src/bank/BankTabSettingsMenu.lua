@@ -64,21 +64,23 @@ local function CreateSettingsMenu()
     --
     -- The popup frame's OnLoad expects the icon selector child to have run
     -- its own initialization first so that the data provider is available.
-    -- Call the child's OnLoad before the parent's so the latter can safely
-    -- reference it when setting up filtering.
+    -- Call the child's OnLoad before the parent's and wire the data
+    -- provider immediately so the parent can safely reference it when
+    -- setting up filtering.
     if frame.IconSelector and frame.IconSelector.OnLoad then
         frame.IconSelector:OnLoad()
     end
 
-    if frame.OnLoad then
-        frame:OnLoad()
-    end
-
-    -- The popup frame mixin expects to reference the icon selector's
-    -- data provider directly.  Replicate the setup normally performed by
-    -- the template so filtering works without errors.
+    -- The popup frame mixin expects to reference the icon selector's data
+    -- provider directly. Replicate the setup normally performed by the
+    -- template prior to calling the parent's OnLoad so filtering works
+    -- without errors.
     if frame.IconSelector then
         frame.iconDataProvider = frame.IconSelector.iconDataProvider
+    end
+
+    if frame.OnLoad then
+        frame:OnLoad()
     end
 
     frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
