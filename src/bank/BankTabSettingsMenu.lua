@@ -111,6 +111,19 @@ local function CreateSettingsMenu()
         end
     end
 
+    if frame.SetIconFilterInternal then
+        local originalSetIconFilterInternal = frame.SetIconFilterInternal
+        function frame:SetIconFilterInternal(...)
+            if not self.iconDataProvider and self.IconSelector then
+                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                    self.IconSelector:OnLoad()
+                end
+                self.iconDataProvider = self.IconSelector.iconDataProvider
+            end
+            originalSetIconFilterInternal(self, ...)
+        end
+    end
+
     -- Populate the menu with data for the requested tab.
     function frame:Load(bankType, tabIndex)
         self.bankType = bankType
