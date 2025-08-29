@@ -2,9 +2,6 @@ local NAME, ADDON = ...
 
 local item = {}
 
-local OPEN_TAB_SETTINGS_EVENT = BankPanelTabSettingsMenuMixin and BankPanelTabSettingsMenuMixin.Event.OpenTabSettingsRequested or "OpenTabSettingsRequested"
-local BANK_TAB_CLICKED_EVENT = BankPanelMixin and BankPanelMixin.Event.BankTabClicked or "BankTabClicked"
-
 local function isBankTabSlot(slot)
     if Enum.BagIndex.CharacterBankTab_1 and Enum.BagIndex.CharacterBankTab_6 then
         if slot >= Enum.BagIndex.CharacterBankTab_1 and slot <= Enum.BagIndex.CharacterBankTab_6 then
@@ -43,8 +40,8 @@ function item:Init(id, slot)
             return
         end
 
-        -- Right-clicking a bank tab should open the default bank tab settings menu
-        if button == "RightButton" and BankFrame and BankFrame.BankPanel and isBankTabSlot(self.slot) then
+        -- Right-clicking a bank tab should open the settings menu
+        if button == "RightButton" and BankFrame and isBankTabSlot(self.slot) then
             local tabIndex, bankType
 
             if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6
@@ -57,53 +54,9 @@ function item:Init(id, slot)
                 tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
                 bankType = Enum.BankType and Enum.BankType.Character
             end
-            -- When our bank tabs are contained within the bank frame, anchoring
-            -- the settings menu to the tab causes it to appear behind the frame.
-            -- Show the menu above the bank frame and position it to the right
-            -- of the frame so it remains visible.
+
             local menu = ADDON:GetBankTabSettingsMenu()
-            menu:SetFrameStrata("FULLSCREEN_DIALOG")
-            menu:ClearAllPoints()
-            menu:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
-            menu:Show()
-
-            local function openMenu()
-                -- Notify the bank panel which tab was selected so the menu becomes
-                -- interactive before requesting the menu details.
-                if bankType then
-                    if EventRegistry and EventRegistry.TriggerEvent then
-                        EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
-                    end
-                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, bankType, tabIndex)
-                else
-                    if EventRegistry and EventRegistry.TriggerEvent then
-                        EventRegistry:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
-                    end
-                    BankFrame.BankPanel:TriggerEvent(BANK_TAB_CLICKED_EVENT, tabIndex)
-                end
-
-                -- Trigger the tab settings menu to load details for the correct
-                -- bank tab.  Some client builds expect the request via the global
-                -- EventRegistry and the menu frame itself, so send the event
-                -- through both for compatibility.
-                if bankType then
-                    if EventRegistry and EventRegistry.TriggerEvent then
-                        EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
-                    end
-                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, bankType, tabIndex)
-                else
-                    if EventRegistry and EventRegistry.TriggerEvent then
-                        EventRegistry:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
-                    end
-                    menu:TriggerEvent(OPEN_TAB_SETTINGS_EVENT, tabIndex)
-                end
-            end
-
-            if C_Timer and C_Timer.After then
-                C_Timer.After(0, openMenu)
-            else
-                openMenu()
-            end
+            menu:Open(bankType, tabIndex)
 
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             return
