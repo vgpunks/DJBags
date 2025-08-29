@@ -18,14 +18,15 @@ local NAME, ADDON = ...
 
 local function FetchTabInfo(bankType, tabIndex)
     if not C_Bank then
-        return nil, nil
+        return nil, nil, nil
     end
 
     if C_Bank.GetBankTabInfo then
         local info = C_Bank.GetBankTabInfo(bankType, tabIndex)
         if info then
             local icon = info.icon or info.iconFileID or info.iconTexture
-            return info.name, icon
+            local depositFlags = info.depositFlags or info.flags or info.depositFlag
+            return info.name, icon, depositFlags
         end
     end
 
@@ -44,12 +45,13 @@ local function FetchTabInfo(bankType, tabIndex)
             end
             if info then
                 local icon = info.icon or info.iconFileID or info.iconTexture
-                return info.name, icon
+                local depositFlags = info.depositFlags or info.flags or info.depositFlag
+                return info.name, icon, depositFlags
             end
         end
     end
 
-    return nil, nil
+    return nil, nil, nil
 end
 
 local function CreateSettingsMenu()
@@ -124,10 +126,11 @@ local function CreateSettingsMenu()
             self.iconDataProvider = self.IconSelector.iconDataProvider
         end
 
-        local name, icon = FetchTabInfo(bankType, tabIndex)
+        local name, icon, depositFlags = FetchTabInfo(bankType, tabIndex)
 
         self.BorderBox.IconSelectorEditBox:SetText(name or "")
         self.selectedIcon = icon or QUESTION_MARK_ICON
+        self.depositFlags = depositFlags or 0
         self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
 
         self.BorderBox.IconSelectorEditBox:HighlightText()
@@ -137,7 +140,7 @@ local function CreateSettingsMenu()
     frame.BorderBox.OkayButton:SetScript("OnClick", function()
         if C_Bank and C_Bank.UpdateBankTabSettings and frame.bankType and frame.tabIndex then
             local newName = frame.BorderBox.IconSelectorEditBox:GetText()
-            C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, nil)
+            C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
         end
         frame:Hide()
         PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
