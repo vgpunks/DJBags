@@ -95,6 +95,20 @@ local function CreateSettingsMenu()
         frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetFontObject(GameFontHighlightSmall)
     end)
 
+    -- Ensure the data provider is always available when changing the icon filter.
+    if frame.SetIconFilter then
+        local originalSetIconFilter = frame.SetIconFilter
+        function frame:SetIconFilter(iconFilter)
+            if not self.iconDataProvider and self.IconSelector then
+                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                    self.IconSelector:OnLoad()
+                end
+                self.iconDataProvider = self.IconSelector.iconDataProvider
+            end
+            originalSetIconFilter(self, iconFilter)
+        end
+    end
+
     -- Populate the menu with data for the requested tab.
     function frame:Load(bankType, tabIndex)
         self.bankType = bankType
