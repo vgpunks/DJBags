@@ -11,19 +11,20 @@ function DJBagsHideBlizzardBank()
     BankFrame:SetPoint('TOPLEFT', UIParent, 'TOPLEFT', -9999, -9999)
 end
 
-function DJBagsRegisterBankBagContainer(self, bags)
+function DJBagsRegisterBankBagContainer(self, bags, bankType)
     DJBagsRegisterBaseBagContainer(self, bags)
 
     -- Save the original BAG_UPDATE implementation so we can gate updates
-    -- while the warband bank is active.
+    -- while the other bank type is active.
     self.baseBAG_UPDATE = self.BAG_UPDATE
 
     for k, v in pairs(bank) do
         self[k] = v
     end
 
-    -- Default to the character bank being active until told otherwise.
-    self.isCharacterBank = true
+    -- Track which bank type this container represents and if it's active.
+    self.bankType = bankType or Enum.BankType and Enum.BankType.Character or 0
+    self.isActive = self.bankType == (Enum.BankType and Enum.BankType.Character or 0)
 
     ADDON.eventManager:Add('BANKFRAME_OPENED', self)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
@@ -37,8 +38,8 @@ end
 
 function bank:BANKFRAME_OPENED()
     local bankType = BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-    self.isCharacterBank = not bankType or bankType == Enum.BankType.Character
-    if self.isCharacterBank then
+    self.isActive = not bankType or bankType == self.bankType
+    if self.isActive then
         self:Show()
     else
         self:Hide()
@@ -50,45 +51,57 @@ function bank:BANKFRAME_CLOSED()
 end
 
 function bank:BAG_UPDATE(bag)
-    if self.isCharacterBank then
+    if self.isActive then
         self:baseBAG_UPDATE(bag)
     end
 end
 
 function bank:PLAYERBANKSLOTS_CHANGED()
-    if self.isCharacterBank then
+    if self.isActive then
         self:BAG_UPDATE_DELAYED()
     end
 end
 
 function bank:BAG_UPDATE_DELAYED()
-    if not self.isCharacterBank then
+    if not self.isActive then
         return
     end
+    local prefix = self.bankType == Enum.BankType.Account and 'accountBag' or 'bag'
     for i = 1, 6 do
-        local barItem = DJBagsBankBar['bag' .. i]
+        local barItem = DJBagsBankBar[prefix .. i]
         if barItem then
             barItem:Update()
         end
     end
 
     local prev
+    local first
     for i = 1, 6 do
-        local barItem = DJBagsBankBar['bag' .. i]
+        local barItem = DJBagsBankBar[prefix .. i]
         if barItem and barItem:IsShown() then
             barItem:ClearAllPoints()
             if prev then
                 barItem:SetPoint('TOPLEFT', prev, 'TOPRIGHT', 5, 0)
             else
                 barItem:SetPoint('TOPLEFT', DJBagsBankBar, 'TOPLEFT', 9, -9)
+                first = barItem
             end
             prev = barItem
         end
     end
+
+    if DJBagsBankBarRestackButton and prev then
+        DJBagsBankBarRestackButton:ClearAllPoints()
+        DJBagsBankBarRestackButton:SetPoint('TOPRIGHT', prev, 'BOTTOMRIGHT', 0, -9.5)
+    end
+    if DJBagsBankBarSettingsBtn and first then
+        DJBagsBankBarSettingsBtn:ClearAllPoints()
+        DJBagsBankBarSettingsBtn:SetPoint('TOPLEFT', first, 'BOTTOMLEFT', 0, -5)
+    end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
-    if self.isCharacterBank then
+    if self.isActive then
         self:BAG_UPDATE_DELAYED()
     end
 end

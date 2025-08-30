@@ -69,6 +69,66 @@
                     </OnLoad>
                 </Scripts>
             </ItemButton>
+            <ItemButton name="$parentAccountBag1" parentKey="accountBag1" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="9" y="-9" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_1, BankButtonIDToInvSlotID(1, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag2" parentKey="accountBag2" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag1" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_2, BankButtonIDToInvSlotID(2, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag3" parentKey="accountBag3" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag2" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_3, BankButtonIDToInvSlotID(3, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag4" parentKey="accountBag4" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag3" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_4, BankButtonIDToInvSlotID(4, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag5" parentKey="accountBag5" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag4" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_5, BankButtonIDToInvSlotID(5, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag6" parentKey="accountBag6" hidden="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag5" relativePoint="TOPRIGHT" x="5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_6, BankButtonIDToInvSlotID(6, Enum.BankType and Enum.BankType.Account or 0))
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
@@ -141,7 +201,30 @@
                                 Enum.BagIndex.CharacterBankTab_3,
                                 Enum.BagIndex.CharacterBankTab_4,
                                 Enum.BagIndex.CharacterBankTab_5,
-                                Enum.BagIndex.CharacterBankTab_6})
+                                Enum.BagIndex.CharacterBankTab_6}, Enum.BankType.Character)
+                    </OnLoad>
+                    <OnShow>
+                        self:OnShow()
+                    </OnShow>
+                    <OnHide>
+                        self:OnHide()
+                    </OnHide>
+                </Scripts>
+            </Frame>
+            <Frame name="DJBagsWarbandBank" inherits="DJBagsBackgroundTemplate" parentKey="warbandBankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
+                   hidden="true" parent="DJBagsBankBar">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsRegisterBankBagContainer(self, {
+                                Enum.BagIndex.AccountBankTab_1,
+                                Enum.BagIndex.AccountBankTab_2,
+                                Enum.BagIndex.AccountBankTab_3,
+                                Enum.BagIndex.AccountBankTab_4,
+                                Enum.BagIndex.AccountBankTab_5,
+                                Enum.BagIndex.AccountBankTab_6}, Enum.BankType.Account)
                     </OnLoad>
                     <OnShow>
                         self:OnShow()
@@ -196,6 +279,36 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
+            <Button name="$parentTab1" parentKey="characterTab" inherits="CharacterFrameTabButtonTemplate" id="1">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="DJBagsBank" relativePoint="BOTTOMRIGHT" x="-75" y="2"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        self:SetText(CHARACTER)
+                        PanelTemplates_TabResize(self, 0)
+                    </OnLoad>
+                    <OnClick>
+                        PanelTemplates_SetTab(self:GetParent(), 1)
+                        BankFrame:SetTab(Enum.BankType and Enum.BankType.Character or 1)
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentTab2" parentKey="warbandTab" inherits="CharacterFrameTabButtonTemplate" id="2">
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT" x="-16"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        self:SetText(WARBAND_BANK or "Warband")
+                        PanelTemplates_TabResize(self, 0)
+                    </OnLoad>
+                    <OnClick>
+                        PanelTemplates_SetTab(self:GetParent(), 2)
+                        BankFrame:SetTab(Enum.BankType and Enum.BankType.Account or 2)
+                    </OnClick>
+                </Scripts>
+            </Button>
         </Frames>
         <Scripts>
             <OnLoad>
