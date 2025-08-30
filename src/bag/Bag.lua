@@ -60,9 +60,10 @@ function bag:UpdateCurrency()
     if not self.currencyBar then return end
 
     local text = ""
-    for i = 1, 3 do
-        local info = C_CurrencyInfo.GetBackpackCurrencyInfo(i)
-        if info then
+    local cnt = C_CurrencyInfo.GetCurrencyListSize()
+    for i = 1, cnt do
+        local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+        if info and info.isShowInBackpack then
             local icon = info.iconFileID or info.icon
             if text ~= "" then
                 text = text .. "  "
@@ -78,6 +79,17 @@ function bag:UpdateCurrency()
         self.currencyBar.amount:ClearAllPoints()
         self.currencyBar.amount:SetPoint("LEFT", self.currencyBar, "LEFT", 8, 0)
         self.currencyBar.amount:SetText(text)
+
+        local padding = 16
+        local gap = 5
+        local width = self.currencyBar.amount:GetStringWidth() + padding
+        local desiredWidth = self.mainBar:GetWidth() + width + gap
+        if desiredWidth > self:GetWidth() then
+            self:SetWidth(desiredWidth)
+        end
+        local maxWidth = self:GetWidth() - self.mainBar:GetWidth() - gap
+        self.currencyBar:SetWidth(math.min(width, maxWidth))
+
         self.currencyBar:Show()
     else
         self.currencyBar:Hide()
