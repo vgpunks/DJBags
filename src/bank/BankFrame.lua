@@ -86,14 +86,33 @@ function bankFrame:UpdateBankType()
         if self.settingsBtn and self.restackButton and self.search then
             local padding = 18
             local spacing = 3
-            local width = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
-            local height = self.search:GetHeight() + padding
+
+            -- Minimum width should accommodate the search box and the
+            -- character/warband tabs. Include a bit of extra padding so the
+            -- tabs are fully visible.
+            local searchWidth = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
+            local tabWidth = 0
+            if self.characterTab and self.warbandTab then
+                tabWidth = self.characterTab:GetWidth() + self.warbandTab:GetWidth() + padding
+            end
+            local width = math.max(searchWidth, tabWidth)
+
+            -- Height must be at least tall enough for the tabs.
+            local searchHeight = self.search:GetHeight() + padding
+            local tabHeight = self.characterTab and (self.characterTab:GetHeight() + padding) or 0
+            local height = math.max(searchHeight, tabHeight)
+
             self:SetSize(width, height)
         end
     end
 
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
-    local maxWidth = (activeBag and activeBag:GetWidth()) or self:GetWidth()
+    -- Ensure tabs resize using at least our minimum width so the frame does
+    -- not shrink when switching tabs.
+    local maxWidth = (activeBag and activeBag:GetWidth()) or 0
+    if self:GetWidth() > maxWidth then
+        maxWidth = self:GetWidth()
+    end
     PanelTemplates_ResizeTabsToFit(self, maxWidth)
 
     if isCharacterBank and self.bankBag and self.bankBag.selectedTab then
