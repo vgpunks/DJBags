@@ -6,6 +6,9 @@ bag.__index = bag
 function DJBagsRegisterBagBagContainer(self, bags)
     DJBagsRegisterBaseBagContainer(self, bags)
 
+    -- Preserve the base OnShow implementation so we can extend it.
+    self.baseOnShow = self.OnShow
+
     for k, v in pairs(bag) do
         self[k] = v
     end
@@ -46,15 +49,35 @@ function bag:BAG_UPDATE_DELAYED()
     end
 end
 
+function bag:OnShow()
+    if self.baseOnShow then
+        self:baseOnShow()
+    end
+    self:UpdateCurrency()
+end
+
 function bag:UpdateCurrency()
     if not self.currencyBar then return end
-    local info = C_CurrencyInfo.GetBackpackCurrencyInfo(1)
-    if info then
-        local icon = info.iconFileID or info.icon
-        if icon then
-            self.currencyBar.icon:SetTexture(icon)
+
+    local text = ""
+    for i = 1, 3 do
+        local info = C_CurrencyInfo.GetBackpackCurrencyInfo(i)
+        if info then
+            local icon = info.iconFileID or info.icon
+            if text ~= "" then
+                text = text .. "  "
+            end
+            text = text .. "|T" .. icon .. ":16|t " .. info.quantity
         end
-        self.currencyBar.amount:SetText(info.quantity)
+    end
+
+    if text ~= "" then
+        if self.currencyBar.icon then
+            self.currencyBar.icon:Hide()
+        end
+        self.currencyBar.amount:ClearAllPoints()
+        self.currencyBar.amount:SetPoint("LEFT", self.currencyBar, "LEFT", 8, 0)
+        self.currencyBar.amount:SetText(text)
         self.currencyBar:Show()
     else
         self.currencyBar:Hide()

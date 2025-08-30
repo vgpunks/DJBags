@@ -214,7 +214,7 @@
                 </Anchors>
             </Frame>                        
             <Frame name="$parentCurrency" parentKey="currencyBar" inherits="DJBagsBackgroundTemplate" hidden="true">
-                <Size x="120" y="33"/>
+                <Size x="200" y="33"/>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT"/>
                 </Anchors>
