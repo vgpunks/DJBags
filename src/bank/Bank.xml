@@ -300,7 +300,7 @@
                     </OnLoad>
                     <OnClick>
                         PanelTemplates_SetTab(self:GetParent(), 1)
-                        BankFrame:SetTab(Enum.BankType and Enum.BankType.Character or 1)
+                        BankFrame:SetTab(1, Enum.BankType and Enum.BankType.Character)
                     </OnClick>
                 </Scripts>
             </Button>
@@ -325,7 +325,7 @@
                     </OnLoad>
                     <OnClick>
                         PanelTemplates_SetTab(self:GetParent(), 2)
-                        BankFrame:SetTab(Enum.BankType and Enum.BankType.Account or 2)
+                        BankFrame:SetTab(2, Enum.BankType and Enum.BankType.Account)
                     </OnClick>
                 </Scripts>
             </Button>
