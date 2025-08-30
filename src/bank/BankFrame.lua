@@ -22,6 +22,28 @@ function DJBagsRegisterBankFrame(self, bags)
     self:SetUserPlaced(true)
 
     PanelTemplates_SetNumTabs(self, 2)
+
+    -- Panels tab templates expect certain textures to exist before
+    -- selecting a tab. During the frame's OnLoad the child tabs may not
+    -- have run their own OnLoad scripts yet, leaving these textures nil
+    -- and causing errors when PanelTemplates_SelectTab runs. Prepare the
+    -- tabs here so we can safely select the initial tab.
+    local function PrepareTab(tab)
+        if not tab then return end
+        if not tab.Text and tab.GetFontString then
+            tab.Text = tab:GetFontString()
+        end
+        if not tab.Left and tab.LeftDisabled then
+            tab.Left = tab.LeftDisabled
+            tab.Middle = tab.MiddleDisabled
+            tab.Right = tab.RightDisabled
+        end
+        if tab.Left then
+            PanelTemplates_TabResize(tab, 0)
+        end
+    end
+    PrepareTab(self.characterTab)
+    PrepareTab(self.warbandTab)
     PanelTemplates_SetTab(self, 1)
 
     -- Update our visibility when the bank switches between character and account tabs.
