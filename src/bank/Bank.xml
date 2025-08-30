@@ -294,7 +294,9 @@
                             self.Middle = self.MiddleDisabled
                             self.Right = self.RightDisabled
                         end
-                        PanelTemplates_TabResize(self, 0)
+                        if self.Left then
+                            PanelTemplates_TabResize(self, 0)
+                        end
                     </OnLoad>
                     <OnClick>
                         PanelTemplates_SetTab(self:GetParent(), 1)
@@ -317,7 +319,9 @@
                             self.Middle = self.MiddleDisabled
                             self.Right = self.RightDisabled
                         end
-                        PanelTemplates_TabResize(self, 0)
+                        if self.Left then
+                            PanelTemplates_TabResize(self, 0)
+                        end
                     </OnLoad>
                     <OnClick>
                         PanelTemplates_SetTab(self:GetParent(), 2)
