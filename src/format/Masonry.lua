@@ -47,6 +47,15 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
     local itemSpacing = bag.settings.itemSpacing
     local maxCols = bag.settings.maxColumns > 0 and bag.settings.maxColumns or 1
 
+    -- Track settings that influence layout so we can reset cached sizing when
+    -- they change (e.g., adjusting column counts).
+    local settingsKey = table.concat({padding, containerSpacing, itemSpacing, maxCols}, ":")
+    if bag._masonrySettingsKey ~= settingsKey then
+        bag._masonrySettingsKey = settingsKey
+        bag._maxWidth = 0
+        bag._maxHeight = 0
+    end
+
     -- Determine how much horizontal space each category will require so we
     -- can order them by size rather than name for better packing.
     local typeSizes = {}
@@ -127,8 +136,19 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
         prevHeight = container:GetHeight()
         cnt = cnt + container.cols
     end
-    bag:SetSize(mW, mH + prevHeight + padding + 4)
+
+    local width = mW
+    local height = mH + prevHeight + padding + 4
+
+    bag._maxWidth = math.max(bag._maxWidth or 0, width)
+    bag._maxHeight = math.max(bag._maxHeight or 0, height)
+    bag:SetSize(bag._maxWidth, bag._maxHeight)
+
     if bag.UpdateCurrency then
         bag:UpdateCurrency()
+        -- Currency updates may expand the frame; ensure cached size reflects it.
+        bag._maxWidth = math.max(bag._maxWidth, bag:GetWidth())
+        bag._maxHeight = math.max(bag._maxHeight, bag:GetHeight())
+        bag:SetSize(bag._maxWidth, bag._maxHeight)
     end
 end
