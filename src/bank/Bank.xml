@@ -9,66 +9,6 @@
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
         <Frames>
-            <ItemButton name="$parentAccountBag1" parentKey="accountBag1" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" x="9" y="-9" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_1, BankButtonIDToInvSlotID(1, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentAccountBag2" parentKey="accountBag2" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag1" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_2, BankButtonIDToInvSlotID(2, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentAccountBag3" parentKey="accountBag3" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag2" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_3, BankButtonIDToInvSlotID(3, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentAccountBag4" parentKey="accountBag4" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag3" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_4, BankButtonIDToInvSlotID(4, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentAccountBag5" parentKey="accountBag5" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag4" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_5, BankButtonIDToInvSlotID(5, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentAccountBag6" parentKey="accountBag6" hidden="true">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag5" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.AccountBankTab_6, BankButtonIDToInvSlotID(6, Enum.BankType and Enum.BankType.Account or 0))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
