@@ -282,7 +282,7 @@
             </Frame>
             <Button name="$parentTab1" parentKey="characterTab" inherits="PanelTabButtonTemplate" id="1">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="DJBagsBank" relativePoint="BOTTOMLEFT" x="2" y="2"/>
+                    <Anchor point="TOPLEFT" relativeTo="DJBagsBank" relativePoint="BOTTOMLEFT" x="4" y="2"/>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -354,3 +354,4 @@
         </Scripts>
     </Frame>
 </Ui>
+
