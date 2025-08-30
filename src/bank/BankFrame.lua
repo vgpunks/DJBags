@@ -85,6 +85,9 @@ function bankFrame:UpdateBankType()
 end
 
 function bankFrame:BANKFRAME_OPENED()
+    if BankFrame and BankFrame.GetActiveBankType and not BankFrame:GetActiveBankType() then
+        BankFrame:SetTab(1, Enum.BankType and Enum.BankType.Character)
+    end
     self:UpdateBankType()
     DJBagsBag:Show()
 end
