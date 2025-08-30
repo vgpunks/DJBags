@@ -71,7 +71,14 @@ function bankFrame:UpdateBankType()
         self.bankSettingsMenu.bag = isCharacterBank and self.bankBag or self.warbandBankBag
     end
 
+    local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
+    if activeBag and self.characterTab then
+        self.characterTab:ClearAllPoints()
+        self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 75, 2)
+    end
+
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
+    PanelTemplates_ResizeTabsToFit(self)
     self:Show()
 end
 
