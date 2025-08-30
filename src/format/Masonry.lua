@@ -128,4 +128,7 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
         cnt = cnt + container.cols
     end
     bag:SetSize(mW, mH + prevHeight + padding + 4)
+    if bag.UpdateCurrency then
+        bag:UpdateCurrency()
+    end
 end
