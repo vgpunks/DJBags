@@ -11,6 +11,9 @@ function DJBagsRegisterBagBagContainer(self, bags)
     end
 
     ADDON.eventManager:Add("NewItemCleared", self)
+    ADDON.eventManager:Add("CURRENCY_DISPLAY_UPDATE", self)
+
+    self:UpdateCurrency()
 end
 
 function bag:SortBags()
@@ -41,4 +44,23 @@ function bag:BAG_UPDATE_DELAYED()
             end
         end
     end
+end
+
+function bag:UpdateCurrency()
+    if not self.currencyBar then return end
+    local info = C_CurrencyInfo.GetBackpackCurrencyInfo(1)
+    if info then
+        local icon = info.iconFileID or info.icon
+        if icon then
+            self.currencyBar.icon:SetTexture(icon)
+        end
+        self.currencyBar.amount:SetText(info.quantity)
+        self.currencyBar:Show()
+    else
+        self.currencyBar:Hide()
+    end
+end
+
+function bag:CURRENCY_DISPLAY_UPDATE()
+    self:UpdateCurrency()
 end
