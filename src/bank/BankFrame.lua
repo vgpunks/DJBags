@@ -14,13 +14,27 @@ function DJBagsRegisterBankFrame(self, bags)
 
     table.insert(UISpecialFrames, self:GetName())
     self:RegisterForDrag("LeftButton")
+    -- Attach dragging to the active bank frame so the bar cannot move on its own.
+    self:SetMovable(false)
     self:SetScript("OnDragStart", function(self, ...)
-        self:StartMoving()
+        local bag = self.bankBag
+        if self.warbandBankBag and self.warbandBankBag:IsShown() then
+            bag = self.warbandBankBag
+        end
+        if bag and bag.StartMoving then
+            bag:StartMoving(...)
+        end
     end)
     self:SetScript("OnDragStop", function(self, ...)
-        self:StopMovingOrSizing(...)
+        local bag = self.bankBag
+        if self.warbandBankBag and self.warbandBankBag:IsShown() then
+            bag = self.warbandBankBag
+        end
+        if bag and bag.StopMovingOrSizing then
+            bag:StopMovingOrSizing(...)
+        end
     end)
-    self:SetUserPlaced(true)
+    self:SetUserPlaced(false)
 
     PanelTemplates_SetNumTabs(self, 2)
 
