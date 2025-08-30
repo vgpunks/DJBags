@@ -149,11 +149,12 @@ function bank:BAG_UPDATE_DELAYED()
     end
 
     -- Position the tab buttons vertically and include the "all" tab for
-    -- character banks.
+    -- character banks. Tabs are anchored to the active bank container rather
+    -- than the outer bank bar so they move with the bag frame itself.
     local prev
     if prefix == 'bag' and DJBagsBankBar.allTab then
         DJBagsBankBar.allTab:ClearAllPoints()
-        DJBagsBankBar.allTab:SetPoint('TOPRIGHT', DJBagsBankBar, 'TOPRIGHT', -9, -9)
+        DJBagsBankBar.allTab:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, 0)
         prev = DJBagsBankBar.allTab
     end
 
@@ -162,9 +163,9 @@ function bank:BAG_UPDATE_DELAYED()
         if barItem and barItem:IsShown() then
             barItem:ClearAllPoints()
             if prev then
-                barItem:SetPoint('TOPRIGHT', prev, 'BOTTOMRIGHT', 0, -5)
+                barItem:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT', 0, -5)
             else
-                barItem:SetPoint('TOPRIGHT', DJBagsBankBar, 'TOPRIGHT', -9, -9)
+                barItem:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, 0)
             end
             prev = barItem
         end
