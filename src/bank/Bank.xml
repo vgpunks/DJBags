@@ -286,6 +286,9 @@
                 <Scripts>
                     <OnLoad>
                         self:SetText(CHARACTER)
+                        if not self.Text and self.GetFontString then
+                            self.Text = self:GetFontString()
+                        end
                         PanelTemplates_TabResize(self, 0)
                     </OnLoad>
                     <OnClick>
@@ -301,6 +304,9 @@
                 <Scripts>
                     <OnLoad>
                         self:SetText(WARBAND_BANK or "Warband")
+                        if not self.Text and self.GetFontString then
+                            self.Text = self:GetFontString()
+                        end
                         PanelTemplates_TabResize(self, 0)
                     </OnLoad>
                     <OnClick>
