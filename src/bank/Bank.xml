@@ -279,7 +279,7 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
-            <Button name="$parentTab1" parentKey="characterTab" inherits="CharacterFrameTabButtonTemplate" id="1">
+            <Button name="$parentTab1" parentKey="characterTab" inherits="PanelTabButtonTemplate" id="1">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeTo="DJBagsBank" relativePoint="BOTTOMRIGHT" x="-75" y="2"/>
                 </Anchors>
@@ -304,7 +304,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentTab2" parentKey="warbandTab" inherits="CharacterFrameTabButtonTemplate" id="2">
+            <Button name="$parentTab2" parentKey="warbandTab" inherits="PanelTabButtonTemplate" id="2">
                 <Anchors>
                     <Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT" x="-16"/>
                 </Anchors>
