@@ -9,50 +9,6 @@
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
         <Frames>
-            <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="DJBagsBankBar">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsRegisterBankBagContainer(self, {
-                                Enum.BagIndex.CharacterBankTab_1,
-                                Enum.BagIndex.CharacterBankTab_2,
-                                Enum.BagIndex.CharacterBankTab_3,
-                                Enum.BagIndex.CharacterBankTab_4,
-                                Enum.BagIndex.CharacterBankTab_5,
-                                Enum.BagIndex.CharacterBankTab_6}, Enum.BankType.Character)
-                    </OnLoad>
-                    <OnShow>
-                        self:OnShow()
-                    </OnShow>
-                    <OnHide>
-                        self:OnHide()
-                    </OnHide>
-                </Scripts>
-            </Frame>
-            <Frame name="DJBagsWarbandBank" inherits="DJBagsBackgroundTemplate" parentKey="warbandBankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="DJBagsBankBar">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsRegisterBankBagContainer(self, {
-                                Enum.BagIndex.AccountBankTab_1,
-                                Enum.BagIndex.AccountBankTab_2,
-                                Enum.BagIndex.AccountBankTab_3,
-                                Enum.BagIndex.AccountBankTab_4,
-                                Enum.BagIndex.AccountBankTab_5,
-                                Enum.BagIndex.AccountBankTab_6}, Enum.BankType.Account)
-                    </OnLoad>
-                    <OnShow>
-                        self:OnShow()
-                    </OnShow>
-                    <OnHide>
-                        self:OnHide()
-                    </OnHide>
-                </Scripts>
-            </Frame>
             <ItemButton name="$parentBag1" parentKey="bag1">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="DJBagsBank" relativePoint="TOPRIGHT" x="5" y="0" />
@@ -232,6 +188,52 @@
                     <Anchor point="RIGHT" relativeTo="$parentRestackButton" relativePoint="LEFT" x="-5" />
                 </Anchors>
             </EditBox>
+            <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
+                   hidden="true" parent="DJBagsBankBar">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsRegisterBankBagContainer(self, {
+                                Enum.BagIndex.CharacterBankTab_1,
+                                Enum.BagIndex.CharacterBankTab_2,
+                                Enum.BagIndex.CharacterBankTab_3,
+                                Enum.BagIndex.CharacterBankTab_4,
+                                Enum.BagIndex.CharacterBankTab_5,
+                                Enum.BagIndex.CharacterBankTab_6}, Enum.BankType.Character)
+                    </OnLoad>
+                    <OnShow>
+                        self:OnShow()
+                    </OnShow>
+                    <OnHide>
+                        self:OnHide()
+                    </OnHide>
+                </Scripts>
+            </Frame>
+            <Frame name="DJBagsWarbandBank" inherits="DJBagsBackgroundTemplate" parentKey="warbandBankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
+                   hidden="true" parent="DJBagsBankBar">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsRegisterBankBagContainer(self, {
+                                Enum.BagIndex.AccountBankTab_1,
+                                Enum.BagIndex.AccountBankTab_2,
+                                Enum.BagIndex.AccountBankTab_3,
+                                Enum.BagIndex.AccountBankTab_4,
+                                Enum.BagIndex.AccountBankTab_5,
+                                Enum.BagIndex.AccountBankTab_6}, Enum.BankType.Account)
+                    </OnLoad>
+                    <OnShow>
+                        self:OnShow()
+                    </OnShow>
+                    <OnHide>
+                        self:OnHide()
+                    </OnHide>
+                </Scripts>
+            </Frame>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
                 <Anchors>
                     <Anchor point="CENTER" relativePoint="TOPRIGHT" x="-2" y="-2"/>
