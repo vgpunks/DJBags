@@ -3,6 +3,42 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
+-- Helper to load the "all" tab button which displays contents from all
+-- character bank tabs.
+function DJBagsBankAllTab_OnLoad(self)
+    SetItemButtonTexture(self, "Interface/Icons/INV_Misc_Bag_08")
+    self:SetScript("OnClick", function()
+        if DJBagsBankBar and DJBagsBankBar.bankBag and DJBagsBankBar.bankBag.SelectTab then
+            DJBagsBankBar.bankBag:SelectTab(0)
+        end
+    end)
+end
+
+-- Helper to initialize a bank tab button for a specific tab index.
+function DJBagsBankTabButton_OnLoad(self, tabIndex)
+    local slot = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1 and (Enum.BagIndex.CharacterBankTab_1 + tabIndex - 1)
+    if slot then
+        local id = C_Container and C_Container.ContainerIDToInventoryID and C_Container.ContainerIDToInventoryID(slot)
+        DJBagsBagItemLoad(self, slot, id)
+    end
+
+    -- Disable drag interactions; tabs are for selection only.
+    self:SetScript('OnDragStart', nil)
+    self:SetScript('OnReceiveDrag', nil)
+
+    self:SetScript("OnClick", function(btn, which)
+        if which == "RightButton" then
+            local menu = ADDON:GetBankTabSettingsMenu()
+            menu:Open(Enum.BankType and Enum.BankType.Character, tabIndex)
+            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+        else
+            if DJBagsBankBar and DJBagsBankBar.bankBag and DJBagsBankBar.bankBag.SelectTab then
+                DJBagsBankBar.bankBag:SelectTab(tabIndex)
+            end
+        end
+    end)
+end
+
 function DJBagsHideBlizzardBank()
     BankFrame:SetAlpha(0)
     BankFrame:EnableMouse(false)
@@ -13,6 +49,10 @@ end
 
 function DJBagsRegisterBankBagContainer(self, bags, bankType)
     DJBagsRegisterBaseBagContainer(self, bags)
+
+    -- Track the full list of bags so we can toggle individual tabs.
+    self.allBags = bags
+    self.selectedTab = 0
 
     -- Save the original BAG_UPDATE implementation so we can gate updates
     -- while the other bank type is active.
@@ -66,11 +106,41 @@ function bank:PLAYERBANKSLOTS_CHANGED()
     end
 end
 
+function bank:SelectTab(tabIndex)
+    self.selectedTab = tabIndex or 0
+    if self.selectedTab == 0 then
+        self.bags = self.allBags
+    else
+        local bagID = self.allBags[self.selectedTab]
+        if bagID then
+            self.bags = { bagID }
+        else
+            self.bags = self.allBags
+            self.selectedTab = 0
+        end
+    end
+
+    self.bagsByKey = {}
+    for _, bag in ipairs(self.bags) do
+        self.bagsByKey[bag] = true
+    end
+
+    self:Refresh()
+    self:BAG_UPDATE_DELAYED()
+
+    if DJBagsBankBar and DJBagsBankBar.UpdateTabSelection then
+        DJBagsBankBar:UpdateTabSelection(self.selectedTab)
+    end
+end
+
 function bank:BAG_UPDATE_DELAYED()
     if not self.isActive then
         return
     end
+
     local prefix = self.bankType == Enum.BankType.Account and 'accountBag' or 'bag'
+
+    -- Update tab icons
     for i = 1, 6 do
         local barItem = DJBagsBankBar[prefix .. i]
         if barItem then
@@ -78,29 +148,26 @@ function bank:BAG_UPDATE_DELAYED()
         end
     end
 
+    -- Position the tab buttons vertically and include the "all" tab for
+    -- character banks.
     local prev
-    local first
+    if prefix == 'bag' and DJBagsBankBar.allTab then
+        DJBagsBankBar.allTab:ClearAllPoints()
+        DJBagsBankBar.allTab:SetPoint('TOPRIGHT', DJBagsBankBar, 'TOPRIGHT', -9, -9)
+        prev = DJBagsBankBar.allTab
+    end
+
     for i = 1, 6 do
         local barItem = DJBagsBankBar[prefix .. i]
         if barItem and barItem:IsShown() then
             barItem:ClearAllPoints()
             if prev then
-                barItem:SetPoint('TOPLEFT', prev, 'TOPRIGHT', 5, 0)
+                barItem:SetPoint('TOPRIGHT', prev, 'BOTTOMRIGHT', 0, -5)
             else
-                barItem:SetPoint('TOPLEFT', DJBagsBankBar, 'TOPLEFT', 9, -9)
-                first = barItem
+                barItem:SetPoint('TOPRIGHT', DJBagsBankBar, 'TOPRIGHT', -9, -9)
             end
             prev = barItem
         end
-    end
-
-    if DJBagsBankBarRestackButton and prev then
-        DJBagsBankBarRestackButton:ClearAllPoints()
-        DJBagsBankBarRestackButton:SetPoint('TOPRIGHT', prev, 'BOTTOMRIGHT', 0, -9.5)
-    end
-    if DJBagsBankBarSettingsBtn and first then
-        DJBagsBankBarSettingsBtn:ClearAllPoints()
-        DJBagsBankBarSettingsBtn:SetPoint('TOPLEFT', first, 'BOTTOMLEFT', 0, -5)
     end
 end
 

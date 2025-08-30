@@ -51,6 +51,7 @@ function bankFrame:UpdateBankType()
     if isCharacterBank then
         if self.bankBag then self.bankBag:Show() end
         if self.warbandBankBag then self.warbandBankBag:Hide() end
+        if self.allTab then self.allTab:Show() end
         for i = 1, 6 do
             local bag = self['bag' .. i]
             local acc = self['accountBag' .. i]
@@ -60,6 +61,7 @@ function bankFrame:UpdateBankType()
     else
         if self.bankBag then self.bankBag:Hide() end
         if self.warbandBankBag then self.warbandBankBag:Show() end
+        if self.allTab then self.allTab:Hide() end
         for i = 1, 6 do
             local bag = self['bag' .. i]
             local acc = self['accountBag' .. i]
@@ -81,6 +83,11 @@ function bankFrame:UpdateBankType()
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
     local maxWidth = (activeBag and activeBag:GetWidth()) or self:GetWidth()
     PanelTemplates_ResizeTabsToFit(self, maxWidth)
+
+    if isCharacterBank and self.bankBag and self.bankBag.selectedTab then
+        self:UpdateTabSelection(self.bankBag.selectedTab)
+    end
+
     self:Show()
 end
 
@@ -94,4 +101,16 @@ end
 
 function bankFrame:BANKFRAME_CLOSED()
     self:Hide()
+end
+
+function bankFrame:UpdateTabSelection(selected)
+    if self.allTab then
+        self.allTab:SetAlpha(selected == 0 and 1 or 0.4)
+    end
+    for i = 1, 6 do
+        local btn = self['bag' .. i]
+        if btn then
+            btn:SetAlpha(selected == i and 1 or 0.4)
+        end
+    end
 end
