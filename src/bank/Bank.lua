@@ -126,11 +126,17 @@ function bank:SelectTab(tabIndex)
     end
 
     -- Reset the item cache and hide items from inactive tabs so the display
-    -- only contains slots from the selected tab.
+    -- only contains slots from the selected tab. Ensure items from the
+    -- active tab are retained in the cache so the bag doesn't appear empty
+    -- after switching tabs.
     self.items = {}
     if self.containers then
         for bagID, container in pairs(self.containers) do
-            if not self.bagsByKey[bagID] then
+            if self.bagsByKey[bagID] then
+                for _, item in pairs(container.items) do
+                    table.insert(self.items, item)
+                end
+            else
                 for _, item in pairs(container.items) do
                     item.id = nil
                     item:Hide()
