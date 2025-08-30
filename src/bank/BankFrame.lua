@@ -78,7 +78,8 @@ function bankFrame:UpdateBankType()
     end
 
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
-    PanelTemplates_ResizeTabsToFit(self)
+    local maxWidth = (activeBag and activeBag:GetWidth()) or self:GetWidth()
+    PanelTemplates_ResizeTabsToFit(self, maxWidth)
     self:Show()
 end
 
