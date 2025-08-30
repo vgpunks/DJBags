@@ -3,6 +3,7 @@ local ADDON_NAME, ADDON = ...
 local bankFrame = {}
 bankFrame.__index = bankFrame
 
+
 function DJBagsRegisterBankFrame(self, bags)
         for k, v in pairs(bankFrame) do
                 self[k] = v
@@ -74,7 +75,7 @@ function bankFrame:UpdateBankType()
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
     if activeBag and self.characterTab then
         self.characterTab:ClearAllPoints()
-        self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 0, 2)
+        self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 2, 2)
     end
 
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
