@@ -145,6 +145,39 @@ function bag:Refresh()
     end
 end
 
+function bag:SetBags(bags)
+    for _, frame in pairs(self.titleContainers) do
+        frame:Hide()
+    end
+    self.titleContainers = {}
+    self.items = {}
+
+    self.bags = bags
+    self.bagsByKey = GetKeyBasedBagList(bags)
+
+    for _, bagID in pairs(bags) do
+        if not self.containers[bagID] then
+            self.containers[bagID] = CreateFrame("Frame", "DJBagsBagContainer_" .. bagID, self)
+            self.containers[bagID]:SetAllPoints()
+            self.containers[bagID]:SetID(bagID)
+            self.containers[bagID].items = {}
+        end
+    end
+
+    for id, container in pairs(self.containers) do
+        local show = self.bagsByKey[id]
+        container:SetShown(show)
+        if not show then
+            for _, item in pairs(container.items) do
+                item.id = nil
+                item:Hide()
+            end
+        end
+    end
+
+    self:Refresh()
+end
+
 function bag:PLAYER_ENTERING_WORLD()
     ADDON.eventManager:Add('BAG_UPDATE', self)
 
