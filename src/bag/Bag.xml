@@ -213,6 +213,27 @@
                     <Anchor point="TOPRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="0" y="0"/>
                 </Anchors>
             </Frame>                        
+            <Frame name="$parentCurrency" parentKey="currencyBar" inherits="DJBagsMainBarTemplate" hidden="true">
+                <Size x="120" y="33"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <Texture parentKey="icon">
+                            <Size x="16" y="16"/>
+                            <Anchors>
+                                <Anchor point="LEFT" x="8" y="0"/>
+                            </Anchors>
+                        </Texture>
+                        <FontString parentKey="amount" inherits="GameFontHighlight">
+                            <Anchors>
+                                <Anchor point="LEFT" relativeKey="$parent.icon" relativePoint="RIGHT" x="5" y="0"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
                 <Anchors>
                     <Anchor point="CENTER" relativePoint="TOPRIGHT" x="-2" y="-2"/>
