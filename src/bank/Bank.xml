@@ -289,6 +289,11 @@
                         if not self.Text and self.GetFontString then
                             self.Text = self:GetFontString()
                         end
+                        if not self.Left and self.LeftDisabled then
+                            self.Left = self.LeftDisabled
+                            self.Middle = self.MiddleDisabled
+                            self.Right = self.RightDisabled
+                        end
                         PanelTemplates_TabResize(self, 0)
                     </OnLoad>
                     <OnClick>
@@ -306,6 +311,11 @@
                         self:SetText(WARBAND_BANK or "Warband")
                         if not self.Text and self.GetFontString then
                             self.Text = self:GetFontString()
+                        end
+                        if not self.Left and self.LeftDisabled then
+                            self.Left = self.LeftDisabled
+                            self.Middle = self.MiddleDisabled
+                            self.Right = self.RightDisabled
                         end
                         PanelTemplates_TabResize(self, 0)
                     </OnLoad>
