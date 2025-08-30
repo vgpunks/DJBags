@@ -11,7 +11,7 @@
         <Frames>
             <ItemButton name="$parentBag1" parentKey="bag1">
                 <Anchors>
-                    <Anchor point="TOPLEFT" x="9" y="-9" />
+                    <Anchor point="TOPLEFT" relativeTo="DJBagsBank" relativePoint="TOPRIGHT" x="5" y="0" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -21,7 +21,7 @@
             </ItemButton>
             <ItemButton name="$parentBag2" parentKey="bag2">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -31,7 +31,7 @@
             </ItemButton>
             <ItemButton name="$parentBag3" parentKey="bag3">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag2" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag2" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -41,7 +41,7 @@
             </ItemButton>
             <ItemButton name="$parentBag4" parentKey="bag4">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag3" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag3" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -51,7 +51,7 @@
             </ItemButton>
             <ItemButton name="$parentBag5" parentKey="bag5">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag4" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag4" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -61,7 +61,7 @@
             </ItemButton>
             <ItemButton name="$parentBag6" parentKey="bag6">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag5" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentBag5" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -71,7 +71,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag1" parentKey="accountBag1" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" x="9" y="-9" />
+                    <Anchor point="TOPLEFT" relativeTo="DJBagsWarbandBank" relativePoint="TOPRIGHT" x="5" y="0" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -81,7 +81,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag2" parentKey="accountBag2" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag1" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag1" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -91,7 +91,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag3" parentKey="accountBag3" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag2" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag2" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -101,7 +101,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag4" parentKey="accountBag4" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag3" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag3" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -111,7 +111,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag5" parentKey="accountBag5" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag4" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag4" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -121,7 +121,7 @@
             </ItemButton>
             <ItemButton name="$parentAccountBag6" parentKey="accountBag6" hidden="true">
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag5" relativePoint="TOPRIGHT" x="5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag5" relativePoint="BOTTOMLEFT" y="-5" />
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -132,7 +132,7 @@
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentBag6" relativePoint="BOTTOMRIGHT" y="-9.5" />
+                    <Anchor point="TOPRIGHT" x="-9" y="-9" />
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
@@ -158,7 +158,7 @@
             <Button name="$parentSettingsBtn">
                 <Size x="16" y="16"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+                    <Anchor point="TOPLEFT" x="9" y="-9"/>
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled"/>
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up"/>

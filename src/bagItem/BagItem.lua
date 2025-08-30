@@ -42,8 +42,7 @@ function item:Init(id, slot)
             return
         end
 
-        -- Right-clicking a bank tab should open the settings menu
-        if button == "RightButton" and BankFrame and isBankTabSlot(self.slot) then
+        if isBankTabSlot(self.slot) then
             local tabIndex, bankType
 
             if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6
@@ -57,11 +56,21 @@ function item:Init(id, slot)
                 bankType = Enum.BankType and Enum.BankType.Character
             end
 
-            local menu = ADDON:GetBankTabSettingsMenu()
-            menu:Open(bankType, tabIndex)
+            if button == "RightButton" and BankFrame then
+                local menu = ADDON:GetBankTabSettingsMenu()
+                menu:Open(bankType, tabIndex)
 
-            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
-            return
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+                return
+            end
+
+            if button == "LeftButton" then
+                if self:GetParent() and self:GetParent().SetBankTab then
+                    self:GetParent():SetBankTab(tabIndex, bankType)
+                end
+                PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
+                return
+            end
         end
 
         self:PlaceOrPickup(button, ...)

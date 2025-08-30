@@ -79,28 +79,17 @@ function bank:BAG_UPDATE_DELAYED()
     end
 
     local prev
-    local first
     for i = 1, 6 do
         local barItem = DJBagsBankBar[prefix .. i]
         if barItem and barItem:IsShown() then
             barItem:ClearAllPoints()
             if prev then
-                barItem:SetPoint('TOPLEFT', prev, 'TOPRIGHT', 5, 0)
+                barItem:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT', 0, -5)
             else
-                barItem:SetPoint('TOPLEFT', DJBagsBankBar, 'TOPLEFT', 9, -9)
-                first = barItem
+                barItem:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, 0)
             end
             prev = barItem
         end
-    end
-
-    if DJBagsBankBarRestackButton and prev then
-        DJBagsBankBarRestackButton:ClearAllPoints()
-        DJBagsBankBarRestackButton:SetPoint('TOPRIGHT', prev, 'BOTTOMRIGHT', 0, -9.5)
-    end
-    if DJBagsBankBarSettingsBtn and first then
-        DJBagsBankBarSettingsBtn:ClearAllPoints()
-        DJBagsBankBarSettingsBtn:SetPoint('TOPLEFT', first, 'BOTTOMLEFT', 0, -5)
     end
 end
 
