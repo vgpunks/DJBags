@@ -125,6 +125,20 @@ function bank:SelectTab(tabIndex)
         self.bagsByKey[bag] = true
     end
 
+    -- Reset the item cache and hide items from inactive tabs so the display
+    -- only contains slots from the selected tab.
+    self.items = {}
+    if self.containers then
+        for bagID, container in pairs(self.containers) do
+            if not self.bagsByKey[bagID] then
+                for _, item in pairs(container.items) do
+                    item.id = nil
+                    item:Hide()
+                end
+            end
+        end
+    end
+
     self:Refresh()
     self:BAG_UPDATE_DELAYED()
 
@@ -176,4 +190,9 @@ function bank:PLAYERBANKBAGSLOTS_CHANGED()
     if self.isActive then
         self:BAG_UPDATE_DELAYED()
     end
+end
+
+-- Override the bag hover event to prevent highlighting items when hovering
+-- over bank tabs.  Tab selection already filters the visible items.
+function bank:DJBAGS_BAG_HOVER()
 end
