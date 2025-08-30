@@ -9,66 +9,6 @@
             <Anchor point="TOPLEFT" x="150" y="-100" />
         </Anchors>
         <Frames>
-            <ItemButton name="$parentBag1" parentKey="bag1">
-                <Anchors>
-                    <Anchor point="TOPLEFT" x="9" y="-9" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_1, BankButtonIDToInvSlotID(1, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag2" parentKey="bag2">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_2, BankButtonIDToInvSlotID(2, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag3" parentKey="bag3">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag2" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_3, BankButtonIDToInvSlotID(3, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag4" parentKey="bag4">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag3" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_4, BankButtonIDToInvSlotID(4, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag5" parentKey="bag5">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag4" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_5, BankButtonIDToInvSlotID(5, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
-            <ItemButton name="$parentBag6" parentKey="bag6">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag5" relativePoint="TOPRIGHT" x="5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsBagItemLoad(self, Enum.BagIndex.CharacterBankTab_6, BankButtonIDToInvSlotID(6, 1))
-                    </OnLoad>
-                </Scripts>
-            </ItemButton>
             <ItemButton name="$parentAccountBag1" parentKey="accountBag1" hidden="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" x="9" y="-9" />
@@ -132,7 +72,7 @@
             <Button name="$parentRestackButton">
                 <Size x="16" y="16" />
                 <Anchors>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentBag6" relativePoint="BOTTOMRIGHT" y="-9.5" />
+                    <Anchor point="TOPRIGHT" x="-9" y="-9" />
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
@@ -158,7 +98,7 @@
             <Button name="$parentSettingsBtn">
                 <Size x="16" y="16"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentBag1" relativePoint="BOTTOMLEFT" x="0" y="-5"/>
+                    <Anchor point="TOPLEFT" x="9" y="-9"/>
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled"/>
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up"/>
@@ -184,8 +124,8 @@
             <EditBox name="$parentSearchBar" inherits="BagSearchBoxTemplate">
                 <Size y="25" />
                 <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentSettingsBtn" relativePoint="RIGHT" x="5"/>
-                    <Anchor point="RIGHT" relativeTo="$parentRestackButton" relativePoint="LEFT" x="-5" />
+                    <Anchor point="TOPLEFT" relativeTo="$parentSettingsBtn" relativePoint="TOPRIGHT" x="5"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentRestackButton" relativePoint="TOPLEFT" x="-5" />
                 </Anchors>
             </EditBox>
             <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
