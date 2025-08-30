@@ -34,7 +34,11 @@ function DJBagsRegisterBankFrame(self, bags)
             bag:StopMovingOrSizing(...)
         end
     end)
-    self:SetUserPlaced(false)
+    -- Only clear the user placement flag if the frame supports being moved or resized.
+    -- Calling SetUserPlaced on non-movable frames triggers an error starting in 11.0.2.
+    if self:IsMovable() or self:IsResizable() then
+        self:SetUserPlaced(false)
+    end
 
     PanelTemplates_SetNumTabs(self, 2)
 
