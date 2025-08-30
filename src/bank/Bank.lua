@@ -38,7 +38,11 @@ end
 
 function bank:BANKFRAME_OPENED()
     local bankType = BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-    self.isActive = not bankType or bankType == self.bankType
+    if not bankType then
+        bankType = Enum.BankType and Enum.BankType.Character or 0
+    end
+
+    self.isActive = bankType == self.bankType
     if self.isActive then
         self:Show()
     else
