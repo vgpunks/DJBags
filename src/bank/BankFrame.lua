@@ -3,24 +3,6 @@ local ADDON_NAME, ADDON = ...
 local bankFrame = {}
 bankFrame.__index = bankFrame
 
-local CHARACTER_TABS = {
-    Enum.BagIndex.CharacterBankTab_1,
-    Enum.BagIndex.CharacterBankTab_2,
-    Enum.BagIndex.CharacterBankTab_3,
-    Enum.BagIndex.CharacterBankTab_4,
-    Enum.BagIndex.CharacterBankTab_5,
-    Enum.BagIndex.CharacterBankTab_6,
-}
-
-local ACCOUNT_TABS = {
-    Enum.BagIndex.AccountBankTab_1,
-    Enum.BagIndex.AccountBankTab_2,
-    Enum.BagIndex.AccountBankTab_3,
-    Enum.BagIndex.AccountBankTab_4,
-    Enum.BagIndex.AccountBankTab_5,
-    Enum.BagIndex.AccountBankTab_6,
-}
-
 
 function DJBagsRegisterBankFrame(self, bags)
         for k, v in pairs(bankFrame) do
@@ -53,42 +35,6 @@ function DJBagsRegisterBankFrame(self, bags)
     hooksecurefunc(BankFrame, "SetTab", function()
         self:UpdateBankType()
     end)
-
-    C_Timer.After(0, function()
-        self:SetBankTab(1, Enum.BankType and Enum.BankType.Character)
-    end)
-end
-
-function bankFrame:SetBankTab(tabIndex, bankType)
-    bankType = bankType or (BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()) or (Enum.BankType and Enum.BankType.Character)
-    self.activeBankTab = tabIndex
-
-    local bags = bankType == Enum.BankType.Account and ACCOUNT_TABS or CHARACTER_TABS
-    local bagIndex = bags[tabIndex]
-
-    if bankType == Enum.BankType.Account then
-        if self.warbandBankBag and bagIndex then
-            self.warbandBankBag:SetBags({ bagIndex })
-            self.warbandBankBag:BAG_UPDATE_DELAYED()
-        end
-        for i = 1, 6 do
-            local btn = self['accountBag' .. i]
-            if btn then
-                btn:SetAlpha(i == tabIndex and 1 or 0.5)
-            end
-        end
-    else
-        if self.bankBag and bagIndex then
-            self.bankBag:SetBags({ bagIndex })
-            self.bankBag:BAG_UPDATE_DELAYED()
-        end
-        for i = 1, 6 do
-            local btn = self['bag' .. i]
-            if btn then
-                btn:SetAlpha(i == tabIndex and 1 or 0.5)
-            end
-        end
-    end
 end
 
 function bankFrame:UpdateBankType()
@@ -135,7 +81,6 @@ function bankFrame:UpdateBankType()
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
     local maxWidth = (activeBag and activeBag:GetWidth()) or self:GetWidth()
     PanelTemplates_ResizeTabsToFit(self, maxWidth)
-    self:SetBankTab(1, isCharacterBank and (Enum.BankType and Enum.BankType.Character) or (Enum.BankType and Enum.BankType.Account))
     self:Show()
 end
 
