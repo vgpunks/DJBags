@@ -75,9 +75,21 @@ function bankFrame:UpdateBankType()
     end
 
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
-    if activeBag and self.characterTab then
-        self.characterTab:ClearAllPoints()
-        self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 2, 2)
+    if activeBag then
+        self:ClearAllPoints()
+        self:SetPoint("TOPRIGHT", activeBag, "BOTTOMRIGHT", 0, -5)
+        if self.characterTab then
+            self.characterTab:ClearAllPoints()
+            self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 2, 2)
+        end
+
+        if self.settingsBtn and self.restackButton and self.search then
+            local padding = 18
+            local spacing = 3
+            local width = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
+            local height = self.search:GetHeight() + padding
+            self:SetSize(width, height)
+        end
     end
 
     PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)

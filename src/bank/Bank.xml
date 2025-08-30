@@ -3,42 +3,62 @@
     <Script file="src/bank/Bank.lua"/>
     <Script file="src/bank/BankTabSettingsMenu.lua"/>
 
-    <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
-        <Size x="323" y="85" />
+    <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
         <Anchors>
-            <Anchor point="TOPLEFT" x="150" y="-100" />
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                DJBagsRegisterBankBagContainer(self, {
+                        Enum.BagIndex.CharacterBankTab_1,
+                        Enum.BagIndex.CharacterBankTab_2,
+                        Enum.BagIndex.CharacterBankTab_3,
+                        Enum.BagIndex.CharacterBankTab_4,
+                        Enum.BagIndex.CharacterBankTab_5,
+                        Enum.BagIndex.CharacterBankTab_6}, Enum.BankType.Character)
+            </OnLoad>
+            <OnShow>
+                self:OnShow()
+            </OnShow>
+            <OnHide>
+                self:OnHide()
+            </OnHide>
+        </Scripts>
+    </Frame>
+
+    <Frame name="DJBagsWarbandBank" inherits="DJBagsBackgroundTemplate" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                DJBagsRegisterBankBagContainer(self, {
+                        Enum.BagIndex.AccountBankTab_1,
+                        Enum.BagIndex.AccountBankTab_2,
+                        Enum.BagIndex.AccountBankTab_3,
+                        Enum.BagIndex.AccountBankTab_4,
+                        Enum.BagIndex.AccountBankTab_5,
+                        Enum.BagIndex.AccountBankTab_6}, Enum.BankType.Account)
+            </OnLoad>
+            <OnShow>
+                self:OnShow()
+            </OnShow>
+            <OnHide>
+                self:OnHide()
+            </OnHide>
+        </Scripts>
+    </Frame>
+
+    <Frame name="DJBagsBankBar" inherits="DJBagsBackgroundTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true">
+        <Size x="150" y="33"/>
+        <Anchors>
+            <Anchor point="TOPRIGHT" relativeTo="DJBagsBank" relativePoint="BOTTOMRIGHT" y="-5"/>
         </Anchors>
         <Frames>
-            <Button name="$parentRestackButton">
-                <Size x="16" y="16" />
-                <Anchors>
-                    <Anchor point="TOPRIGHT" x="-9" y="-9" />
-                </Anchors>
-                <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled" />
-                <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up" />
-                <HighlightTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Up" alphaMode="ADD" />
-                <Scripts>
-                    <OnEnter>
-                        GameTooltip:SetOwner(self, 'TOPRIGHT')
-                        GameTooltip:SetText(BAG_CLEANUP_BANK)
-                        GameTooltip:Show()
-                    </OnEnter>
-                    <OnLeave>
-                        GameTooltip:Hide()
-                    </OnLeave>
-                    <OnClick>
-                        if C_Container and C_Container.SortBankBags then
-                            C_Container.SortBankBags()
-                        elseif SortBankBags then
-                            SortBankBags()
-                        end
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentSettingsBtn">
+            <Button name="$parentSettingsBtn" parentKey="settingsBtn">
                 <Size x="16" y="16"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" x="9" y="-9"/>
+                    <Anchor point="RIGHT" relativePoint="RIGHT" relativeTo="$parent" x="-9"/>
                 </Anchors>
                 <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled"/>
                 <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up"/>
@@ -61,59 +81,38 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <EditBox name="$parentSearchBar" inherits="BagSearchBoxTemplate">
-                <Size y="25" />
+            <Button name="$parentRestackButton" parentKey="restackButton">
+                <Size x="16" y="16"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parentSettingsBtn" relativePoint="TOPRIGHT" x="5"/>
-                    <Anchor point="TOPRIGHT" relativeTo="$parentRestackButton" relativePoint="TOPLEFT" x="-5" />
+                    <Anchor point="RIGHT" relativeTo="$parentSettingsBtn" relativePoint="LEFT" x="-3"/>
+                </Anchors>
+                <NormalTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Disabled"/>
+                <PushedTexture file="Interface\Buttons\UI-GuildButton-OfficerNote-Up"/>
+                <HighlightTexture file="Interface\Buttons\UI-GuildButton-PublicNote-Up" alphaMode="ADD"/>
+                <Scripts>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, 'TOPRIGHT')
+                        GameTooltip:SetText(BAG_CLEANUP_BANK)
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                    <OnClick>
+                        if C_Container and C_Container.SortBankBags then
+                            C_Container.SortBankBags()
+                        elseif SortBankBags then
+                            SortBankBags()
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <EditBox name="$parentSearchBox" parentKey="search" inherits="BagSearchBoxTemplate" letters="15">
+                <Size x="96" y="18"/>
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentRestackButton" relativePoint="LEFT" x="-3"/>
                 </Anchors>
             </EditBox>
-            <Frame name="DJBagsBank" inherits="DJBagsBackgroundTemplate" parentKey="bankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
-                   hidden="true" parent="DJBagsBankBar">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsRegisterBankBagContainer(self, {
-                                Enum.BagIndex.CharacterBankTab_1,
-                                Enum.BagIndex.CharacterBankTab_2,
-                                Enum.BagIndex.CharacterBankTab_3,
-                                Enum.BagIndex.CharacterBankTab_4,
-                                Enum.BagIndex.CharacterBankTab_5,
-                                Enum.BagIndex.CharacterBankTab_6}, Enum.BankType.Character)
-                    </OnLoad>
-                    <OnShow>
-                        self:OnShow()
-                    </OnShow>
-                    <OnHide>
-                        self:OnHide()
-                    </OnHide>
-                </Scripts>
-            </Frame>
-            <Frame name="DJBagsWarbandBank" inherits="DJBagsBackgroundTemplate" parentKey="warbandBankBag" frameStrata="MEDIUM" toplevel="true" movable="true" enableMouse="true"
-                   hidden="true" parent="DJBagsBankBar">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT" y="-5" />
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        DJBagsRegisterBankBagContainer(self, {
-                                Enum.BagIndex.AccountBankTab_1,
-                                Enum.BagIndex.AccountBankTab_2,
-                                Enum.BagIndex.AccountBankTab_3,
-                                Enum.BagIndex.AccountBankTab_4,
-                                Enum.BagIndex.AccountBankTab_5,
-                                Enum.BagIndex.AccountBankTab_6}, Enum.BankType.Account)
-                    </OnLoad>
-                    <OnShow>
-                        self:OnShow()
-                    </OnShow>
-                    <OnHide>
-                        self:OnHide()
-                    </OnHide>
-                </Scripts>
-            </Frame>
             <ItemButton name="$parentAllTab" parentKey="allTab">
                 <Size x="36" y="36"/>
                 <Anchors>
@@ -231,7 +230,6 @@
                     </Layer>
                 </Layers>
                 <Scripts>
-
                     <OnLoad>
                         self.bag = self:GetParent().bankBag
                     </OnLoad>
@@ -290,6 +288,8 @@
         </Frames>
         <Scripts>
             <OnLoad>
+                self.bankBag = DJBagsBank
+                self.warbandBankBag = DJBagsWarbandBank
                 DJBagsRegisterBankFrame(self)
             </OnLoad>
             <OnShow>
@@ -311,5 +311,4 @@
         </Scripts>
     </Frame>
 </Ui>
-
 
