@@ -25,7 +25,9 @@ function DJBagsBagItemLoad(button, slot, id)
 end
 
 function item:Init(id, slot)
-    self:SetID(id)
+    -- Some game versions may not provide slot or inventory IDs for all bank
+    -- tabs.  Guard against nil so SetID never receives an invalid value.
+    self:SetID(id or slot or 0)
     self.slot = slot
 
     -- Allow both left and right button clicks so we can open bank tab settings
