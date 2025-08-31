@@ -21,28 +21,35 @@ local function FetchTabInfo(bankType, tabIndex)
         return nil, nil, nil
     end
 
-    if C_Bank.GetBankTabDisplayInfo then
-        local info = C_Bank.GetBankTabDisplayInfo(bankType, tabIndex)
-        if info then
-            local icon = info.icon or info.iconFileID or info.iconTexture
-            local depositFlags = info.depositFlags or info.flags or info.depositFlag
-            return info.name, icon, depositFlags
-        end
+    local info
+
+    -- Helper to safely invoke an API method using pcall.
+    local function Try(func, ...)
+        if not func then return nil end
+        local ok, result = pcall(func, ...)
+        if ok then return result end
     end
 
-    if C_Bank.GetBankTabInfo then
-        local info = C_Bank.GetBankTabInfo(bankType, tabIndex)
-        if info then
-            local icon = info.icon or info.iconFileID or info.iconTexture
-            local depositFlags = info.depositFlags or info.flags or info.depositFlag
-            return info.name, icon, depositFlags
-        end
+    -- Newer API versions expect (bankType, tabIndex) while older builds
+    -- only take a tab index or use the reverse ordering.  Try a variety of
+    -- call signatures so tab data is located regardless of client version.
+    info = Try(C_Bank.GetBankTabDisplayInfo, bankType, tabIndex)
+        or Try(C_Bank.GetBankTabDisplayInfo, tabIndex, bankType)
+        or Try(C_Bank.GetBankTabDisplayInfo, tabIndex)
+
+    if not info then
+        info = Try(C_Bank.GetBankTabInfo, bankType, tabIndex)
+            or Try(C_Bank.GetBankTabInfo, tabIndex, bankType)
+            or Try(C_Bank.GetBankTabInfo, tabIndex)
     end
 
-    if C_Bank.GetPurchasedBankTabData then
-        local tabData = C_Bank.GetPurchasedBankTabData(bankType)
+    if not info then
+        local tabData = Try(C_Bank.GetPurchasedBankTabData, bankType)
+            or Try(C_Bank.FetchPurchasedBankTabData, bankType)
+            or Try(C_Bank.GetPurchasedBankTabData)
+            or Try(C_Bank.FetchPurchasedBankTabData)
         if tabData then
-            local info = tabData[tabIndex]
+            info = tabData[tabIndex]
             if not info then
                 for _, data in ipairs(tabData) do
                     local id = data.ID or data.bankTabID
@@ -52,31 +59,13 @@ local function FetchTabInfo(bankType, tabIndex)
                     end
                 end
             end
-            if info then
-                local icon = info.icon or info.iconFileID or info.iconTexture
-                local depositFlags = info.depositFlags or info.flags or info.depositFlag
-                return info.name, icon, depositFlags
-            end
         end
-    elseif C_Bank.FetchPurchasedBankTabData then
-        local tabData = C_Bank.FetchPurchasedBankTabData(bankType)
-        if tabData then
-            local info = tabData[tabIndex]
-            if not info then
-                for _, data in ipairs(tabData) do
-                    local id = data.ID or data.bankTabID
-                    if id == tabIndex then
-                        info = data
-                        break
-                    end
-                end
-            end
-            if info then
-                local icon = info.icon or info.iconFileID or info.iconTexture
-                local depositFlags = info.depositFlags or info.flags or info.depositFlag
-                return info.name, icon, depositFlags
-            end
-        end
+    end
+
+    if info then
+        local icon = info.icon or info.iconFileID or info.iconTexture
+        local depositFlags = info.depositFlags or info.flags or info.depositFlag
+        return info.name, icon, depositFlags
     end
 
     return nil, nil, nil
