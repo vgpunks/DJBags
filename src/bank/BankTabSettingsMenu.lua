@@ -95,6 +95,21 @@ local function FetchTabInfo(bankType, tabIndex)
 end
 
 local function CreateSettingsMenu()
+    -- Ensure the Blizzard icon selector UI is loaded before creating the frame.
+    if C_AddOns and C_AddOns.LoadAddOn then
+        -- Retail clients expose the loader via C_AddOns.
+        pcall(C_AddOns.LoadAddOn, "Blizzard-IconSelector")
+        pcall(C_AddOns.LoadAddOn, "Blizzard_IconSelector")
+    elseif LoadAddOn then
+        -- Fallback for older clients with the global loader.
+        pcall(LoadAddOn, "Blizzard-IconSelector")
+        pcall(LoadAddOn, "Blizzard_IconSelector")
+    elseif UIParentLoadAddOn then
+        -- Final fallback in case UIParentLoadAddOn is available instead.
+        pcall(UIParentLoadAddOn, "Blizzard-IconSelector")
+        pcall(UIParentLoadAddOn, "Blizzard_IconSelector")
+    end
+
     -- Use the generic icon selector template which provides a name edit
     -- box and icon picker.
     local frame = CreateFrame("Frame", "DJBagsBankTabSettingsMenu", UIParent, "IconSelectorPopupFrameTemplate")
