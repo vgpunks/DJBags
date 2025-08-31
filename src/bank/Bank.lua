@@ -174,7 +174,7 @@ function bank:BAG_UPDATE_DELAYED()
     local prev
     if prefix == 'bag' and DJBagsBankBar.allTab then
         DJBagsBankBar.allTab:ClearAllPoints()
-        DJBagsBankBar.allTab:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, 0)
+        DJBagsBankBar.allTab:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, -5)
         prev = DJBagsBankBar.allTab
     end
 
@@ -185,7 +185,7 @@ function bank:BAG_UPDATE_DELAYED()
             if prev then
                 barItem:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT', 0, -5)
             else
-                barItem:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, 0)
+                barItem:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, prefix == 'bag' and -5 or 0)
             end
             prev = barItem
         end
