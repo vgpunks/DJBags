@@ -220,7 +220,7 @@ local function CreateSettingsMenu()
         self:SetFrameStrata("FULLSCREEN_DIALOG")
         self:ClearAllPoints()
         local anchor = BankFrame
-        if bankType == (Enum.BankType and Enum.BankType.Account) then
+        if Enum.BankType and bankType == Enum.BankType.Account then
             anchor = DJBagsWarbandBank or anchor
         else
             anchor = DJBagsBank or anchor
@@ -261,7 +261,7 @@ function ADDON:GetBankTabSettingsMenu()
             end
             if self.SetPoint then
                 local anchor = BankFrame
-                if bankType == (Enum.BankType and Enum.BankType.Account) then
+                if Enum.BankType and bankType == Enum.BankType.Account then
                     anchor = DJBagsWarbandBank or anchor
                 else
                     anchor = DJBagsBank or anchor
