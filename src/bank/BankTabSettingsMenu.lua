@@ -244,13 +244,18 @@ function ADDON:GetBankTabSettingsMenu()
         menu = self.bankTabSettingsMenu
     end
 
-    -- Some game versions may not provide an Open method on the settings
-    -- menu frame.  Wrap the existing behavior so callers can always invoke
-    -- menu:Open(bankType, tabIndex) regardless of the underlying
-    -- implementation.
-    if menu and not menu.Open then
+    -- Ensure the settings menu can always be opened and anchored near our
+    -- custom bank frames.  Some game versions provide a built-in menu with an
+    -- existing Open method that anchors to Blizzard's BankPanel.  That frame is
+    -- moved off-screen by DJBags, resulting in the menu appearing invisible.
+    -- Wrap the menu's Open behavior so the menu is always positioned relative
+    -- to our active bank frame.
+    if menu and not menu.DJBagsWrappedOpen then
+        local baseOpen = menu.Open
         function menu:Open(bankType, tabIndex)
-            if self.Load then
+            if baseOpen then
+                baseOpen(self, bankType, tabIndex)
+            elseif self.Load then
                 self:Load(bankType, tabIndex)
             end
             if self.SetFrameStrata then
@@ -272,6 +277,7 @@ function ADDON:GetBankTabSettingsMenu()
                 self:Show()
             end
         end
+        menu.DJBagsWrappedOpen = true
     end
 
     return menu
