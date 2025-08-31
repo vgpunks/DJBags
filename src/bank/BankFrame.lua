@@ -137,6 +137,10 @@ function bankFrame:UpdateBankType()
         self:UpdateTabSelection(self.bankBag.selectedTab)
     end
 
+    if activeBag and activeBag.BAG_UPDATE_DELAYED then
+        activeBag:BAG_UPDATE_DELAYED()
+    end
+
     self:Show()
 end
 
