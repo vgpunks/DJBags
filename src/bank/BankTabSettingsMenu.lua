@@ -100,14 +100,20 @@ local function CreateSettingsMenu()
         -- Retail clients expose the loader via C_AddOns.
         pcall(C_AddOns.LoadAddOn, "Blizzard-IconSelector")
         pcall(C_AddOns.LoadAddOn, "Blizzard_IconSelector")
+        pcall(C_AddOns.LoadAddOn, "Blizzard_IconSelectorUI")
+        pcall(C_AddOns.LoadAddOn, "Blizzard-IconSelectorUI")
     elseif LoadAddOn then
         -- Fallback for older clients with the global loader.
         pcall(LoadAddOn, "Blizzard-IconSelector")
         pcall(LoadAddOn, "Blizzard_IconSelector")
+        pcall(LoadAddOn, "Blizzard_IconSelectorUI")
+        pcall(LoadAddOn, "Blizzard-IconSelectorUI")
     elseif UIParentLoadAddOn then
         -- Final fallback in case UIParentLoadAddOn is available instead.
         pcall(UIParentLoadAddOn, "Blizzard-IconSelector")
         pcall(UIParentLoadAddOn, "Blizzard_IconSelector")
+        pcall(UIParentLoadAddOn, "Blizzard_IconSelectorUI")
+        pcall(UIParentLoadAddOn, "Blizzard-IconSelectorUI")
     end
 
     -- Use the generic icon selector template which provides a name edit
@@ -126,6 +132,9 @@ local function CreateSettingsMenu()
     -- setting up filtering.
     if frame.IconSelector and frame.IconSelector.OnLoad then
         frame.IconSelector:OnLoad()
+        if frame.IconSelector.iconDataProvider and frame.IconSelector.iconDataProvider.GenerateIconList then
+            pcall(frame.IconSelector.iconDataProvider.GenerateIconList, frame.IconSelector.iconDataProvider)
+        end
     end
 
     -- The popup frame mixin expects to reference the icon selector's data
@@ -160,6 +169,46 @@ local function CreateSettingsMenu()
         frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetText(ICON_SELECTION_CLICK)
         frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetFontObject(GameFontHighlightSmall)
     end)
+
+    -- Optional deposit setting checkboxes mirroring the Blizzard menu.
+    frame.depositChecks = {}
+    local function AddDepositOption(flag, label, offset)
+        local check = CreateFrame("CheckButton", nil, frame.BorderBox, "InterfaceOptionsSmallCheckButtonTemplate")
+        check:SetPoint("TOPLEFT", frame.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, offset)
+        check.Text:SetText(label)
+        check:SetScript("OnClick", function(self)
+            if self:GetChecked() then
+                frame.depositFlags = bit.bor(frame.depositFlags or 0, flag)
+            else
+                frame.depositFlags = bit.band(frame.depositFlags or 0, bit.bnot(flag))
+            end
+        end)
+        table.insert(frame.depositChecks, {button = check, flag = flag})
+        return offset - 22
+    end
+
+    local offset = -8
+    if Enum.BankTabSettingFlags then
+        -- Known flag providing auto deposit control.
+        if Enum.BankTabSettingFlags.AllowAutoDeposit then
+            offset = AddDepositOption(Enum.BankTabSettingFlags.AllowAutoDeposit, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+        elseif Enum.BankTabSettingFlags.DisableAutoStore then
+            offset = AddDepositOption(Enum.BankTabSettingFlags.DisableAutoStore, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+        end
+
+        -- Flag to control public visibility if available.
+        if Enum.BankTabSettingFlags.IsPublic then
+            offset = AddDepositOption(Enum.BankTabSettingFlags.IsPublic, BANK_TAB_PUBLIC or "Public Tab", offset)
+        end
+    end
+
+    -- If deposit checkboxes were added, shift the icon selector below them.
+    if frame.IconSelector and frame.BorderBox and #frame.depositChecks > 0 then
+        local anchor = frame.depositChecks[#frame.depositChecks].button
+        frame.IconSelector:ClearAllPoints()
+        frame.IconSelector:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -10)
+        frame.IconSelector:SetPoint("BOTTOMRIGHT", frame.BorderBox, "BOTTOMRIGHT", -5, 40)
+    end
 
     -- Ensure the data provider is always available when changing the icon filter.
     if frame.SetIconFilter then
@@ -209,6 +258,13 @@ local function CreateSettingsMenu()
         self.selectedIcon = icon or QUESTION_MARK_ICON
         self.depositFlags = depositFlags or 0
         self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
+
+        if self.depositChecks then
+            for _, data in ipairs(self.depositChecks) do
+                local checked = bit.band(self.depositFlags or 0, data.flag) ~= 0
+                data.button:SetChecked(checked)
+            end
+        end
 
         -- Ensure the icon selector has data and displays the selected icon.
         if self.IconSelector then
