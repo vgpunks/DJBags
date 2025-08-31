@@ -272,7 +272,7 @@ function ADDON:GetBankTabSettingsMenu()
                 tabIndex = ...
             end
             if baseOpen then
-                baseOpen(self, ...)
+                baseOpen(self, bankType, tabIndex)
             end
             if self.SetParent then
                 self:SetParent(UIParent)
