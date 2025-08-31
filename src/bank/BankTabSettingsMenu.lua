@@ -227,9 +227,14 @@ local function CreateSettingsMenu()
 end
 
 function ADDON:GetBankTabSettingsMenu()
+    if BankPanel and BankPanel.TabSettingsMenu then
+        return BankPanel.TabSettingsMenu
+    end
+
     if not self.bankTabSettingsMenu then
         self.bankTabSettingsMenu = CreateSettingsMenu()
     end
+
     return self.bankTabSettingsMenu
 end
 
