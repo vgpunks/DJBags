@@ -142,6 +142,15 @@ local function CreateSettingsMenu()
 
     frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
 
+    -- Some game versions parent the icon selector outside the BorderBox.
+    -- Reanchor the grid so it always appears beneath the name field.
+    if frame.IconSelector and frame.BorderBox then
+        frame.IconSelector:SetParent(frame.BorderBox)
+        frame.IconSelector:ClearAllPoints()
+        frame.IconSelector:SetPoint("TOPLEFT", frame.BorderBox.SelectedIconArea, "BOTTOMLEFT", 0, -10)
+        frame.IconSelector:SetPoint("BOTTOMRIGHT", frame.BorderBox, "BOTTOMRIGHT", -5, 40)
+    end
+
     -- Track the currently selected icon.
     frame.selectedIcon = QUESTION_MARK_ICON
 
@@ -225,21 +234,39 @@ local function CreateSettingsMenu()
         self.BorderBox.IconSelectorEditBox:HighlightText()
     end
 
-    -- Commit any changes to the tab when the user accepts the dialog.
-    frame.BorderBox.OkayButton:SetScript("OnClick", function()
-        if C_Bank and C_Bank.UpdateBankTabSettings and frame.bankType and frame.tabIndex then
-            local newName = frame.BorderBox.IconSelectorEditBox:GetText()
-            C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
-        end
-        frame:Hide()
-        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
-    end)
+    -- Resolve the okay and cancel buttons across differing template versions.
+    local okayButton = (frame.BorderBox and frame.BorderBox.OkayButton) or frame.OkayButton or frame.AcceptButton
+    local cancelButton = (frame.BorderBox and frame.BorderBox.CancelButton) or frame.CancelButton
 
-    -- Simply hide the frame when cancelled.
-    frame.BorderBox.CancelButton:SetScript("OnClick", function()
-        frame:Hide()
-        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
-    end)
+    -- Reposition the action buttons beneath the icon grid if they're not already anchored.
+    if okayButton and cancelButton and okayButton.ClearAllPoints and cancelButton.ClearAllPoints then
+        cancelButton:ClearAllPoints()
+        okayButton:ClearAllPoints()
+        cancelButton:SetPoint("BOTTOMRIGHT", frame.BorderBox or frame, "BOTTOMRIGHT", -90, 5)
+        okayButton:SetPoint("LEFT", cancelButton, "RIGHT", 4, 0)
+    end
+
+    if okayButton then
+        -- Commit any changes to the tab when the user accepts the dialog.
+        okayButton:Show()
+        okayButton:SetScript("OnClick", function()
+            if C_Bank and C_Bank.UpdateBankTabSettings and frame.bankType and frame.tabIndex then
+                local newName = frame.BorderBox.IconSelectorEditBox:GetText()
+                C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
+            end
+            frame:Hide()
+            PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
+        end)
+    end
+
+    if cancelButton then
+        -- Simply hide the frame when cancelled.
+        cancelButton:Show()
+        cancelButton:SetScript("OnClick", function()
+            frame:Hide()
+            PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
+        end)
+    end
 
     -- Helper to open the menu for a given tab.
     function frame:Open(bankType, tabIndex)
