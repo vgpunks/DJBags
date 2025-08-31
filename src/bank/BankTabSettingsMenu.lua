@@ -301,9 +301,25 @@ local function CreateSettingsMenu()
         self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
 
         if self.depositChecks then
+            local showDeposit = bankType and Enum.BankType and bankType == Enum.BankType.Account
+            local anchor
             for _, data in ipairs(self.depositChecks) do
-                local checked = bit.band(self.depositFlags or 0, data.flag) ~= 0
-                data.button:SetChecked(checked)
+                data.button:SetShown(showDeposit)
+                if showDeposit then
+                    local checked = bit.band(self.depositFlags or 0, data.flag) ~= 0
+                    data.button:SetChecked(checked)
+                    anchor = data.button
+                end
+            end
+
+            if self.IconSelector and self.BorderBox then
+                self.IconSelector:ClearAllPoints()
+                if showDeposit and anchor then
+                    self.IconSelector:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -10)
+                else
+                    self.IconSelector:SetPoint("TOPLEFT", self.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, -10)
+                end
+                self.IconSelector:SetPoint("BOTTOMRIGHT", self.BorderBox, "BOTTOMRIGHT", -5, 40)
             end
         end
 
