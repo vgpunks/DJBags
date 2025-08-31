@@ -243,7 +243,8 @@ function ADDON:GetBankTabSettingsMenu()
         function menu:Open(bankType, tabIndex)
             if baseOpen then
                 baseOpen(self, bankType, tabIndex)
-            elseif self.Load then
+            end
+            if self.Load then
                 self:Load(bankType, tabIndex)
             end
             if self.SetParent then
