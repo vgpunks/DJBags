@@ -1,5 +1,20 @@
 local ADDON_NAME, ADDON = ...
 
+function DJBagsShowCurrencyTooltip(self)
+    local cnt = C_CurrencyInfo.GetCurrencyListSize()
+    GameTooltip:SetOwner(self, "ANCHOR_NONE")
+    GameTooltip:SetPoint("BOTTOMLEFT", self, "TOPLEFT")
+    GameTooltip:SetText("Currency")
+    for index = 1, cnt do
+        local info = C_CurrencyInfo.GetCurrencyListInfo(index)
+        if info.quantity ~= 0 then
+            local icon = info.iconFileID or info.icon
+            GameTooltip:AddDoubleLine(info.name, info.quantity .. " |T" .. icon .. ":16|t", 1, 1, 1, 1, 1, 1)
+        end
+    end
+    GameTooltip:Show()
+end
+
 local bag = {}
 bag.__index = bag
 
