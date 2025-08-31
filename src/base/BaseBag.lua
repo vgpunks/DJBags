@@ -32,6 +32,7 @@ local function MakeMoveable(self)
     end)
     if self:GetParent() == UIParent then
         self:SetUserPlaced(true)
+        self:SetClampedToScreen(true)
     end
 end
 

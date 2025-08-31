@@ -74,6 +74,13 @@ function DJBagsRegisterBankBagContainer(self, bags, bankType)
     BankFrame:UnregisterAllEvents()
     BankFrame:SetScript('OnShow', DJBagsHideBlizzardBank)
     DJBagsHideBlizzardBank()
+
+    -- Keep the warband and character bank frames aligned when moved directly.
+    self:HookScript('OnDragStop', function(frame)
+        if DJBagsSyncBankFramePositions then
+            DJBagsSyncBankFramePositions(frame)
+        end
+    end)
 end
 
 function bank:BANKFRAME_OPENED()
