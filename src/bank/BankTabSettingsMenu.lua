@@ -264,9 +264,15 @@ function ADDON:GetBankTabSettingsMenu()
     -- to our active bank frame and parented to a visible frame.
     if menu and not menu.DJBagsWrappedOpen then
         local baseOpen = menu.Open
-        function menu:Open(bankType, tabIndex)
+        function menu:Open(...)
+            local bankType, tabIndex
+            if select('#', ...) >= 2 then
+                bankType, tabIndex = ...
+            else
+                tabIndex = ...
+            end
             if baseOpen then
-                baseOpen(self, bankType, tabIndex)
+                baseOpen(self, ...)
             end
             if self.Load then
                 self:Load(bankType, tabIndex)

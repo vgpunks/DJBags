@@ -58,7 +58,11 @@ function item:Init(id, slot)
             end
 
             local menu = ADDON:GetBankTabSettingsMenu()
-            menu:Open(bankType, tabIndex)
+            if bankType then
+                menu:Open(bankType, tabIndex)
+            else
+                menu:Open(tabIndex)
+            end
 
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             return
