@@ -249,7 +249,7 @@ function ADDON:GetBankTabSettingsMenu()
     -- existing Open method that anchors to Blizzard's BankPanel.  That frame is
     -- moved off-screen by DJBags, resulting in the menu appearing invisible.
     -- Wrap the menu's Open behavior so the menu is always positioned relative
-    -- to our active bank frame.
+    -- to our active bank frame and parented to a visible frame.
     if menu and not menu.DJBagsWrappedOpen then
         local baseOpen = menu.Open
         function menu:Open(bankType, tabIndex)
@@ -257,6 +257,9 @@ function ADDON:GetBankTabSettingsMenu()
                 baseOpen(self, bankType, tabIndex)
             elseif self.Load then
                 self:Load(bankType, tabIndex)
+            end
+            if self.SetParent then
+                self:SetParent(UIParent)
             end
             if self.SetFrameStrata then
                 self:SetFrameStrata("FULLSCREEN_DIALOG")
