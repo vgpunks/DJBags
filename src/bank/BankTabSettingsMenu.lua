@@ -10,10 +10,9 @@ local NAME, ADDON = ...
     created.  To avoid those problems we construct a lightweight menu
     ourselves using the generic IconSelectorPopupFrameTemplate.
 
-    The menu allows the user to rename a tab and choose a new icon.
-    Deposit setting checkboxes are intentionally omitted; the goal is
-    simply to provide a functional frame that reliably edits character
-    bank tabs.
+    The menu allows the user to rename a tab, choose a new icon and adjust
+    deposit behavior.  It provides a functional frame that reliably edits
+    character bank tabs across different client versions.
 ]]
 
 local function FetchTabInfo(bankType, tabIndex)
@@ -94,6 +93,15 @@ local function FetchTabInfo(bankType, tabIndex)
     return name, icon, depositFlags
 end
 
+-- Fallback flags for clients that do not provide the enumeration table.  The
+-- numeric values mirror the retail constants so UpdateBankTabSettings receives
+-- the expected bitfield regardless of game version.
+local BankTabSettingFlags = Enum.BankTabSettingFlags or {
+    AllowAutoDeposit = 1,
+    DisableAutoStore = 2,
+    IsPublic = 4,
+}
+
 local function CreateSettingsMenu()
     -- Ensure the Blizzard icon selector UI is loaded before creating the frame.
     if C_AddOns and C_AddOns.LoadAddOn then
@@ -120,6 +128,11 @@ local function CreateSettingsMenu()
     -- box and icon picker.
     local frame = CreateFrame("Frame", "DJBagsBankTabSettingsMenu", UIParent, "IconSelectorPopupFrameTemplate")
     frame:Hide()
+    -- Ensure the popup consumes mouse input so underlying bag slots do not
+    -- display tooltips while the settings menu is open.
+    frame:EnableMouse(true)
+    frame:SetToplevel(true)
+    frame:SetScript("OnEnter", GameTooltip_Hide)
 
     -- Frames created via CreateFrame do not automatically execute their
     -- OnLoad handler.  Initialize the mixin so the icon selector behaves
@@ -150,6 +163,10 @@ local function CreateSettingsMenu()
     end
 
     frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
+
+    if frame.BorderBox and frame.BorderBox.EnableMouse then
+        frame.BorderBox:EnableMouse(true)
+    end
 
     -- Some game versions parent the icon selector outside the BorderBox.
     -- Reanchor the grid so it always appears beneath the name field.
@@ -188,17 +205,17 @@ local function CreateSettingsMenu()
     end
 
     local offset = -8
-    if Enum.BankTabSettingFlags then
+    if BankTabSettingFlags then
         -- Known flag providing auto deposit control.
-        if Enum.BankTabSettingFlags.AllowAutoDeposit then
-            offset = AddDepositOption(Enum.BankTabSettingFlags.AllowAutoDeposit, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
-        elseif Enum.BankTabSettingFlags.DisableAutoStore then
-            offset = AddDepositOption(Enum.BankTabSettingFlags.DisableAutoStore, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+        if BankTabSettingFlags.AllowAutoDeposit then
+            offset = AddDepositOption(BankTabSettingFlags.AllowAutoDeposit, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+        elseif BankTabSettingFlags.DisableAutoStore then
+            offset = AddDepositOption(BankTabSettingFlags.DisableAutoStore, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
         end
 
         -- Flag to control public visibility if available.
-        if Enum.BankTabSettingFlags.IsPublic then
-            offset = AddDepositOption(Enum.BankTabSettingFlags.IsPublic, BANK_TAB_PUBLIC or "Public Tab", offset)
+        if BankTabSettingFlags.IsPublic then
+            offset = AddDepositOption(BankTabSettingFlags.IsPublic, BANK_TAB_PUBLIC or "Public Tab", offset)
         end
     end
 
@@ -250,6 +267,9 @@ local function CreateSettingsMenu()
                 self.IconSelector:OnLoad()
             end
             self.iconDataProvider = self.IconSelector.iconDataProvider
+            if self.iconDataProvider and self.iconDataProvider.GenerateIconList then
+                pcall(self.iconDataProvider.GenerateIconList, self.iconDataProvider)
+            end
         end
 
         local name, icon, depositFlags = FetchTabInfo(bankType, tabIndex)
