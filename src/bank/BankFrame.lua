@@ -3,6 +3,20 @@ local ADDON_NAME, ADDON = ...
 local bankFrame = {}
 bankFrame.__index = bankFrame
 
+-- Keep bank frames aligned so both open at the same location.
+function DJBagsSyncBankFramePositions(moved)
+    if not DJBagsBank or not DJBagsWarbandBank then
+        return
+    end
+    local source = moved or DJBagsBank
+    local target = source == DJBagsBank and DJBagsWarbandBank or DJBagsBank
+    local point, relTo, relPoint, x, y = source:GetPoint()
+    target:ClearAllPoints()
+    target:SetPoint(point, relTo or UIParent, relPoint, x, y)
+    if target.ClampToScreen then
+        target:ClampToScreen()
+    end
+end
 
 function DJBagsRegisterBankFrame(self, bags)
         for k, v in pairs(bankFrame) do
@@ -16,6 +30,7 @@ function DJBagsRegisterBankFrame(self, bags)
     self:RegisterForDrag("LeftButton")
     -- Attach dragging to the active bank frame so the bar cannot move on its own.
     self:SetMovable(false)
+    self:SetClampedToScreen(true)
     self:SetScript("OnDragStart", function(self, ...)
         local bag = self.bankBag
         if self.warbandBankBag and self.warbandBankBag:IsShown() then
@@ -32,6 +47,7 @@ function DJBagsRegisterBankFrame(self, bags)
         end
         if bag and bag.StopMovingOrSizing then
             bag:StopMovingOrSizing(...)
+            DJBagsSyncBankFramePositions(bag)
         end
     end)
     -- Only clear the user placement flag if the frame supports being moved or resized.
@@ -53,6 +69,8 @@ function DJBagsRegisterBankFrame(self, bags)
     hooksecurefunc(BankFrame, "SetTab", function()
         self:UpdateBankType()
     end)
+
+    DJBagsSyncBankFramePositions(self.bankBag)
 end
 
 function bankFrame:UpdateBankType()
