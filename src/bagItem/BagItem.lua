@@ -88,19 +88,12 @@ function item:Update()
         local tabIndex = slot - Enum.BagIndex.CharacterBankTab_1 + 1
 
         -- Determine if this tab has been purchased
-        local purchasedIDs
-        if C_Bank.GetPurchasedBankTabIDs then
-            purchasedIDs = C_Bank.GetPurchasedBankTabIDs(Enum.BankType.Character)
-        elseif C_Bank.FetchPurchasedBankTabIDs then
-            purchasedIDs = C_Bank.FetchPurchasedBankTabIDs(Enum.BankType.Character)
-        end
+        local purchasedIDs = C_Bank.GetPurchasedBankTabIDs and C_Bank.GetPurchasedBankTabIDs(Enum.BankType.Character) or {}
         local purchased = false
-        if purchasedIDs then
-            for _, id in ipairs(purchasedIDs) do
-                if id == tabIndex or id == slot then
-                    purchased = true
-                    break
-                end
+        for _, id in ipairs(purchasedIDs) do
+            if id == tabIndex then
+                purchased = true
+                break
             end
         end
 
@@ -112,52 +105,15 @@ function item:Update()
 
         self:Show()
 
-        -- Tab is purchased, fetch its icon from the bank data.  The icon
-        -- chosen for a bank tab is not tied to the inventory item placed in
-        -- the slot, so prefer the information returned by the C_Bank API and
-        -- only fall back to the inventory texture as a last resort.
+        -- Fetch the tab icon from the bank data.  The icon chosen for a bank
+        -- tab is not tied to the inventory item placed in the slot, so prefer
+        -- the information returned by the C_Bank API and only fall back to the
+        -- inventory texture as a last resort.
         local icon
-
-        if C_Bank then
-            -- Newer API builds may expose tab data directly via a helper
-            -- function.  Attempt to use it first.
-            if C_Bank.GetBankTabDisplayInfo then
-                local info = C_Bank.GetBankTabDisplayInfo(Enum.BankType.Character, tabIndex)
-                if info then
-                    icon = info.icon or info.iconFileID or info.iconTexture
-                end
-            elseif C_Bank.GetBankTabInfo then
-                local info = C_Bank.GetBankTabInfo(Enum.BankType.Character, tabIndex)
-                if info then
-                    icon = info.icon or info.iconFileID or info.iconTexture
-                end
-            end
-
-            -- If the direct call was unavailable or returned nothing, fall
-            -- back to iterating the purchased tab data.
-            if not icon then
-                local tabData
-                if C_Bank.GetPurchasedBankTabData then
-                    tabData = C_Bank.GetPurchasedBankTabData(Enum.BankType.Character)
-                elseif C_Bank.FetchPurchasedBankTabData then
-                    tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
-                end
-
-                if tabData then
-                    local info = tabData[tabIndex] or tabData[slot]
-                    if not info then
-                        for _, data in ipairs(tabData) do
-                            local infoID = data.ID or data.bankTabID
-                            if infoID == tabIndex or infoID == slot then
-                                info = data
-                                break
-                            end
-                        end
-                    end
-                    if info then
-                        icon = info.icon or info.iconFileID or info.iconTexture
-                    end
-                end
+        if C_Bank.GetBankTabSettings then
+            local info = C_Bank.GetBankTabSettings(Enum.BankType.Character, tabIndex)
+            if info then
+                icon = info.icon
             end
         end
 
