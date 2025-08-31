@@ -88,7 +88,12 @@ function item:Update()
         local tabIndex = slot - Enum.BagIndex.CharacterBankTab_1 + 1
 
         -- Determine if this tab has been purchased
-        local purchasedIDs = C_Bank.FetchPurchasedBankTabIDs(Enum.BankType.Character)
+        local purchasedIDs
+        if C_Bank.GetPurchasedBankTabIDs then
+            purchasedIDs = C_Bank.GetPurchasedBankTabIDs(Enum.BankType.Character)
+        elseif C_Bank.FetchPurchasedBankTabIDs then
+            purchasedIDs = C_Bank.FetchPurchasedBankTabIDs(Enum.BankType.Character)
+        end
         local purchased = false
         if purchasedIDs then
             for _, id in ipairs(purchasedIDs) do
@@ -116,7 +121,12 @@ function item:Update()
         if C_Bank then
             -- Newer API builds may expose tab data directly via a helper
             -- function.  Attempt to use it first.
-            if C_Bank.GetBankTabInfo then
+            if C_Bank.GetBankTabDisplayInfo then
+                local info = C_Bank.GetBankTabDisplayInfo(Enum.BankType.Character, tabIndex)
+                if info then
+                    icon = info.icon or info.iconFileID or info.iconTexture
+                end
+            elseif C_Bank.GetBankTabInfo then
                 local info = C_Bank.GetBankTabInfo(Enum.BankType.Character, tabIndex)
                 if info then
                     icon = info.icon or info.iconFileID or info.iconTexture
@@ -125,8 +135,14 @@ function item:Update()
 
             -- If the direct call was unavailable or returned nothing, fall
             -- back to iterating the purchased tab data.
-            if not icon and C_Bank.FetchPurchasedBankTabData then
-                local tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
+            if not icon then
+                local tabData
+                if C_Bank.GetPurchasedBankTabData then
+                    tabData = C_Bank.GetPurchasedBankTabData(Enum.BankType.Character)
+                elseif C_Bank.FetchPurchasedBankTabData then
+                    tabData = C_Bank.FetchPurchasedBankTabData(Enum.BankType.Character)
+                end
+
                 if tabData then
                     local info = tabData[tabIndex] or tabData[slot]
                     if not info then
