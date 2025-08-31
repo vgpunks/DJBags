@@ -227,14 +227,41 @@ local function CreateSettingsMenu()
 end
 
 function ADDON:GetBankTabSettingsMenu()
+    local menu
+
     if BankPanel and BankPanel.TabSettingsMenu then
-        return BankPanel.TabSettingsMenu
+        menu = BankPanel.TabSettingsMenu
+    else
+        if not self.bankTabSettingsMenu then
+            self.bankTabSettingsMenu = CreateSettingsMenu()
+        end
+        menu = self.bankTabSettingsMenu
     end
 
-    if not self.bankTabSettingsMenu then
-        self.bankTabSettingsMenu = CreateSettingsMenu()
+    -- Some game versions may not provide an Open method on the settings
+    -- menu frame.  Wrap the existing behavior so callers can always invoke
+    -- menu:Open(bankType, tabIndex) regardless of the underlying
+    -- implementation.
+    if menu and not menu.Open then
+        function menu:Open(bankType, tabIndex)
+            if self.Load then
+                self:Load(bankType, tabIndex)
+            end
+            if self.SetFrameStrata then
+                self:SetFrameStrata("FULLSCREEN_DIALOG")
+            end
+            if self.ClearAllPoints then
+                self:ClearAllPoints()
+            end
+            if self.SetPoint then
+                self:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
+            end
+            if self.Show then
+                self:Show()
+            end
+        end
     end
 
-    return self.bankTabSettingsMenu
+    return menu
 end
 
