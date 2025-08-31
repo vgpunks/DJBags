@@ -21,6 +21,15 @@ local function FetchTabInfo(bankType, tabIndex)
         return nil, nil, nil
     end
 
+    if C_Bank.GetBankTabDisplayInfo then
+        local info = C_Bank.GetBankTabDisplayInfo(bankType, tabIndex)
+        if info then
+            local icon = info.icon or info.iconFileID or info.iconTexture
+            local depositFlags = info.depositFlags or info.flags or info.depositFlag
+            return info.name, icon, depositFlags
+        end
+    end
+
     if C_Bank.GetBankTabInfo then
         local info = C_Bank.GetBankTabInfo(bankType, tabIndex)
         if info then
@@ -30,7 +39,26 @@ local function FetchTabInfo(bankType, tabIndex)
         end
     end
 
-    if C_Bank.FetchPurchasedBankTabData then
+    if C_Bank.GetPurchasedBankTabData then
+        local tabData = C_Bank.GetPurchasedBankTabData(bankType)
+        if tabData then
+            local info = tabData[tabIndex]
+            if not info then
+                for _, data in ipairs(tabData) do
+                    local id = data.ID or data.bankTabID
+                    if id == tabIndex then
+                        info = data
+                        break
+                    end
+                end
+            end
+            if info then
+                local icon = info.icon or info.iconFileID or info.iconTexture
+                local depositFlags = info.depositFlags or info.flags or info.depositFlag
+                return info.name, icon, depositFlags
+            end
+        end
+    elseif C_Bank.FetchPurchasedBankTabData then
         local tabData = C_Bank.FetchPurchasedBankTabData(bankType)
         if tabData then
             local info = tabData[tabIndex]
