@@ -219,7 +219,13 @@ local function CreateSettingsMenu()
         self:Load(bankType, tabIndex)
         self:SetFrameStrata("FULLSCREEN_DIALOG")
         self:ClearAllPoints()
-        self:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
+        local anchor = BankFrame
+        if bankType == (Enum.BankType and Enum.BankType.Account) then
+            anchor = DJBagsWarbandBank or anchor
+        else
+            anchor = DJBagsBank or anchor
+        end
+        self:SetPoint("TOPLEFT", anchor, "TOPRIGHT")
         self:Show()
     end
 
@@ -254,7 +260,13 @@ function ADDON:GetBankTabSettingsMenu()
                 self:ClearAllPoints()
             end
             if self.SetPoint then
-                self:SetPoint("TOPLEFT", BankFrame, "TOPRIGHT")
+                local anchor = BankFrame
+                if bankType == (Enum.BankType and Enum.BankType.Account) then
+                    anchor = DJBagsWarbandBank or anchor
+                else
+                    anchor = DJBagsBank or anchor
+                end
+                self:SetPoint("TOPLEFT", anchor, "TOPRIGHT")
             end
             if self.Show then
                 self:Show()
