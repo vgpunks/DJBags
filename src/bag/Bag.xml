@@ -173,24 +173,6 @@
                     <Anchor point="BOTTOMRIGHT" relativeTo="$parentSearchBox" relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
-                    <OnEnter>
-                        local cnt = C_CurrencyInfo.GetCurrencyListSize()
-                        local currencyFrame = self:GetParent():GetParent().currencyBar
-        
-                        GameTooltip:SetOwner(currencyFrame, "ANCHOR_NONE")
-                        GameTooltip:SetPoint("BOTTOMLEFT", currencyFrame, "TOPLEFT")
-                        GameTooltip:SetText("Currency")
-                        for index = 1, cnt do
-                            local info = C_CurrencyInfo.GetCurrencyListInfo(index)
-                            if info.quantity ~= 0 then
-                                GameTooltip:AddDoubleLine(info.name, info.quantity .. " |T" .. info.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1)
-                            end
-                        end
-                        GameTooltip:Show()
-                    </OnEnter>
-                    <OnLeave>
-                            GameTooltip:Hide()
-                    </OnLeave>
                     <OnMouseDown>
                             MoneyInputFrame_OpenPopup(self:GetParent().moneyFrame);
                     </OnMouseDown>
@@ -235,6 +217,25 @@
                         </FontString>
                     </Layer>
                 </Layers>
+                <Scripts>
+                    <OnEnter>
+                        local cnt = C_CurrencyInfo.GetCurrencyListSize()
+
+                        GameTooltip:SetOwner(self, "ANCHOR_NONE")
+                        GameTooltip:SetPoint("BOTTOMLEFT", self, "TOPLEFT")
+                        GameTooltip:SetText("Currency")
+                        for index = 1, cnt do
+                            local info = C_CurrencyInfo.GetCurrencyListInfo(index)
+                            if info.quantity ~= 0 then
+                                GameTooltip:AddDoubleLine(info.name, info.quantity .. " |T" .. info.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1)
+                            end
+                        end
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                </Scripts>
             </Frame>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
                 <Anchors>
