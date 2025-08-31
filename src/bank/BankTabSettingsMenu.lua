@@ -31,10 +31,7 @@ local function CreateMenu()
     local frame = CreateFrame("Frame", "DJBagsBankTabSettings", UIParent, "ButtonFrameTemplate")
     frame:Hide()
     frame:SetSize(320, 420)
-    local titleText = frame.TitleText or (frame.TitleContainer and frame.TitleContainer.TitleText)
-    if titleText then
-        titleText:SetText(BANK_TAB_SETTINGS or "Bank Tab Settings")
-    end
+    frame.TitleText:SetText(BANK_TAB_SETTINGS or "Bank Tab Settings")
 
     -- name box
     frame.nameBox = CreateFrame("EditBox", "$parentNameBox", frame, "InputBoxTemplate")
