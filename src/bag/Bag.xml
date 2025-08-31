@@ -175,8 +175,10 @@
                 <Scripts>
                     <OnEnter>
                         local cnt = C_CurrencyInfo.GetCurrencyListSize()
-                        GameTooltip:SetOwner(self, "ANCHOR_NONE")
-                        GameTooltip:SetPoint("BOTTOMLEFT", self, "TOPLEFT")
+                        local currencyFrame = self:GetParent():GetParent().currencyBar
+        
+                        GameTooltip:SetOwner(currencyFrame, "ANCHOR_NONE")
+                        GameTooltip:SetPoint("BOTTOMLEFT", currencyFrame, "TOPLEFT")
                         GameTooltip:SetText("Currency")
                         for index = 1, cnt do
                             local info = C_CurrencyInfo.GetCurrencyListInfo(index)
