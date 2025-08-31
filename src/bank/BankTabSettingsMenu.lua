@@ -37,10 +37,27 @@ local function FetchTabInfo(bankType, tabIndex)
         or Try(C_Bank.GetBankTabDisplayInfo, tabIndex, bankType)
         or Try(C_Bank.GetBankTabDisplayInfo, tabIndex)
 
+    -- Some API variants return a table with the data instead of multiple
+    -- discrete values.  Normalize the results so callers always receive
+    -- name, icon, and deposit flag fields.
+    if type(name) == "table" then
+        local info = name
+        name = info.name
+        icon = info.icon or info.iconFileID or info.iconTexture
+        depositFlags = info.depositFlags or info.flags or info.depositFlag
+    end
+
     if not name then
         name, icon, depositFlags = Try(C_Bank.GetBankTabInfo, bankType, tabIndex)
             or Try(C_Bank.GetBankTabInfo, tabIndex, bankType)
             or Try(C_Bank.GetBankTabInfo, tabIndex)
+
+        if type(name) == "table" then
+            local info = name
+            name = info.name
+            icon = info.icon or info.iconFileID or info.iconTexture
+            depositFlags = info.depositFlags or info.flags or info.depositFlag
+        end
     end
 
     if not name then
@@ -65,6 +82,13 @@ local function FetchTabInfo(bankType, tabIndex)
                 depositFlags = info.depositFlags or info.flags or info.depositFlag
             end
         end
+    end
+
+    if type(name) == "table" then
+        local info = name
+        name = info.name
+        icon = info.icon or info.iconFileID or info.iconTexture
+        depositFlags = info.depositFlags or info.flags or info.depositFlag
     end
 
     return name, icon, depositFlags
