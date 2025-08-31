@@ -21,35 +21,35 @@ local function FetchTabInfo(bankType, tabIndex)
         return nil, nil, nil
     end
 
-    local info
+    local name, icon, depositFlags
 
-    -- Helper to safely invoke an API method using pcall.
+    -- Helper to safely invoke an API method using pcall and return all results.
     local function Try(func, ...)
-        if not func then return nil end
-        local ok, result = pcall(func, ...)
-        if ok then return result end
+        if not func then return end
+        local ok, r1, r2, r3, r4 = pcall(func, ...)
+        if ok then return r1, r2, r3, r4 end
     end
 
     -- Newer API versions expect (bankType, tabIndex) while older builds
     -- only take a tab index or use the reverse ordering.  Try a variety of
     -- call signatures so tab data is located regardless of client version.
-    info = Try(C_Bank.GetBankTabDisplayInfo, bankType, tabIndex)
+    name, icon, depositFlags = Try(C_Bank.GetBankTabDisplayInfo, bankType, tabIndex)
         or Try(C_Bank.GetBankTabDisplayInfo, tabIndex, bankType)
         or Try(C_Bank.GetBankTabDisplayInfo, tabIndex)
 
-    if not info then
-        info = Try(C_Bank.GetBankTabInfo, bankType, tabIndex)
+    if not name then
+        name, icon, depositFlags = Try(C_Bank.GetBankTabInfo, bankType, tabIndex)
             or Try(C_Bank.GetBankTabInfo, tabIndex, bankType)
             or Try(C_Bank.GetBankTabInfo, tabIndex)
     end
 
-    if not info then
+    if not name then
         local tabData = Try(C_Bank.GetPurchasedBankTabData, bankType)
             or Try(C_Bank.FetchPurchasedBankTabData, bankType)
             or Try(C_Bank.GetPurchasedBankTabData)
             or Try(C_Bank.FetchPurchasedBankTabData)
         if tabData then
-            info = tabData[tabIndex]
+            local info = tabData[tabIndex]
             if not info then
                 for _, data in ipairs(tabData) do
                     local id = data.ID or data.bankTabID
@@ -59,16 +59,15 @@ local function FetchTabInfo(bankType, tabIndex)
                     end
                 end
             end
+            if info then
+                name = info.name
+                icon = info.icon or info.iconFileID or info.iconTexture
+                depositFlags = info.depositFlags or info.flags or info.depositFlag
+            end
         end
     end
 
-    if info then
-        local icon = info.icon or info.iconFileID or info.iconTexture
-        local depositFlags = info.depositFlags or info.flags or info.depositFlag
-        return info.name, icon, depositFlags
-    end
-
-    return nil, nil, nil
+    return name, icon, depositFlags
 end
 
 local function CreateSettingsMenu()
