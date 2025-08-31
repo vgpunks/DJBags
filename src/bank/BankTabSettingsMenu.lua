@@ -174,6 +174,27 @@ local function CreateSettingsMenu()
         self.depositFlags = depositFlags or 0
         self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
 
+        -- Ensure the icon selector has data and displays the selected icon.
+        if self.IconSelector then
+            -- Reinitialize the selector when the provider was cleared on hide.
+            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                self.IconSelector:OnLoad()
+            end
+
+            if self.IconSelector.SetSelectedIcon then
+                self.IconSelector:SetSelectedIcon(self.selectedIcon)
+            end
+
+            -- Clearing any leftover search filter avoids an empty grid.
+            if self.IconSelector.ClearSearchFilter then
+                self.IconSelector:ClearSearchFilter()
+            end
+
+            if self.IconSelector.RefreshIcons then
+                self.IconSelector:RefreshIcons()
+            end
+        end
+
         self.BorderBox.IconSelectorEditBox:HighlightText()
     end
 
