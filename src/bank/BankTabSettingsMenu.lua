@@ -190,9 +190,30 @@ local function CreateSettingsMenu()
     -- Optional deposit setting checkboxes mirroring the Blizzard menu.
     frame.depositChecks = {}
     local function AddDepositOption(flag, label, offset)
-        local check = CreateFrame("CheckButton", nil, frame.BorderBox, "InterfaceOptionsSmallCheckButtonTemplate")
+        -- Some clients do not provide the InterfaceOptionsSmallCheckButtonTemplate
+        -- used by the retail UI.  Attempt to create the checkbox using that
+        -- template and gracefully fall back to more common alternatives so the
+        -- settings menu works across different game versions.
+        local check
+        local ok, result = pcall(CreateFrame, "CheckButton", nil, frame.BorderBox, "InterfaceOptionsSmallCheckButtonTemplate")
+        if ok and result then
+            check = result
+        else
+            ok, result = pcall(CreateFrame, "CheckButton", nil, frame.BorderBox, "UICheckButtonTemplate")
+            if ok and result then
+                check = result
+            else
+                check = CreateFrame("CheckButton", nil, frame.BorderBox)
+                local text = check:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+                text:SetPoint("LEFT", check, "RIGHT", 0, 1)
+                check.Text = text
+            end
+        end
+
         check:SetPoint("TOPLEFT", frame.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, offset)
-        check.Text:SetText(label)
+        if check.Text then
+            check.Text:SetText(label)
+        end
         check:SetScript("OnClick", function(self)
             if self:GetChecked() then
                 frame.depositFlags = bit.bor(frame.depositFlags or 0, flag)
