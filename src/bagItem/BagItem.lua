@@ -217,7 +217,9 @@ function item:OnEnter()
     GameTooltip:Show()
     CursorUpdate(self)
 
-    ADDON.eventManager:Fire('DJBAGS_BAG_HOVER', self.slot, true)
+    if not isBankTabSlot(self.slot) then
+        ADDON.eventManager:Fire('DJBAGS_BAG_HOVER', self.slot, true)
+    end
 end
 
 function item:SetCost(cost)
@@ -234,6 +236,8 @@ end
 function item:OnLeave()
     GameTooltip_Hide()
     ResetCursor()
-    
-    ADDON.eventManager:Fire('DJBAGS_BAG_HOVER', self.slot, false)
+
+    if not isBankTabSlot(self.slot) then
+        ADDON.eventManager:Fire('DJBAGS_BAG_HOVER', self.slot, false)
+    end
 end
