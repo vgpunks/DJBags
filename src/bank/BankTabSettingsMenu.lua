@@ -1,152 +1,220 @@
 local NAME, ADDON = ...
 
 --[[
-    Custom frame for editing character bank tab settings in patch 11.2.
+    Create a simple bank tab settings frame from scratch.
 
-    The Blizzard menu is tightly coupled to their BankFrame so we build a
-    lightweight replacement that exposes the same options:
-      * rename the tab
-      * choose a new icon
-      * configure deposit flags
+    The default Blizzard implementation is tightly coupled to the
+    BankFrame's internal layout and expects to be parented to it.
+    Replicating the Blizzard menu introduced a number of issues for
+    character bank tabs where only an empty background frame would be
+    created.  To avoid those problems we construct a lightweight menu
+    ourselves using the generic IconSelectorPopupFrameTemplate.
 
-    The frame intentionally avoids any legacy API fallbacks and relies on the
-    11.2 C_Bank API.
+    The menu allows the user to rename a tab and choose a new icon.
+    Deposit setting checkboxes are intentionally omitted; the goal is
+    simply to provide a functional frame that reliably edits character
+    bank tabs.
 ]]
 
-local function GetTabSettings(bankType, tabIndex)
-    if not C_Bank or not C_Bank.GetBankTabSettings then
-        return
+local function FetchTabInfo(bankType, tabIndex)
+    if not C_Bank then
+        return nil, nil, nil
     end
-    return C_Bank.GetBankTabSettings(bankType, tabIndex)
+
+    if C_Bank.GetBankTabDisplayInfo then
+        local info = C_Bank.GetBankTabDisplayInfo(bankType, tabIndex)
+        if info then
+            local icon = info.icon or info.iconFileID or info.iconTexture
+            local depositFlags = info.depositFlags or info.flags or info.depositFlag
+            return info.name, icon, depositFlags
+        end
+    end
+
+    if C_Bank.GetBankTabInfo then
+        local info = C_Bank.GetBankTabInfo(bankType, tabIndex)
+        if info then
+            local icon = info.icon or info.iconFileID or info.iconTexture
+            local depositFlags = info.depositFlags or info.flags or info.depositFlag
+            return info.name, icon, depositFlags
+        end
+    end
+
+    if C_Bank.GetPurchasedBankTabData then
+        local tabData = C_Bank.GetPurchasedBankTabData(bankType)
+        if tabData then
+            local info = tabData[tabIndex]
+            if not info then
+                for _, data in ipairs(tabData) do
+                    local id = data.ID or data.bankTabID
+                    if id == tabIndex then
+                        info = data
+                        break
+                    end
+                end
+            end
+            if info then
+                local icon = info.icon or info.iconFileID or info.iconTexture
+                local depositFlags = info.depositFlags or info.flags or info.depositFlag
+                return info.name, icon, depositFlags
+            end
+        end
+    elseif C_Bank.FetchPurchasedBankTabData then
+        local tabData = C_Bank.FetchPurchasedBankTabData(bankType)
+        if tabData then
+            local info = tabData[tabIndex]
+            if not info then
+                for _, data in ipairs(tabData) do
+                    local id = data.ID or data.bankTabID
+                    if id == tabIndex then
+                        info = data
+                        break
+                    end
+                end
+            end
+            if info then
+                local icon = info.icon or info.iconFileID or info.iconTexture
+                local depositFlags = info.depositFlags or info.flags or info.depositFlag
+                return info.name, icon, depositFlags
+            end
+        end
+    end
+
+    return nil, nil, nil
 end
 
-local function GetDepositOptions(bankType, tabIndex)
-    if C_Bank and C_Bank.GetBankTabDepositOptions then
-        return C_Bank.GetBankTabDepositOptions(bankType, tabIndex) or {}
-    end
-    return {}
-end
-
-local function CreateMenu()
-    local frame = CreateFrame("Frame", "DJBagsBankTabSettings", UIParent, "ButtonFrameTemplate")
+local function CreateSettingsMenu()
+    -- Use the generic icon selector template which provides a name edit
+    -- box and icon picker.
+    local frame = CreateFrame("Frame", "DJBagsBankTabSettingsMenu", UIParent, "IconSelectorPopupFrameTemplate")
     frame:Hide()
-    frame:SetSize(320, 420)
-    frame.TitleText:SetText(BANK_TAB_SETTINGS or "Bank Tab Settings")
 
-    -- name box
-    frame.nameBox = CreateFrame("EditBox", "$parentNameBox", frame, "InputBoxTemplate")
-    frame.nameBox:SetSize(220, 20)
-    frame.nameBox:SetAutoFocus(false)
-    frame.nameBox:SetPoint("TOP", 0, -40)
-
-    -- icon button
-    frame.iconButton = CreateFrame("Button", "$parentIconButton", frame, "ItemButtonTemplate")
-    frame.iconButton:SetPoint("TOPLEFT", frame.nameBox, "BOTTOMLEFT", -4, -10)
-    frame.iconButton.Icon:SetTexture(QUESTION_MARK_ICON)
-
-    local function EnsureIconPicker()
-        if frame.iconPicker then return end
-        frame.iconPicker = CreateFrame("Frame", "$parentIconPicker", frame, "IconSelectorPopupFrameTemplate")
-        frame.iconPicker:Hide()
-        if frame.iconPicker.IconSelector and frame.iconPicker.IconSelector.OnLoad then
-            frame.iconPicker.IconSelector:OnLoad()
-        end
-        if frame.iconPicker.OnLoad then
-            frame.iconPicker:OnLoad()
-        end
-        if frame.iconPicker.IconSelector and frame.iconPicker.IconSelector.SetSelectedCallback then
-            frame.iconPicker.IconSelector:SetSelectedCallback(function(_, icon)
-                frame.iconPicker.selectedIcon = icon
-            end)
-        end
-        frame.iconPicker.BorderBox.OkayButton:SetScript("OnClick", function()
-            frame.selectedIcon = frame.iconPicker.selectedIcon or QUESTION_MARK_ICON
-            frame.iconButton.Icon:SetTexture(frame.selectedIcon)
-            frame.iconPicker:Hide()
-        end)
-        frame.iconPicker.BorderBox.CancelButton:SetScript("OnClick", function()
-            frame.iconPicker:Hide()
-        end)
+    -- Frames created via CreateFrame do not automatically execute their
+    -- OnLoad handler.  Initialize the mixin so the icon selector behaves
+    -- correctly.
+    --
+    -- The popup frame's OnLoad expects the icon selector child to have run
+    -- its own initialization first so that the data provider is available.
+    -- Call the child's OnLoad before the parent's and wire the data
+    -- provider immediately so the parent can safely reference it when
+    -- setting up filtering.
+    if frame.IconSelector and frame.IconSelector.OnLoad then
+        frame.IconSelector:OnLoad()
     end
 
-    frame.iconButton:SetScript("OnClick", function()
-        EnsureIconPicker()
-        frame.iconPicker.selectedIcon = frame.selectedIcon
-        frame.iconPicker:SetPoint("TOPLEFT", frame, "TOPRIGHT")
-        frame.iconPicker:Show()
-        if frame.iconPicker.IconSelector and frame.iconPicker.IconSelector.SetSelectedIcon then
-            frame.iconPicker.IconSelector:SetSelectedIcon(frame.selectedIcon)
-        end
+    -- The popup frame mixin expects to reference the icon selector's data
+    -- provider directly. Replicate the setup normally performed by the
+    -- template prior to calling the parent's OnLoad so filtering works
+    -- without errors.
+    if frame.IconSelector then
+        frame.iconDataProvider = frame.IconSelector.iconDataProvider
+    end
+
+    if frame.OnLoad then
+        frame:OnLoad()
+    end
+
+    frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
+
+    -- Track the currently selected icon.
+    frame.selectedIcon = QUESTION_MARK_ICON
+
+    frame.IconSelector:SetSelectedCallback(function(_, icon)
+        frame.selectedIcon = icon
+        frame.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(icon)
+        frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetText(ICON_SELECTION_CLICK)
+        frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetFontObject(GameFontHighlightSmall)
     end)
 
-    -- deposit options
-    frame.depositChecks = {}
-    local function BuildDepositChecks()
-        for _, check in ipairs(frame.depositChecks) do check:Hide() end
-        wipe(frame.depositChecks)
-        local options = GetDepositOptions(frame.bankType, frame.tabIndex)
-        local prev
-        for i, opt in ipairs(options) do
-            local check = CreateFrame("CheckButton", "$parentDepositOption"..i, frame, "InterfaceOptionsCheckButtonTemplate")
-            check.Text:SetText(opt.name or opt.text or ("Option"..i))
-            check.flag = opt.flag or 0
-            if prev then
-                check:SetPoint("TOPLEFT", prev, "BOTTOMLEFT", 0, -4)
-            else
-                check:SetPoint("TOPLEFT", frame.iconButton, "BOTTOMLEFT", 0, -16)
+    -- Ensure the data provider is always available when changing the icon filter.
+    if frame.SetIconFilter then
+        local originalSetIconFilter = frame.SetIconFilter
+        function frame:SetIconFilter(iconFilter)
+            if not self.iconDataProvider and self.IconSelector then
+                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                    self.IconSelector:OnLoad()
+                end
+                self.iconDataProvider = self.IconSelector.iconDataProvider
             end
-            frame.depositChecks[i] = check
-            prev = check
+            originalSetIconFilter(self, iconFilter)
         end
     end
 
-    -- accept and cancel buttons
-    frame.acceptButton = CreateFrame("Button", "$parentAcceptButton", frame, "UIPanelButtonTemplate")
-    frame.acceptButton:SetSize(96, 22)
-    frame.acceptButton:SetPoint("BOTTOMRIGHT", -16, 16)
-    frame.acceptButton:SetText(OKAY)
-    frame.acceptButton:SetScript("OnClick", function()
-        local name = frame.nameBox:GetText()
-        local icon = frame.selectedIcon or QUESTION_MARK_ICON
-        local flags = 0
-        for _, check in ipairs(frame.depositChecks) do
-            if check:GetChecked() then
-                flags = bit.bor(flags, check.flag)
+    if frame.SetIconFilterInternal then
+        local originalSetIconFilterInternal = frame.SetIconFilterInternal
+        function frame:SetIconFilterInternal(...)
+            if not self.iconDataProvider and self.IconSelector then
+                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                    self.IconSelector:OnLoad()
+                end
+                self.iconDataProvider = self.IconSelector.iconDataProvider
             end
+            originalSetIconFilterInternal(self, ...)
         end
-        if C_Bank and C_Bank.UpdateBankTabSettings then
-            C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, name, icon, flags)
-        end
-        frame:Hide()
-        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
-    end)
+    end
 
-    frame.cancelButton = CreateFrame("Button", "$parentCancelButton", frame, "UIPanelButtonTemplate")
-    frame.cancelButton:SetSize(96, 22)
-    frame.cancelButton:SetPoint("BOTTOMLEFT", 16, 16)
-    frame.cancelButton:SetText(CANCEL)
-    frame.cancelButton:SetScript("OnClick", function()
-        frame:Hide()
-        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
-    end)
-
+    -- Populate the menu with data for the requested tab.
     function frame:Load(bankType, tabIndex)
         self.bankType = bankType
         self.tabIndex = tabIndex
-        local info = GetTabSettings(bankType, tabIndex)
-        local name = info and info.name or ""
-        local icon = info and info.icon or QUESTION_MARK_ICON
-        local flags = info and info.depositFlags or 0
-        self.nameBox:SetText(name)
-        self.selectedIcon = icon
-        self.iconButton.Icon:SetTexture(icon)
-        BuildDepositChecks()
-        for _, check in ipairs(self.depositChecks) do
-            check:SetChecked(bit.band(flags, check.flag) ~= 0)
+
+        -- The icon selector's data provider is cleared whenever the popup
+        -- frame is hidden. Reinitialize the child frame as needed and wire
+        -- the provider so filtering works when the menu is reopened.
+        if self.IconSelector then
+            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                self.IconSelector:OnLoad()
+            end
+            self.iconDataProvider = self.IconSelector.iconDataProvider
         end
-        self.nameBox:HighlightText()
+
+        local name, icon, depositFlags = FetchTabInfo(bankType, tabIndex)
+
+        self.BorderBox.IconSelectorEditBox:SetText(name or "")
+        self.selectedIcon = icon or QUESTION_MARK_ICON
+        self.depositFlags = depositFlags or 0
+        self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
+
+        -- Ensure the icon selector has data and displays the selected icon.
+        if self.IconSelector then
+            -- Reinitialize the selector when the provider was cleared on hide.
+            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
+                self.IconSelector:OnLoad()
+            end
+
+            if self.IconSelector.SetSelectedIcon then
+                self.IconSelector:SetSelectedIcon(self.selectedIcon)
+            end
+
+            -- Clearing any leftover search filter avoids an empty grid.
+            if self.IconSelector.ClearSearchFilter then
+                self.IconSelector:ClearSearchFilter()
+            end
+
+            if self.IconSelector.RefreshIcons then
+                self.IconSelector:RefreshIcons()
+            end
+        end
+
+        self.BorderBox.IconSelectorEditBox:HighlightText()
     end
 
+    -- Commit any changes to the tab when the user accepts the dialog.
+    frame.BorderBox.OkayButton:SetScript("OnClick", function()
+        if C_Bank and C_Bank.UpdateBankTabSettings and frame.bankType and frame.tabIndex then
+            local newName = frame.BorderBox.IconSelectorEditBox:GetText()
+            C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
+        end
+        frame:Hide()
+        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
+    end)
+
+    -- Simply hide the frame when cancelled.
+    frame.BorderBox.CancelButton:SetScript("OnClick", function()
+        frame:Hide()
+        PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
+    end)
+
+    -- Helper to open the menu for a given tab.
     function frame:Open(bankType, tabIndex)
         self:Load(bankType, tabIndex)
         self:SetFrameStrata("FULLSCREEN_DIALOG")
@@ -160,7 +228,7 @@ end
 
 function ADDON:GetBankTabSettingsMenu()
     if not self.bankTabSettingsMenu then
-        self.bankTabSettingsMenu = CreateMenu()
+        self.bankTabSettingsMenu = CreateSettingsMenu()
     end
     return self.bankTabSettingsMenu
 end
