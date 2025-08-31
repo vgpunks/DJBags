@@ -28,8 +28,9 @@ function DJBagsBankTabButton_OnLoad(self, tabIndex)
 
     self:SetScript("OnClick", function(btn, which)
         if which == "RightButton" then
-            local menu = ADDON:GetBankTabSettingsMenu()
-            menu:Open(Enum.BankType and Enum.BankType.Character, tabIndex)
+            local bankType = Enum.BankType and Enum.BankType.Character
+            local menu = ADDON:GetBankTabSettingsMenu(bankType)
+            menu:Open(bankType, tabIndex)
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
         else
             if DJBagsBankBar and DJBagsBankBar.bankBag and DJBagsBankBar.bankBag.SelectTab then
