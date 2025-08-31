@@ -259,10 +259,19 @@ local function CreateSettingsMenu()
     return frame
 end
 
-function ADDON:GetBankTabSettingsMenu()
+function ADDON:GetBankTabSettingsMenu(bankType)
     local menu
 
-    if BankPanel and BankPanel.TabSettingsMenu then
+    -- Prefer our custom settings menu for character bank tabs so the
+    -- icon selector is always initialized correctly.  Fall back to the
+    -- Blizzard implementation for other bank types so features like
+    -- deposit restrictions remain available.
+    local useCustom = true
+    if bankType and Enum.BankType and bankType ~= Enum.BankType.Character then
+        useCustom = false
+    end
+
+    if not useCustom and BankPanel and BankPanel.TabSettingsMenu then
         menu = BankPanel.TabSettingsMenu
     else
         if not self.bankTabSettingsMenu then

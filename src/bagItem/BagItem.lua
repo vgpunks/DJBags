@@ -57,7 +57,7 @@ function item:Init(id, slot)
                 bankType = Enum.BankType and Enum.BankType.Character
             end
 
-            local menu = ADDON:GetBankTabSettingsMenu()
+            local menu = ADDON:GetBankTabSettingsMenu(bankType)
             if bankType then
                 menu:Open(bankType, tabIndex)
             else
