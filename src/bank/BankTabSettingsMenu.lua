@@ -102,6 +102,32 @@ local BankTabSettingFlags = Enum.BankTabSettingFlags or {
     IsPublic = 4,
 }
 
+-- Helper to update a bank tab's settings across differing API versions.  Try
+-- multiple call signatures so both modern and legacy clients handle the
+-- request.  The call order mirrors FetchTabInfo's approach but omits nil
+-- arguments for builds that do not support deposit flags.
+local function UpdateTabSettings(bankType, tabIndex, name, icon, depositFlags)
+    if not C_Bank or not C_Bank.UpdateBankTabSettings then
+        return
+    end
+
+    local function Try(func, ...)
+        if not func then return end
+        local ok = pcall(func, ...)
+        if ok then return true end
+    end
+
+    return Try(C_Bank.UpdateBankTabSettings, bankType, tabIndex, name, icon, depositFlags)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, bankType, name, icon, depositFlags)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, name, icon, depositFlags)
+        or Try(C_Bank.UpdateBankTabSettings, bankType, tabIndex, name, icon)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, bankType, name, icon)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, name, icon)
+        or Try(C_Bank.UpdateBankTabSettings, bankType, tabIndex, name)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, bankType, name)
+        or Try(C_Bank.UpdateBankTabSettings, tabIndex, name)
+end
+
 local function CreateSettingsMenu()
     -- Ensure the Blizzard icon selector UI is loaded before creating the frame.
     if C_AddOns and C_AddOns.LoadAddOn then
@@ -330,6 +356,13 @@ local function CreateSettingsMenu()
                 self.IconSelector:OnLoad()
             end
 
+            -- Some clients require the OnShow handler to run before icons are
+            -- generated. Explicitly invoke it so the grid is populated even
+            -- when the frame was constructed manually.
+            if self.IconSelector.OnShow then
+                self.IconSelector:OnShow()
+            end
+
             if self.IconSelector.SetSelectedIcon then
                 self.IconSelector:SetSelectedIcon(self.selectedIcon)
             end
@@ -363,10 +396,8 @@ local function CreateSettingsMenu()
         -- Commit any changes to the tab when the user accepts the dialog.
         okayButton:Show()
         okayButton:SetScript("OnClick", function()
-            if C_Bank and C_Bank.UpdateBankTabSettings and frame.bankType and frame.tabIndex then
-                local newName = frame.BorderBox.IconSelectorEditBox:GetText()
-                C_Bank.UpdateBankTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
-            end
+            local newName = frame.BorderBox.IconSelectorEditBox:GetText()
+            UpdateTabSettings(frame.bankType, frame.tabIndex, newName, frame.selectedIcon, frame.depositFlags or 0)
             frame:Hide()
             PlaySound(SOUNDKIT.GS_TITLE_OPTION_OK)
         end)
