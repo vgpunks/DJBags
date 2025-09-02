@@ -30,7 +30,7 @@ function item:Init(id, slot)
     self:SetID(id or slot or 0)
     self.slot = slot
 
-    -- Allow both left and right button clicks so we can open bank tab settings
+    -- Allow both left and right button clicks.
     self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
     self:SetScript('OnDragStart', self.DragItem)
@@ -39,32 +39,6 @@ function item:Init(id, slot)
         if self.buy then
             PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             StaticPopup_Show("CONFIRM_BUY_BANK_SLOT")
-            return
-        end
-
-        -- Right-clicking a bank tab should open the settings menu
-        if button == "RightButton" and BankFrame and isBankTabSlot(self.slot) then
-            local tabIndex, bankType
-
-            if Enum.BagIndex.AccountBankTab_1 and Enum.BagIndex.AccountBankTab_6
-                and self.slot >= Enum.BagIndex.AccountBankTab_1
-                and self.slot <= Enum.BagIndex.AccountBankTab_6
-            then
-                tabIndex = self.slot - Enum.BagIndex.AccountBankTab_1 + 1
-                bankType = Enum.BankType and Enum.BankType.Account
-            else
-                tabIndex = self.slot - Enum.BagIndex.CharacterBankTab_1 + 1
-                bankType = Enum.BankType and Enum.BankType.Character
-            end
-
-            local menu = ADDON:GetBankTabSettingsMenu(bankType)
-            if bankType then
-                menu:Open(bankType, tabIndex)
-            else
-                menu:Open(tabIndex)
-            end
-
-            PlaySound(SOUNDKIT.IG_MAINMENU_OPTION)
             return
         end
 
