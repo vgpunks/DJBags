@@ -189,6 +189,72 @@
                     </OnLoad>
                 </Scripts>
             </ItemButton>
+            <ItemButton name="$parentAccountBag1" parentKey="accountBag1">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="DJBagsWarbandBank" relativePoint="TOPRIGHT" x="5" y="0"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 1)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag2" parentKey="accountBag2">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag1" relativePoint="BOTTOMLEFT" y="-5"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 2)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag3" parentKey="accountBag3">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag2" relativePoint="BOTTOMLEFT" y="-5"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 3)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag4" parentKey="accountBag4">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag3" relativePoint="BOTTOMLEFT" y="-5"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 4)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag5" parentKey="accountBag5">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag4" relativePoint="BOTTOMLEFT" y="-5"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 5)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
+            <ItemButton name="$parentAccountBag6" parentKey="accountBag6">
+                <Size x="36" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentAccountBag5" relativePoint="BOTTOMLEFT" y="-5"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        DJBagsAccountBankTabButton_OnLoad(self, 6)
+                    </OnLoad>
+                </Scripts>
+            </ItemButton>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
                 <Anchors>
                     <Anchor point="CENTER" relativePoint="TOPRIGHT" x="-2" y="-2"/>
