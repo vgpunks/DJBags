@@ -194,6 +194,12 @@ local function CreateSettingsMenu()
         frame.BorderBox:EnableMouse(true)
     end
 
+    -- Darken the background so the menu overlays the bank frame similar to
+    -- Blizzard's implementation.
+    frame.BG = frame:CreateTexture(nil, "BACKGROUND")
+    frame.BG:SetAllPoints(frame)
+    frame.BG:SetColorTexture(0, 0, 0, 0.6)
+
     -- Some game versions parent the icon selector outside the BorderBox.
     -- Reanchor the grid so it always appears beneath the name field.
     if frame.IconSelector and frame.BorderBox then
@@ -213,30 +219,40 @@ local function CreateSettingsMenu()
         frame.BorderBox.SelectedIconArea.SelectedIconText.SelectedIconDescription:SetFontObject(GameFontHighlightSmall)
     end)
 
-    -- Optional deposit setting checkboxes mirroring the Blizzard menu.
+    -- Container for optional deposit setting checkboxes mirroring the
+    -- Blizzard menu.  The options are grouped in a dedicated menu so they can
+    -- be positioned consistently regardless of client version.
+    frame.DepositSettingsMenu = CreateFrame("Frame", nil, frame)
+    frame.DepositSettingsMenu:SetPoint("TOPLEFT", frame.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, -8)
+    frame.DepositSettingsMenu:SetPoint("RIGHT", frame.BorderBox, "RIGHT", 0, 0)
+    frame.DepositSettingsMenu:SetHeight(1)
+    frame.DepositSettingsMenu:Hide()
+    frame.DepositSettingsMenu:SetFrameLevel((frame.BorderBox and frame.BorderBox:GetFrameLevel() or 1) + 1)
+
     frame.depositChecks = {}
-    local function AddDepositOption(flag, label, offset)
+    local function AddDepositOption(flag, label)
         -- Some clients do not provide the InterfaceOptionsSmallCheckButtonTemplate
         -- used by the retail UI.  Attempt to create the checkbox using that
         -- template and gracefully fall back to more common alternatives so the
         -- settings menu works across different game versions.
         local check
-        local ok, result = pcall(CreateFrame, "CheckButton", nil, frame.BorderBox, "InterfaceOptionsSmallCheckButtonTemplate")
+        local ok, result = pcall(CreateFrame, "CheckButton", nil, frame.DepositSettingsMenu, "InterfaceOptionsSmallCheckButtonTemplate")
         if ok and result then
             check = result
         else
-            ok, result = pcall(CreateFrame, "CheckButton", nil, frame.BorderBox, "UICheckButtonTemplate")
+            ok, result = pcall(CreateFrame, "CheckButton", nil, frame.DepositSettingsMenu, "UICheckButtonTemplate")
             if ok and result then
                 check = result
             else
-                check = CreateFrame("CheckButton", nil, frame.BorderBox)
+                check = CreateFrame("CheckButton", nil, frame.DepositSettingsMenu)
                 local text = check:CreateFontString(nil, "ARTWORK", "GameFontNormal")
                 text:SetPoint("LEFT", check, "RIGHT", 0, 1)
                 check.Text = text
             end
         end
 
-        check:SetPoint("TOPLEFT", frame.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, offset)
+        local index = #frame.depositChecks
+        check:SetPoint("TOPLEFT", frame.DepositSettingsMenu, "TOPLEFT", 0, -index * 22)
         if check.Text then
             check.Text:SetText(label)
         end
@@ -248,29 +264,29 @@ local function CreateSettingsMenu()
             end
         end)
         table.insert(frame.depositChecks, {button = check, flag = flag})
-        return offset - 22
+        frame.DepositSettingsMenu:SetHeight((index + 1) * 22)
     end
 
-    local offset = -8
     if BankTabSettingFlags then
         -- Known flag providing auto deposit control.
         if BankTabSettingFlags.AllowAutoDeposit then
-            offset = AddDepositOption(BankTabSettingFlags.AllowAutoDeposit, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+            AddDepositOption(BankTabSettingFlags.AllowAutoDeposit, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit")
         elseif BankTabSettingFlags.DisableAutoStore then
-            offset = AddDepositOption(BankTabSettingFlags.DisableAutoStore, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit", offset)
+            AddDepositOption(BankTabSettingFlags.DisableAutoStore, BANK_TAB_ALLOW_AUTO_DEPOSIT or "Allow Auto-Deposit")
         end
 
         -- Flag to control public visibility if available.
         if BankTabSettingFlags.IsPublic then
-            offset = AddDepositOption(BankTabSettingFlags.IsPublic, BANK_TAB_PUBLIC or "Public Tab", offset)
+            AddDepositOption(BankTabSettingFlags.IsPublic, BANK_TAB_PUBLIC or "Public Tab")
         end
     end
 
-    -- If deposit checkboxes were added, shift the icon selector below them.
+    -- If deposit checkboxes were added, shift the icon selector below their
+    -- container so the layout matches Blizzard's frame stack.
     if frame.IconSelector and frame.BorderBox and #frame.depositChecks > 0 then
-        local anchor = frame.depositChecks[#frame.depositChecks].button
+        frame.DepositSettingsMenu:Show()
         frame.IconSelector:ClearAllPoints()
-        frame.IconSelector:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -10)
+        frame.IconSelector:SetPoint("TOPLEFT", frame.DepositSettingsMenu, "BOTTOMLEFT", 0, -10)
         frame.IconSelector:SetPoint("BOTTOMRIGHT", frame.BorderBox, "BOTTOMRIGHT", -5, 40)
     end
 
@@ -328,20 +344,19 @@ local function CreateSettingsMenu()
 
         if self.depositChecks then
             local showDeposit = bankType and Enum.BankType and bankType == Enum.BankType.Account
-            local anchor
+            self.DepositSettingsMenu:SetShown(showDeposit and #self.depositChecks > 0)
             for _, data in ipairs(self.depositChecks) do
                 data.button:SetShown(showDeposit)
                 if showDeposit then
                     local checked = bit.band(self.depositFlags or 0, data.flag) ~= 0
                     data.button:SetChecked(checked)
-                    anchor = data.button
                 end
             end
 
             if self.IconSelector and self.BorderBox then
                 self.IconSelector:ClearAllPoints()
-                if showDeposit and anchor then
-                    self.IconSelector:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -10)
+                if showDeposit and self.DepositSettingsMenu:IsShown() then
+                    self.IconSelector:SetPoint("TOPLEFT", self.DepositSettingsMenu, "BOTTOMLEFT", 0, -10)
                 else
                     self.IconSelector:SetPoint("TOPLEFT", self.BorderBox.IconSelectorEditBox, "BOTTOMLEFT", 0, -10)
                 end
@@ -416,14 +431,20 @@ local function CreateSettingsMenu()
     function frame:Open(bankType, tabIndex)
         self:Load(bankType, tabIndex)
         self:SetFrameStrata("FULLSCREEN_DIALOG")
-        self:ClearAllPoints()
         local anchor = BankFrame
         if Enum.BankType and bankType == Enum.BankType.Account then
             anchor = DJBagsWarbandBank or anchor
         else
             anchor = DJBagsBank or anchor
         end
-        self:SetPoint("TOPLEFT", anchor, "TOPRIGHT")
+        if self.SetParent then
+            self:SetParent(anchor)
+        end
+        if self.ClearAllPoints then
+            self:ClearAllPoints()
+        end
+        self:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 0)
+        self:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, 0)
         self:Show()
     end
 
@@ -469,8 +490,14 @@ function ADDON:GetBankTabSettingsMenu(bankType)
             if baseOpen then
                 baseOpen(self, bankType, tabIndex)
             end
+            local anchor = BankFrame
+            if Enum.BankType and bankType == Enum.BankType.Account then
+                anchor = DJBagsWarbandBank or anchor
+            else
+                anchor = DJBagsBank or anchor
+            end
             if self.SetParent then
-                self:SetParent(UIParent)
+                self:SetParent(anchor)
             end
             if self.SetFrameStrata then
                 self:SetFrameStrata("FULLSCREEN_DIALOG")
@@ -479,13 +506,8 @@ function ADDON:GetBankTabSettingsMenu(bankType)
                 self:ClearAllPoints()
             end
             if self.SetPoint then
-                local anchor = BankFrame
-                if Enum.BankType and bankType == Enum.BankType.Account then
-                    anchor = DJBagsWarbandBank or anchor
-                else
-                    anchor = DJBagsBank or anchor
-                end
-                self:SetPoint("TOPLEFT", anchor, "TOPRIGHT")
+                self:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 0)
+                self:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, 0)
             end
             if self.Show then
                 self:Show()
