@@ -343,8 +343,8 @@ local function CreateSettingsMenu()
         self.BorderBox.SelectedIconArea.SelectedIconButton:SetIconTexture(self.selectedIcon)
 
         if self.depositChecks then
-            local showDeposit = bankType and Enum.BankType and bankType == Enum.BankType.Account
-            self.DepositSettingsMenu:SetShown(showDeposit and #self.depositChecks > 0)
+            local showDeposit = #self.depositChecks > 0
+            self.DepositSettingsMenu:SetShown(showDeposit)
             for _, data in ipairs(self.depositChecks) do
                 data.button:SetShown(showDeposit)
                 if showDeposit then
@@ -389,6 +389,15 @@ local function CreateSettingsMenu()
 
             if self.IconSelector.RefreshIcons then
                 self.IconSelector:RefreshIcons()
+                if self.iconDataProvider and self.iconDataProvider.GetNumIcons then
+                    local ok, count = pcall(self.iconDataProvider.GetNumIcons, self.iconDataProvider)
+                    if ok and count == 0 and self.iconDataProvider.GenerateIconList then
+                        pcall(self.iconDataProvider.GenerateIconList, self.iconDataProvider)
+                        if self.IconSelector.RefreshIcons then
+                            self.IconSelector:RefreshIcons()
+                        end
+                    end
+                end
             end
         end
 
