@@ -33,6 +33,25 @@ function DJBagsBankTabButton_OnLoad(self, tabIndex)
     end)
 end
 
+-- Helper to initialize a warband bank tab button for a specific tab index.
+function DJBagsAccountBankTabButton_OnLoad(self, tabIndex)
+    local slot = Enum.BagIndex and Enum.BagIndex.AccountBankTab_1 and (Enum.BagIndex.AccountBankTab_1 + tabIndex - 1)
+    if slot then
+        local id = C_Container and C_Container.ContainerIDToInventoryID and C_Container.ContainerIDToInventoryID(slot)
+        DJBagsBagItemLoad(self, slot, id)
+    end
+
+    -- Disable drag interactions; tabs are for selection only.
+    self:SetScript('OnDragStart', nil)
+    self:SetScript('OnReceiveDrag', nil)
+
+    self:SetScript("OnClick", function()
+        if DJBagsBankBar and DJBagsBankBar.warbandBankBag and DJBagsBankBar.warbandBankBag.SelectTab then
+            DJBagsBankBar.warbandBankBag:SelectTab(tabIndex)
+        end
+    end)
+end
+
 function DJBagsHideBlizzardBank()
     BankFrame:SetAlpha(0)
     BankFrame:EnableMouse(false)
