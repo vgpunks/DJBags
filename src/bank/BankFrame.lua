@@ -155,6 +155,13 @@ function bankFrame:UpdateBankType()
         self:UpdateTabSelection(self.bankBag.selectedTab)
     end
 
+    if self.bankBag then
+        self.bankBag:BAG_UPDATE_DELAYED()
+    end
+    if self.warbandBankBag then
+        self.warbandBankBag:BAG_UPDATE_DELAYED()
+    end
+
     self:Show()
 end
 
