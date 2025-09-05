@@ -163,8 +163,9 @@ function bankFrame:UpdateBankType()
     end
     PanelTemplates_ResizeTabsToFit(self, maxWidth)
 
-    if isCharacterBank and self.bankBag and self.bankBag.selectedTab then
-        self:UpdateTabSelection(self.bankBag.selectedTab)
+    local activeContainer = isCharacterBank and self.bankBag or self.warbandBankBag
+    if activeContainer and activeContainer.selectedTab then
+        self:UpdateTabSelection(activeContainer.selectedTab)
     end
 
     if self.bankBag then
