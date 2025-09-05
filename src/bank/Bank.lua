@@ -3,54 +3,6 @@ local ADDON_NAME, ADDON = ...
 local bank = {}
 bank.__index = bank
 
--- Helper to load the "all" tab button which displays contents from all
--- character bank tabs.
-function DJBagsBankAllTab_OnLoad(self)
-    SetItemButtonTexture(self, "Interface/Icons/INV_Misc_Bag_08")
-    self:SetScript("OnClick", function()
-        if DJBagsBankBar and DJBagsBankBar.bankBag and DJBagsBankBar.bankBag.SelectTab then
-            DJBagsBankBar.bankBag:SelectTab(0)
-        end
-    end)
-end
-
--- Helper to initialize a bank tab button for a specific tab index.
---
--- `bankType` determines which bank container the tab should control.  When
--- omitted, character bank tabs are assumed.  Warband bank tabs use
--- `Enum.BankType.Account`.
-function DJBagsBankTabButton_OnLoad(self, tabIndex, bankType)
-    local baseSlot
-    if bankType == Enum.BankType.Account then
-        baseSlot = Enum.BagIndex and Enum.BagIndex.AccountBankTab_1
-    else
-        baseSlot = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1
-        bankType = Enum.BankType.Character
-    end
-
-    local slot = baseSlot and (baseSlot + tabIndex - 1)
-    if slot then
-        local id = C_Container and C_Container.ContainerIDToInventoryID and C_Container.ContainerIDToInventoryID(slot)
-        DJBagsBagItemLoad(self, slot, id)
-    end
-
-    -- Disable drag interactions; tabs are for selection only.
-    self:SetScript('OnDragStart', nil)
-    self:SetScript('OnReceiveDrag', nil)
-
-    self:SetScript("OnClick", function()
-        local bar = DJBagsBankBar
-        if not bar then
-            return
-        end
-
-        local bag = (bankType == Enum.BankType.Account) and bar.warbandBankBag or bar.bankBag
-        if bag and bag.SelectTab then
-            bag:SelectTab(tabIndex)
-        end
-    end)
-end
-
 function DJBagsHideBlizzardBank()
     BankFrame:SetAlpha(0)
     BankFrame:EnableMouse(false)
@@ -61,10 +13,6 @@ end
 
 function DJBagsRegisterBankBagContainer(self, bags, bankType)
     DJBagsRegisterBaseBagContainer(self, bags)
-
-    -- Track the full list of bags so we can toggle individual tabs.
-    self.allBags = bags
-    self.selectedTab = 0
 
     -- Save the original BAG_UPDATE implementation so we can gate updates
     -- while the other bank type is active.
@@ -126,111 +74,25 @@ end
 
 function bank:PLAYERBANKSLOTS_CHANGED()
     if self.isActive then
-        self:BAG_UPDATE_DELAYED()
-    end
-end
-
-function bank:SelectTab(tabIndex)
-    self.selectedTab = tabIndex or 0
-    if self.selectedTab == 0 then
-        self.bags = self.allBags
-    else
-        local bagID = self.allBags[self.selectedTab]
-        if bagID then
-            self.bags = { bagID }
-        else
-            self.bags = self.allBags
-            self.selectedTab = 0
-        end
-    end
-
-    self.bagsByKey = {}
-    for _, bag in ipairs(self.bags) do
-        self.bagsByKey[bag] = true
-    end
-
-    -- Reset the item cache and hide items from inactive tabs so the display
-    -- only contains slots from the selected tab. Ensure items from the
-    -- active tab are retained in the cache so the bag doesn't appear empty
-    -- after switching tabs.
-    self.items = {}
-    if self.containers then
-        for bagID, container in pairs(self.containers) do
-            if self.bagsByKey[bagID] then
-                for _, item in pairs(container.items) do
-                    table.insert(self.items, item)
-                end
-            else
-                for _, item in pairs(container.items) do
-                    item.id = nil
-                    item:Hide()
-                end
-            end
-        end
-    end
-
-    self:Refresh()
-    self:BAG_UPDATE_DELAYED()
-
-    if DJBagsBankBar and DJBagsBankBar.UpdateTabSelection then
-        DJBagsBankBar:UpdateTabSelection(self.selectedTab)
-    end
-end
-
-function bank:BAG_UPDATE_DELAYED()
-    if not self.isActive then
-        return
-    end
-
-    local prefix = self.bankType == Enum.BankType.Account and 'accountBag' or 'bag'
-
-    -- Update tab icons
-    for i = 1, 6 do
-        local barItem = DJBagsBankBar[prefix .. i]
-        if barItem then
-            barItem:Update()
-        end
-    end
-
-    -- Position the tab buttons vertically and include the "all" tab for
-    -- character banks. Tabs are anchored to the active bank container rather
-    -- than the outer bank bar so they move with the bag frame itself.
-    local prev
-    if prefix == 'bag' and DJBagsBankBar.allTab then
-        DJBagsBankBar.allTab:ClearAllPoints()
-        DJBagsBankBar.allTab:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, -5)
-        prev = DJBagsBankBar.allTab
-    end
-
-    for i = 1, 6 do
-        local barItem = DJBagsBankBar[prefix .. i]
-        if barItem and barItem:IsShown() then
-            barItem:ClearAllPoints()
-            if prev then
-                barItem:SetPoint('TOPLEFT', prev, 'BOTTOMLEFT', 0, -5)
-            else
-                barItem:SetPoint('TOPLEFT', self, 'TOPRIGHT', 5, prefix == 'bag' and -5 or 0)
-            end
-            prev = barItem
-        end
+        self:Refresh()
     end
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
     if self.isActive then
-        self:BAG_UPDATE_DELAYED()
+        self:Refresh()
     end
 end
 
 function bank:ACCOUNT_BANK_TAB_PURCHASED()
     if self.isActive then
-        self:BAG_UPDATE_DELAYED()
+        self:Refresh()
     end
 end
 
 function bank:ACCOUNT_BANK_SLOTS_CHANGED()
     if self.isActive then
-        self:BAG_UPDATE_DELAYED()
+        self:Refresh()
     end
 end
 
