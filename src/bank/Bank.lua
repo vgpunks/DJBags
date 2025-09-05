@@ -83,6 +83,10 @@ function DJBagsRegisterBankBagContainer(self, bags, bankType)
     ADDON.eventManager:Add('BANKFRAME_CLOSED', self)
     ADDON.eventManager:Add('PLAYERBANKSLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERBANKBAGSLOTS_CHANGED', self)
+    -- Warband bank tabs use separate events when purchased. Ensure we listen
+    -- for those so newly unlocked tabs become visible without a reload.
+    ADDON.eventManager:Add('ACCOUNT_BANK_TAB_PURCHASED', self)
+    ADDON.eventManager:Add('PLAYERACCOUNTBANKSLOTS_CHANGED', self)
 
     BankFrame:UnregisterAllEvents()
     BankFrame:SetScript('OnShow', DJBagsHideBlizzardBank)
@@ -213,6 +217,18 @@ function bank:BAG_UPDATE_DELAYED()
 end
 
 function bank:PLAYERBANKBAGSLOTS_CHANGED()
+    if self.isActive then
+        self:BAG_UPDATE_DELAYED()
+    end
+end
+
+function bank:ACCOUNT_BANK_TAB_PURCHASED()
+    if self.isActive then
+        self:BAG_UPDATE_DELAYED()
+    end
+end
+
+function bank:PLAYERACCOUNTBANKSLOTS_CHANGED()
     if self.isActive then
         self:BAG_UPDATE_DELAYED()
     end
