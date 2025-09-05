@@ -106,10 +106,49 @@
                     </OnClick>
                 </Scripts>
             </Button>
+            <Button name="$parentDepositButton" parentKey="depositButton">
+                <Size x="16" y="16"/>
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentRestackButton" relativePoint="LEFT" x="-3"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        self:RegisterEvent("ADDON_LOADED")
+                        self:RegisterEvent("BANKFRAME_OPENED")
+                        self:SetScript("OnEvent", function(button, event, addon)
+                            if event == "ADDON_LOADED" and addon ~= "Blizzard_BankUI" then return end
+                            local default = ReagentBankFrame and ReagentBankFrame.DepositButton
+                            if default and default:GetNormalTexture() then
+                                button:SetNormalTexture(default:GetNormalTexture():GetTexture())
+                                button:SetPushedTexture(default:GetPushedTexture():GetTexture())
+                                local highlight = default:GetHighlightTexture()
+                                if highlight then
+                                    button:SetHighlightTexture(highlight:GetTexture(), "ADD")
+                                end
+                                button:UnregisterEvent("ADDON_LOADED")
+                                button:UnregisterEvent("BANKFRAME_OPENED")
+                            end
+                        end)
+                    </OnLoad>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, 'TOPRIGHT')
+                        GameTooltip:SetText(REAGENTBANK_DEPOSIT or "Deposit Reagents")
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                    <OnClick>
+                        if DepositReagentBank then
+                            DepositReagentBank()
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
             <EditBox name="$parentSearchBox" parentKey="search" inherits="BagSearchBoxTemplate" letters="15">
                 <Size x="96" y="18"/>
                 <Anchors>
-                    <Anchor point="RIGHT" relativeTo="$parentRestackButton" relativePoint="LEFT" x="-3"/>
+                    <Anchor point="RIGHT" relativeTo="$parentDepositButton" relativePoint="LEFT" x="-3"/>
                 </Anchors>
             </EditBox>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
