@@ -97,7 +97,8 @@ function bankFrame:UpdateBankType()
     end
 
     if self.depositButton then
-        local showDeposit = isCharacterBank and (not IsReagentBankUnlocked or IsReagentBankUnlocked())
+        local IsReagentBankUnlockedFunc = (C_Bank and C_Bank.IsReagentBankUnlocked) or IsReagentBankUnlocked
+        local showDeposit = isCharacterBank and (not IsReagentBankUnlockedFunc or IsReagentBankUnlockedFunc())
         self.depositButton:SetShown(showDeposit)
     end
 
