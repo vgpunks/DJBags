@@ -91,7 +91,13 @@ function bankFrame:UpdateBankType()
         for i = 1, 6 do
             local bag = self['bag' .. i]
             local acc = self['accountBag' .. i]
-            if bag then bag:Show() end
+            if bag then
+                if bag.Update then
+                    bag:Update()
+                else
+                    bag:Show()
+                end
+            end
             if acc then acc:Hide() end
         end
     else
@@ -102,7 +108,13 @@ function bankFrame:UpdateBankType()
             local bag = self['bag' .. i]
             local acc = self['accountBag' .. i]
             if bag then bag:Hide() end
-            if acc then acc:Show() end
+            if acc then
+                if acc.Update then
+                    acc:Update()
+                else
+                    acc:Show()
+                end
+            end
         end
     end
 
