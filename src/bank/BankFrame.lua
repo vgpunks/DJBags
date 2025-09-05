@@ -97,9 +97,11 @@ function bankFrame:UpdateBankType()
     end
 
     if self.depositButton then
-        local IsReagentBankUnlockedFunc = (C_Bank and C_Bank.IsReagentBankUnlocked) or IsReagentBankUnlocked
-        local showDeposit = isCharacterBank and (not IsReagentBankUnlockedFunc or IsReagentBankUnlockedFunc())
-        self.depositButton:SetShown(showDeposit)
+        local hasDeposit = (C_Bank and C_Bank.DepositAllReagents)
+            or (C_Container and C_Container.DepositAllReagents)
+            or DepositReagentBank
+            or DepositAllReagents
+        self.depositButton:SetShown(hasDeposit)
     end
 
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
