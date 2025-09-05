@@ -300,56 +300,6 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
-            <Button name="$parentTab1" parentKey="characterTab" inherits="PanelTabButtonTemplate" id="1">
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="DJBagsBank" relativePoint="BOTTOMLEFT" x="2" y="2"/>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        self:SetText(CHARACTER)
-                        if not self.Text and self.GetFontString then
-                            self.Text = self:GetFontString()
-                        end
-                        if not self.Left and self.LeftDisabled then
-                            self.Left = self.LeftDisabled
-                            self.Middle = self.MiddleDisabled
-                            self.Right = self.RightDisabled
-                        end
-                        if self.Left then
-                            PanelTemplates_TabResize(self, 0)
-                        end
-                    </OnLoad>
-                    <OnClick>
-                        PanelTemplates_SetTab(self:GetParent(), 1)
-                        BankFrame:SetTab(1, Enum.BankType and Enum.BankType.Character)
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentTab2" parentKey="warbandTab" inherits="PanelTabButtonTemplate" id="2">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentTab1" relativePoint="RIGHT" x="-16"/>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        self:SetText(WARBAND_BANK or "Warband")
-                        if not self.Text and self.GetFontString then
-                            self.Text = self:GetFontString()
-                        end
-                        if not self.Left and self.LeftDisabled then
-                            self.Left = self.LeftDisabled
-                            self.Middle = self.MiddleDisabled
-                            self.Right = self.RightDisabled
-                        end
-                        if self.Left then
-                            PanelTemplates_TabResize(self, 0)
-                        end
-                    </OnLoad>
-                    <OnClick>
-                        PanelTemplates_SetTab(self:GetParent(), 2)
-                        BankFrame:SetTab(2, Enum.BankType and Enum.BankType.Account)
-                    </OnClick>
-                </Scripts>
-            </Button>
         </Frames>
         <Scripts>
             <OnLoad>
