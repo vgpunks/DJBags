@@ -196,7 +196,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 1)
+                        DJBagsBankTabButton_OnLoad(self, 1, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -207,7 +207,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 2)
+                        DJBagsBankTabButton_OnLoad(self, 2, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -218,7 +218,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 3)
+                        DJBagsBankTabButton_OnLoad(self, 3, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -229,7 +229,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 4)
+                        DJBagsBankTabButton_OnLoad(self, 4, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -240,7 +240,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 5)
+                        DJBagsBankTabButton_OnLoad(self, 5, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>
@@ -251,7 +251,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        DJBagsAccountBankTabButton_OnLoad(self, 6)
+                        DJBagsBankTabButton_OnLoad(self, 6, Enum.BankType.Account)
                     </OnLoad>
                 </Scripts>
             </ItemButton>

@@ -15,8 +15,20 @@ function DJBagsBankAllTab_OnLoad(self)
 end
 
 -- Helper to initialize a bank tab button for a specific tab index.
-function DJBagsBankTabButton_OnLoad(self, tabIndex)
-    local slot = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1 and (Enum.BagIndex.CharacterBankTab_1 + tabIndex - 1)
+--
+-- `bankType` determines which bank container the tab should control.  When
+-- omitted, character bank tabs are assumed.  Warband bank tabs use
+-- `Enum.BankType.Account`.
+function DJBagsBankTabButton_OnLoad(self, tabIndex, bankType)
+    local baseSlot
+    if bankType == Enum.BankType.Account then
+        baseSlot = Enum.BagIndex and Enum.BagIndex.AccountBankTab_1
+    else
+        baseSlot = Enum.BagIndex and Enum.BagIndex.CharacterBankTab_1
+        bankType = Enum.BankType.Character
+    end
+
+    local slot = baseSlot and (baseSlot + tabIndex - 1)
     if slot then
         local id = C_Container and C_Container.ContainerIDToInventoryID and C_Container.ContainerIDToInventoryID(slot)
         DJBagsBagItemLoad(self, slot, id)
@@ -27,27 +39,14 @@ function DJBagsBankTabButton_OnLoad(self, tabIndex)
     self:SetScript('OnReceiveDrag', nil)
 
     self:SetScript("OnClick", function()
-        if DJBagsBankBar and DJBagsBankBar.bankBag and DJBagsBankBar.bankBag.SelectTab then
-            DJBagsBankBar.bankBag:SelectTab(tabIndex)
+        local bar = DJBagsBankBar
+        if not bar then
+            return
         end
-    end)
-end
 
--- Helper to initialize a warband bank tab button for a specific tab index.
-function DJBagsAccountBankTabButton_OnLoad(self, tabIndex)
-    local slot = Enum.BagIndex and Enum.BagIndex.AccountBankTab_1 and (Enum.BagIndex.AccountBankTab_1 + tabIndex - 1)
-    if slot then
-        local id = C_Container and C_Container.ContainerIDToInventoryID and C_Container.ContainerIDToInventoryID(slot)
-        DJBagsBagItemLoad(self, slot, id)
-    end
-
-    -- Disable drag interactions; tabs are for selection only.
-    self:SetScript('OnDragStart', nil)
-    self:SetScript('OnReceiveDrag', nil)
-
-    self:SetScript("OnClick", function()
-        if DJBagsBankBar and DJBagsBankBar.warbandBankBag and DJBagsBankBar.warbandBankBag.SelectTab then
-            DJBagsBankBar.warbandBankBag:SelectTab(tabIndex)
+        local bag = (bankType == Enum.BankType.Account) and bar.warbandBankBag or bar.bankBag
+        if bag and bag.SelectTab then
+            bag:SelectTab(tabIndex)
         end
     end)
 end
