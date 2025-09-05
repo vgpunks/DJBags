@@ -56,15 +56,6 @@ function DJBagsRegisterBankFrame(self, bags)
         self:SetUserPlaced(false)
     end
 
-    PanelTemplates_SetNumTabs(self, 2)
-
-    -- Defer selecting the initial tab until the next frame so that the
-    -- child tab buttons have finished running their own OnLoad scripts and
-    -- created the textures expected by PanelTemplates_SelectTab.
-    C_Timer.After(0, function()
-        PanelTemplates_SetTab(self, 1)
-    end)
-
     -- Update our visibility when the bank switches between character and account tabs.
     hooksecurefunc(BankFrame, "SetTab", function()
         self:UpdateBankType()
@@ -126,42 +117,20 @@ function bankFrame:UpdateBankType()
     if activeBag then
         self:ClearAllPoints()
         self:SetPoint("TOPRIGHT", activeBag, "BOTTOMRIGHT", 0, -5)
-        if self.characterTab then
-            self.characterTab:ClearAllPoints()
-            self.characterTab:SetPoint("TOPLEFT", activeBag, "BOTTOMLEFT", 2, 2)
-        end
 
         if self.settingsBtn and self.restackButton and self.search then
             local padding = 18
             local spacing = 3
 
-            -- Minimum width should accommodate the search box and the
-            -- character/warband tabs. Include a bit of extra padding so the
-            -- tabs are fully visible.
-            local searchWidth = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
-            local tabWidth = 0
-            if self.characterTab and self.warbandTab then
-                tabWidth = self.characterTab:GetWidth() + self.warbandTab:GetWidth() + padding
-            end
-            local width = math.max(searchWidth, tabWidth)
+            -- Minimum width should accommodate the search box.
+            local width = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
 
-            -- Height must be at least tall enough for the tabs.
-            local searchHeight = self.search:GetHeight() + padding
-            local tabHeight = self.characterTab and (self.characterTab:GetHeight() + padding) or 0
-            local height = math.max(searchHeight, tabHeight)
+            -- Height only needs to fit the search box.
+            local height = self.search:GetHeight() + padding
 
             self:SetSize(width, height)
         end
     end
-
-    PanelTemplates_SetTab(self, isCharacterBank and 1 or 2)
-    -- Ensure tabs resize using at least our minimum width so the frame does
-    -- not shrink when switching tabs.
-    local maxWidth = (activeBag and activeBag:GetWidth()) or 0
-    if self:GetWidth() > maxWidth then
-        maxWidth = self:GetWidth()
-    end
-    PanelTemplates_ResizeTabsToFit(self, maxWidth)
 
     local activeContainer = isCharacterBank and self.bankBag or self.warbandBankBag
     if activeContainer and activeContainer.selectedTab then
