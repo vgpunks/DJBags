@@ -87,35 +87,9 @@ function bankFrame:UpdateBankType()
     if isCharacterBank then
         if self.bankBag then self.bankBag:Show() end
         if self.warbandBankBag then self.warbandBankBag:Hide() end
-        if self.allTab then self.allTab:Show() end
-        for i = 1, 6 do
-            local bag = self['bag' .. i]
-            local acc = self['accountBag' .. i]
-            if bag then
-                if bag.Update then
-                    bag:Update()
-                else
-                    bag:Show()
-                end
-            end
-            if acc then acc:Hide() end
-        end
     else
         if self.bankBag then self.bankBag:Hide() end
         if self.warbandBankBag then self.warbandBankBag:Show() end
-        if self.allTab then self.allTab:Hide() end
-        for i = 1, 6 do
-            local bag = self['bag' .. i]
-            local acc = self['accountBag' .. i]
-            if bag then bag:Hide() end
-            if acc then
-                if acc.Update then
-                    acc:Update()
-                else
-                    acc:Show()
-                end
-            end
-        end
     end
 
     if self.bankSettingsMenu then
@@ -163,18 +137,6 @@ function bankFrame:UpdateBankType()
     end
     PanelTemplates_ResizeTabsToFit(self, maxWidth)
 
-    local activeContainer = isCharacterBank and self.bankBag or self.warbandBankBag
-    if activeContainer and activeContainer.selectedTab then
-        self:UpdateTabSelection(activeContainer.selectedTab)
-    end
-
-    if self.bankBag then
-        self.bankBag:BAG_UPDATE_DELAYED()
-    end
-    if self.warbandBankBag then
-        self.warbandBankBag:BAG_UPDATE_DELAYED()
-    end
-
     self:Show()
 end
 
@@ -190,19 +152,3 @@ function bankFrame:BANKFRAME_CLOSED()
     self:Hide()
 end
 
-function bankFrame:UpdateTabSelection(selected)
-    local bankType = BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-    local isCharacterBank = not bankType or bankType == Enum.BankType.Character
-
-    if self.allTab then
-        self.allTab:SetAlpha(isCharacterBank and selected == 0 and 1 or 0.4)
-    end
-
-    for i = 1, 6 do
-        local key = (isCharacterBank and 'bag' or 'accountBag') .. i
-        local btn = self[key]
-        if btn then
-            btn:SetAlpha(selected == i and 1 or 0.4)
-        end
-    end
-end
