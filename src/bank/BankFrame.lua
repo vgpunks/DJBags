@@ -97,11 +97,13 @@ function bankFrame:UpdateBankType()
     end
 
     if self.depositButton then
-        local hasDeposit = (C_Bank and C_Bank.DepositAllReagents)
-            or (C_Container and C_Container.DepositAllReagents)
-            or DepositReagentBank
-            or DepositAllReagents
-        self.depositButton:SetShown(hasDeposit)
+        -- Always show the deposit reagents button when viewing the character bank.
+        -- The Blizzard API can load the deposit functions asynchronously which
+        -- caused our previous capability check to fail and hide the button. The
+        -- onclick handler already checks for the appropriate functions before
+        -- calling them, so simply display the button whenever the character bank
+        -- is active.
+        self.depositButton:SetShown(isCharacterBank)
     end
 
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
