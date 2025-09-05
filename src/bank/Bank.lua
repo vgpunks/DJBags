@@ -86,6 +86,7 @@ function DJBagsRegisterBankBagContainer(self, bags, bankType)
     -- Warband bank tabs use separate events when purchased. Ensure we listen
     -- for those so newly unlocked tabs become visible without a reload.
     ADDON.eventManager:Add('ACCOUNT_BANK_TAB_PURCHASED', self)
+    ADDON.eventManager:Add('ACCOUNT_BANK_SLOTS_CHANGED', self)
     ADDON.eventManager:Add('PLAYERACCOUNTBANKSLOTS_CHANGED', self)
 
     BankFrame:UnregisterAllEvents()
@@ -228,11 +229,13 @@ function bank:ACCOUNT_BANK_TAB_PURCHASED()
     end
 end
 
-function bank:PLAYERACCOUNTBANKSLOTS_CHANGED()
+function bank:ACCOUNT_BANK_SLOTS_CHANGED()
     if self.isActive then
         self:BAG_UPDATE_DELAYED()
     end
 end
+
+bank.PLAYERACCOUNTBANKSLOTS_CHANGED = bank.ACCOUNT_BANK_SLOTS_CHANGED
 
 -- Override the bag hover event to prevent highlighting items when hovering
 -- over bank tabs.  Tab selection already filters the visible items.
