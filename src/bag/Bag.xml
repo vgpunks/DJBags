@@ -100,7 +100,7 @@
                     </OnClick>
                 </Scripts>
             </CheckButton>
-            <Button name="$parentRestackBtn">
+            <Button name="$parentRestackBtn" parentKey="restackButton">
                 <Size x="16" y="16"/>
                 <Anchors>
                     <Anchor point="RIGHT" relativeTo="$parentBagBtn" relativePoint="LEFT" x="-3"/>
@@ -122,7 +122,37 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parentClearButton">
+            <Button name="$parentDepositButton" parentKey="depositButton" hidden="true">
+                <Size x="16" y="16"/>
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentRestackBtn" relativePoint="LEFT" x="-3"/>
+                </Anchors>
+                <NormalTexture file="Interface\\Icons\\INV_Misc_Bag_08"/>
+                <PushedTexture file="Interface\\Icons\\INV_Misc_Bag_08"/>
+                <HighlightTexture file="Interface\\Buttons\\UI-Common-MouseHilight" alphaMode="ADD"/>
+                <Scripts>
+                    <OnEnter>
+                        GameTooltip:SetOwner(self, 'TOPRIGHT')
+                        GameTooltip:SetText(REAGENTBANK_DEPOSIT or "Deposit Reagents")
+                        GameTooltip:Show()
+                    </OnEnter>
+                    <OnLeave>
+                        GameTooltip:Hide()
+                    </OnLeave>
+                    <OnClick>
+                        if C_Bank and C_Bank.DepositAllReagents then
+                            C_Bank.DepositAllReagents()
+                        elseif C_Container and C_Container.DepositAllReagents then
+                            C_Container.DepositAllReagents()
+                        elseif DepositReagentBank then
+                            DepositReagentBank()
+                        elseif DepositAllReagents then
+                            DepositAllReagents()
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentClearButton" parentKey="clearButton">
                 <Size x="25" y="25"/>
                 <Anchors>
                     <Anchor point="RIGHT" relativeTo="$parentRestackBtn" relativePoint="LEFT" x="-3"/>
