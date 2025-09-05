@@ -96,6 +96,11 @@ function bankFrame:UpdateBankType()
         self.bankSettingsMenu.bag = isCharacterBank and self.bankBag or self.warbandBankBag
     end
 
+    if self.depositButton then
+        local showDeposit = isCharacterBank and IsReagentBankUnlocked and IsReagentBankUnlocked()
+        self.depositButton:SetShown(showDeposit)
+    end
+
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
     if activeBag then
         self:ClearAllPoints()
@@ -112,7 +117,13 @@ function bankFrame:UpdateBankType()
             -- Minimum width should accommodate the search box and the
             -- character/warband tabs. Include a bit of extra padding so the
             -- tabs are fully visible.
-            local searchWidth = self.settingsBtn:GetWidth() + self.restackButton:GetWidth() + self.search:GetWidth() + padding + spacing * 2
+            local buttonsWidth = self.settingsBtn:GetWidth() + self.restackButton:GetWidth()
+            local numButtons = 2
+            if self.depositButton and self.depositButton:IsShown() then
+                buttonsWidth = buttonsWidth + self.depositButton:GetWidth()
+                numButtons = numButtons + 1
+            end
+            local searchWidth = buttonsWidth + self.search:GetWidth() + padding + spacing * numButtons
             local tabWidth = 0
             if self.characterTab and self.warbandTab then
                 tabWidth = self.characterTab:GetWidth() + self.warbandTab:GetWidth() + padding
