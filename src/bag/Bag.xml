@@ -127,9 +127,9 @@
                 <Anchors>
                     <Anchor point="RIGHT" relativeTo="$parentRestackBtn" relativePoint="LEFT" x="-3"/>
                 </Anchors>
-                <NormalTexture file="Interface\\Icons\\INV_Misc_Bag_08"/>
-                <PushedTexture file="Interface\\Icons\\INV_Misc_Bag_08"/>
-                <HighlightTexture file="Interface\\Buttons\\UI-Common-MouseHilight" alphaMode="ADD"/>
+                <NormalTexture file="Interface\Icons\INV_Misc_Bag_08"/>
+                <PushedTexture file="Interface\Icons\INV_Misc_Bag_08"/>
+                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
                 <Scripts>
                     <OnEnter>
                         GameTooltip:SetOwner(self, 'TOPRIGHT')
