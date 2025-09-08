@@ -128,10 +128,13 @@
                             C_Bank.DepositAllReagents()
                         elseif C_Container and C_Container.DepositAllReagents then
                             C_Container.DepositAllReagents()
-                        elseif DepositReagentBank then
-                            DepositReagentBank()
                         elseif DepositAllReagents then
                             DepositAllReagents()
+                        end
+                        if C_Bank and C_Bank.DepositReagentBank then
+                            C_Bank.DepositReagentBank()
+                        elseif DepositReagentBank then
+                            DepositReagentBank()
                         end
                     </OnClick>
                 </Scripts>
