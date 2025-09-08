@@ -133,6 +133,8 @@
                         end
                         if C_Bank and C_Bank.DepositReagentBank then
                             C_Bank.DepositReagentBank()
+                        elseif C_Container and C_Container.DepositReagentBank then
+                            C_Container.DepositReagentBank()
                         elseif DepositReagentBank then
                             DepositReagentBank()
                         end
