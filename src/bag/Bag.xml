@@ -140,7 +140,9 @@
                         GameTooltip:Hide()
                     </OnLeave>
                     <OnClick>
-                        if C_Bank and C_Bank.DepositAllReagents then
+                        if C_Bank and C_Bank.DepositReagentBank then
+                            C_Bank.DepositReagentBank()
+                        elseif C_Bank and C_Bank.DepositAllReagents then
                             C_Bank.DepositAllReagents()
                         elseif C_Container and C_Container.DepositAllReagents then
                             C_Container.DepositAllReagents()
