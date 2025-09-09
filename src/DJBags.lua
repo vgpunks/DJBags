@@ -62,6 +62,24 @@ ToggleBackpack = function()
     end
 end
 
+local oldOpen = OpenBag
+OpenBag = function(id)
+    if id < 5 and id > -1 then
+        DJBagsBag:Show()
+    else
+        oldOpen(id)
+    end
+end
+
+local oldClose = CloseBag
+CloseBag = function(id)
+    if id < 5 and id > -1 then
+        DJBagsBag:Hide()
+    else
+        oldClose(id)
+    end
+end
+
 OpenAllBags = function()
     DJBagsBag:Show()
 end
