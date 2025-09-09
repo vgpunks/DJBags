@@ -101,3 +101,11 @@ end
 function bag:CURRENCY_DISPLAY_UPDATE()
     self:UpdateCurrency()
 end
+
+function bag:BANKFRAME_OPENED()
+    self:Show()
+end
+
+function bag:BANKFRAME_CLOSED()
+    self:Hide()
+end
