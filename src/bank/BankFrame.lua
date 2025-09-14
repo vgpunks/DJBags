@@ -96,6 +96,15 @@ function bankFrame:UpdateBankType()
         self.bankSettingsMenu.bag = isCharacterBank and self.bankBag or self.warbandBankBag
     end
 
+    if self.depositButton then
+        -- Display the deposit reagents button whenever the character bank
+        -- container is visible.  Rely on the bag's actual visibility rather
+        -- than the Blizzard bank type API which can return stale values while
+        -- the bank UI is loading, leaving the button hidden even though the
+        -- character bank is on screen.
+        local showDeposit = self.bankBag and self.bankBag:IsShown()
+        self.depositButton:SetShown(showDeposit)
+    end
 
     local activeBag = isCharacterBank and self.bankBag or self.warbandBankBag
     if activeBag then
@@ -115,6 +124,10 @@ function bankFrame:UpdateBankType()
             -- tabs are fully visible.
             local buttonsWidth = self.settingsBtn:GetWidth() + self.restackButton:GetWidth()
             local numButtons = 2
+            if self.depositButton and self.depositButton:IsShown() then
+                buttonsWidth = buttonsWidth + self.depositButton:GetWidth()
+                numButtons = numButtons + 1
+            end
             local searchWidth = buttonsWidth + self.search:GetWidth() + padding + spacing * numButtons
             local tabWidth = 0
             if self.characterTab and self.warbandTab then
