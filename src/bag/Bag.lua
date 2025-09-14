@@ -104,18 +104,8 @@ end
 
 function bag:BANKFRAME_OPENED()
     self:Show()
-    if self.mainBar and self.mainBar.depositButton and self.mainBar.clearButton then
-        self.mainBar.depositButton:Show()
-        self.mainBar.clearButton:ClearAllPoints()
-        self.mainBar.clearButton:SetPoint("RIGHT", self.mainBar.depositButton, "LEFT", -3, 0)
-    end
 end
 
 function bag:BANKFRAME_CLOSED()
     self:Hide()
-    if self.mainBar and self.mainBar.depositButton and self.mainBar.clearButton and self.mainBar.restackButton then
-        self.mainBar.depositButton:Hide()
-        self.mainBar.clearButton:ClearAllPoints()
-        self.mainBar.clearButton:SetPoint("RIGHT", self.mainBar.restackButton, "LEFT", -3, 0)
-    end
 end
