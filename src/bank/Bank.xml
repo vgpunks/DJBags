@@ -125,14 +125,15 @@
                     </OnLeave>
                     <OnClick>
                         local bankType = BankFrame and BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-                        if C_Bank and C_Bank.DepositAllReagents then
-                            C_Bank.DepositAllReagents(bankType or Enum.BankType and Enum.BankType.Character)
-                        elseif C_Container and C_Container.DepositAllReagents then
-                            C_Container.DepositAllReagents()
-                        elseif C_Bank and C_Bank.DepositReagentBank then
+                        bankType = bankType or (Enum.BankType and Enum.BankType.Character)
+                        if C_Bank and C_Bank.DepositReagentBank then
                             C_Bank.DepositReagentBank(bankType)
                         elseif C_Container and C_Container.DepositReagentBank then
                             C_Container.DepositReagentBank()
+                        elseif C_Bank and C_Bank.DepositAllReagents then
+                            C_Bank.DepositAllReagents(bankType)
+                        elseif C_Container and C_Container.DepositAllReagents then
+                            C_Container.DepositAllReagents()
                         elseif DepositReagentBank then
                             DepositReagentBank()
                         end
