@@ -97,12 +97,13 @@ function bankFrame:UpdateBankType()
     end
 
     if self.depositButton then
-        -- Display the deposit reagents button whenever the character bank
-        -- container is visible.  Rely on the bag's actual visibility rather
-        -- than the Blizzard bank type API which can return stale values while
-        -- the bank UI is loading, leaving the button hidden even though the
-        -- character bank is on screen.
-        local showDeposit = self.bankBag and self.bankBag:IsShown()
+        -- Display the deposit reagents button whenever either bank container
+        -- is visible.  Rely on the bags' actual visibility rather than the
+        -- Blizzard bank type API which can return stale values while the bank
+        -- UI is loading, leaving the button hidden even though the bank is on
+        -- screen.
+        local showDeposit = (self.bankBag and self.bankBag:IsShown()) or
+            (self.warbandBankBag and self.warbandBankBag:IsShown())
         self.depositButton:SetShown(showDeposit)
     end
 
