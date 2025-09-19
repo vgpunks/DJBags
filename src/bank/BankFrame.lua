@@ -102,8 +102,10 @@ function bankFrame:UpdateBankType()
         -- Blizzard bank type API which can return stale values while the bank
         -- UI is loading, leaving the button hidden even though the bank is on
         -- screen.
-        local showDeposit = (self.bankBag and self.bankBag:IsShown()) or
-            (self.warbandBankBag and self.warbandBankBag:IsShown())
+        local showDeposit = (self.bankBag and self.bankBag:IsShown())
+        if self.warbandBankBag and self.warbandBankBag:IsShown() then
+            showDeposit = false
+        end
         self.depositButton:SetShown(showDeposit)
     end
 

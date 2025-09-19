@@ -72,10 +72,16 @@
                         GameTooltip:Hide()
                     </OnLeave>
                     <OnClick>
-                        if self:GetParent().bankSettingsMenu:IsVisible() then
-                            self:GetParent().bankSettingsMenu:Hide()
-                        else
-                            self:GetParent().bankSettingsMenu:Show()
+                                                                        -- 11.2+: Reagent Bank removed; use bank tabs with Reagent flags.
+                        -- This calls Blizzard's auto-deposit for the active bank type.
+                        local bankType = (BankFrame and BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()) or (Enum.BankType and Enum.BankType.Character) or 0
+                        if C_Bank and C_Bank.DoesBankTypeSupportAutoDeposit and C_Bank.DoesBankTypeSupportAutoDeposit(bankType) and C_Bank.AutoDepositItemsIntoBank then
+                            C_Bank.AutoDepositItemsIntoBank(bankType)
+                        elseif C_Container and C_Container.DepositAllReagents then
+                            -- Fallback path on older clients/builds
+                            C_Container.DepositAllReagents()
+                        elseif DepositReagentBank then
+                            DepositReagentBank()
                         end
                     </OnClick>
                 </Scripts>
@@ -117,7 +123,7 @@
                 <Scripts>
                     <OnEnter>
                         GameTooltip:SetOwner(self, 'TOPRIGHT')
-                        GameTooltip:SetText(REAGENTBANK_DEPOSIT or "Deposit Reagents")
+                        GameTooltip:SetText("Auto-deposit reagents to your bank tabs")
                         GameTooltip:Show()
                     </OnEnter>
                     <OnLeave>
@@ -125,13 +131,16 @@
                     </OnLeave>
                     <OnClick>
                         local bankType = BankFrame and BankFrame.GetActiveBankType and BankFrame:GetActiveBankType()
-                        bankType = bankType or (Enum.BankType and Enum.BankType.Character)
-                        if C_Bank and C_Bank.DepositReagentBank then
-                            C_Bank.DepositReagentBank(bankType)
-                        elseif C_Container and C_Container.DepositReagentBank then
-                            C_Container.DepositReagentBank()
-                        elseif C_Bank and C_Bank.DepositAllReagents then
-                            C_Bank.DepositAllReagents(bankType)
+                        if not bankType and Enum and Enum.BankType then
+                            -- default to whichever DJBags frame is visible
+                            if DJBagsWarbandBank and DJBagsWarbandBank:IsShown() then
+                                bankType = Enum.BankType.Account
+                            else
+                                bankType = Enum.BankType.Character
+                            end
+                        end
+                        if C_Bank and C_Bank.DoesBankTypeSupportAutoDeposit and C_Bank.DoesBankTypeSupportAutoDeposit(bankType) and C_Bank.AutoDepositItemsIntoBank then
+                            C_Bank.AutoDepositItemsIntoBank(bankType)
                         elseif C_Container and C_Container.DepositAllReagents then
                             C_Container.DepositAllReagents()
                         elseif DepositReagentBank then
@@ -143,7 +152,8 @@
             <EditBox name="$parentSearchBox" parentKey="search" inherits="BagSearchBoxTemplate" letters="15">
                 <Size x="96" y="18"/>
                 <Anchors>
-                    <Anchor point="RIGHT" relativeTo="$parentDepositButton" relativePoint="LEFT" x="-3"/>
+                    <Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT" x="16"/>
+                    <Anchor point="RIGHT" relativeTo="$parentDepositButton" relativePoint="LEFT" x="-6"/>
                 </Anchors>
             </EditBox>
             <Button name="$parentClose" parentKey="close" inherits="UIPanelCloseButton">
