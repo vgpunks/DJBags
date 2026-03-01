@@ -116,6 +116,25 @@ function bag:OnLoad(bags)
     self.titleContainers = {}
     self.Format = ADDON.formatter[ADDON.formats.MASONRY]
 
+    -- In some UI flows (notably bank/warband-bank XML OnLoad paths), Format() may
+    -- be invoked before PLAYER_ENTERING_WORLD runs and populates SavedVariables.
+    -- Ensure a safe defaults table exists so early layouts don't error.
+    if not self.settings then
+        if CopyTable then
+            self.settings = CopyTable(settings)
+        else
+            self.settings = {
+                padding = settings.padding,
+                scale = settings.scale,
+                containerSpacing = settings.containerSpacing,
+                itemSpacing = settings.itemSpacing,
+                maxColumns = settings.maxColumns,
+            }
+        end
+    end
+    self.settings.filters = self.settings.filters or {}
+    self:SetScale(self.settings.scale or 1)
+
     ADDON.eventManager:Add('PLAYER_ENTERING_WORLD', self)
 
     MakeMoveable(self) 

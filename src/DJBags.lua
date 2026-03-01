@@ -49,7 +49,7 @@ ToggleBag = function(id)
         else
             DJBagsBag:Show()
         end
-    else
+    elseif oldToggle then
         oldToggle(id)
     end
 end
@@ -66,7 +66,7 @@ local oldOpen = OpenBag
 OpenBag = function(id)
     if id < 5 and id > -1 then
         DJBagsBag:Show()
-    else
+    elseif oldOpen then
         oldOpen(id)
     end
 end
@@ -75,7 +75,7 @@ local oldClose = CloseBag
 CloseBag = function(id)
     if id < 5 and id > -1 then
         DJBagsBag:Hide()
-    else
+    elseif oldClose then
         oldClose(id)
     end
 end
@@ -105,3 +105,57 @@ SLASH_RL1 = '/rl';
 function SlashCmdList.RL(msg, editbox)
     ReloadUI()
 end
+
+-- -----------------------------------------------------------------------
+-- Loot Toast / Loot Notification click → open DJBags bag
+--
+-- In Midnight the loot alert system hooks use several paths depending on
+-- client version:
+--   1. ContainerFrame_OpenBag(bagID)  – called by older loot notification clicks
+--   2. EventRegistry "LootToastFrame.OpenBag"  – Midnight AlertSystem path
+--   3. LootAlertSystem / GenerateLootToastLink clicks may call OpenBackpack()
+--
+-- Paths 1 and 3 are already covered by our OpenBag / OpenBackpack overrides.
+-- We hook path 2 via EventRegistry so any toast click that fires that event
+-- also opens DJBags.
+-- -----------------------------------------------------------------------
+local function DJBagsSetupLootToastHooks()
+    -- Hook EventRegistry loot open event (Midnight AlertSystem)
+    if EventRegistry then
+        EventRegistry:RegisterCallback("LootToastFrame.OpenBag", function()
+            DJBagsBag:Show()
+        end, "DJBagsLootToast")
+    end
+
+    -- Hook ContainerFrame_OpenBag for the bag-bar loot toast click path.
+    -- In older clients this global is called directly when clicking a loot
+    -- toast item to open the container it landed in.
+    if ContainerFrame_OpenBag then
+        local _origContainerOpenBag = ContainerFrame_OpenBag
+        ContainerFrame_OpenBag = function(bagID, ...)
+            if bagID and bagID >= 0 and bagID <= 4 then
+                DJBagsBag:Show()
+            else
+                _origContainerOpenBag(bagID, ...)
+            end
+        end
+    end
+
+    -- Midnight: LootAlertSystem uses a click handler that may set
+    -- ToggleBackpack or call C_Container.OpenBag. Secure-wrap OpenBackpack
+    -- is already done above. Additionally hook the LootFrame click callback
+    -- if present (harmless if not).
+    if LootAlertSystem and LootAlertSystem.OnAlertFrameStackButtonClick then
+        hooksecurefunc(LootAlertSystem, "OnAlertFrameStackButtonClick", function()
+            DJBagsBag:Show()
+        end)
+    end
+end
+
+-- Run after PLAYER_LOGIN so all frames and registries are initialised.
+local lootHookFrame = CreateFrame("Frame")
+lootHookFrame:RegisterEvent("PLAYER_LOGIN")
+lootHookFrame:SetScript("OnEvent", function(self)
+    DJBagsSetupLootToastHooks()
+    self:UnregisterAllEvents()
+end)

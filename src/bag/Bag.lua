@@ -33,7 +33,7 @@ end
 
 function bag:ClearNewItems()
     DJBags_DB_Char.newItems = {}
-    C_NewItems:ClearAll()
+    if C_NewItems and C_NewItems.ClearAll then C_NewItems.ClearAll() end
     self:Refresh()
 end
 

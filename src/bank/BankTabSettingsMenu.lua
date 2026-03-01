@@ -102,6 +102,22 @@ local BankTabSettingFlags = Enum.BankTabSettingFlags or {
     IsPublic = 4,
 }
 
+
+-- Call a frame's XML script handler (OnLoad/OnShow/etc) if one is assigned.
+-- Many Blizzard templates wire behavior through frame scripts rather than
+-- mixin methods, and frames created with CreateFrame() may not have those
+-- scripts executed automatically on some client builds.
+local function CallScript(frame, scriptName, ...)
+    if not frame or not frame.GetScript then
+        return
+    end
+    local handler = frame:GetScript(scriptName)
+    if type(handler) == "function" then
+        local ok, err = xpcall(handler, CallErrorHandler, frame, ...)
+        return ok
+    end
+end
+
 -- Helper to update a bank tab's settings across differing API versions.  Try
 -- multiple call signatures so both modern and legacy clients handle the
 -- request.  The call order mirrors FetchTabInfo's approach but omits nil
@@ -158,37 +174,44 @@ local function CreateSettingsMenu()
     -- display tooltips while the settings menu is open.
     frame:EnableMouse(true)
     frame:SetToplevel(true)
-    frame:SetScript("OnEnter", GameTooltip_Hide)
-
-    -- Frames created via CreateFrame do not automatically execute their
-    -- OnLoad handler.  Initialize the mixin so the icon selector behaves
-    -- correctly.
-    --
-    -- The popup frame's OnLoad expects the icon selector child to have run
-    -- its own initialization first so that the data provider is available.
-    -- Call the child's OnLoad before the parent's and wire the data
-    -- provider immediately so the parent can safely reference it when
-    -- setting up filtering.
-    if frame.IconSelector and frame.IconSelector.OnLoad then
-        frame.IconSelector:OnLoad()
-        if frame.IconSelector.iconDataProvider and frame.IconSelector.iconDataProvider.GenerateIconList then
-            pcall(frame.IconSelector.iconDataProvider.GenerateIconList, frame.IconSelector.iconDataProvider)
-        end
+    
+    -- Keep the template scripts intact; just ensure we stay on top visually.
+    if frame.HookScript then
+        frame:HookScript("OnShow", function()
+            frame:Raise()
+            -- Ensure legacy UIDropDownMenu lists appear above the bank frame and our popup.
+            for i = 1, 4 do
+                local list = _G and _G["DropDownList" .. i]
+                if list and list.SetFrameStrata then
+                    list:SetFrameStrata("FULLSCREEN_DIALOG")
+                    if list.SetToplevel then
+                        list:SetToplevel(true)
+                    end
+                end
+            end
+        end)
     end
 
-    -- The popup frame mixin expects to reference the icon selector's data
-    -- provider directly. Replicate the setup normally performed by the
-    -- template prior to calling the parent's OnLoad so filtering works
-    -- without errors.
+    -- Ensure XML OnLoad scripts have run so the icon selector (and its dropdowns)
+    -- are fully initialized. Some builds do not automatically execute template
+    -- OnLoad handlers when creating frames via CreateFrame().
+    if frame.IconSelector and not frame.IconSelector.iconDataProvider then
+        CallScript(frame.IconSelector, "OnLoad")
+    end
+    if frame.GetScript and frame:GetScript("OnLoad") and not frame._djbOnLoadCalled then
+        CallScript(frame, "OnLoad")
+        frame._djbOnLoadCalled = true
+    end
+
     if frame.IconSelector then
         frame.iconDataProvider = frame.IconSelector.iconDataProvider
+        if frame.iconDataProvider and frame.iconDataProvider.GenerateIconList then
+            pcall(frame.iconDataProvider.GenerateIconList, frame.iconDataProvider)
+        end
     end
-
-    if frame.OnLoad then
-        frame:OnLoad()
+    if frame.BorderBox and frame.BorderBox.IconSelectorEditBox then
+        frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
     end
-
-    frame.BorderBox.IconSelectorEditBox:SetAutoFocus(false)
 
     if frame.BorderBox and frame.BorderBox.EnableMouse then
         frame.BorderBox:EnableMouse(true)
@@ -295,8 +318,8 @@ local function CreateSettingsMenu()
         local originalSetIconFilter = frame.SetIconFilter
         function frame:SetIconFilter(iconFilter)
             if not self.iconDataProvider and self.IconSelector then
-                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
-                    self.IconSelector:OnLoad()
+                if not self.IconSelector.iconDataProvider then
+                    CallScript(self.IconSelector, "OnLoad")
                 end
                 self.iconDataProvider = self.IconSelector.iconDataProvider
             end
@@ -308,8 +331,8 @@ local function CreateSettingsMenu()
         local originalSetIconFilterInternal = frame.SetIconFilterInternal
         function frame:SetIconFilterInternal(...)
             if not self.iconDataProvider and self.IconSelector then
-                if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
-                    self.IconSelector:OnLoad()
+                if not self.IconSelector.iconDataProvider then
+                    CallScript(self.IconSelector, "OnLoad")
                 end
                 self.iconDataProvider = self.IconSelector.iconDataProvider
             end
@@ -326,8 +349,8 @@ local function CreateSettingsMenu()
         -- frame is hidden. Reinitialize the child frame as needed and wire
         -- the provider so filtering works when the menu is reopened.
         if self.IconSelector then
-            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
-                self.IconSelector:OnLoad()
+            if not self.IconSelector.iconDataProvider then
+                CallScript(self.IconSelector, "OnLoad")
             end
             self.iconDataProvider = self.IconSelector.iconDataProvider
             if self.iconDataProvider and self.iconDataProvider.GenerateIconList then
@@ -367,16 +390,12 @@ local function CreateSettingsMenu()
         -- Ensure the icon selector has data and displays the selected icon.
         if self.IconSelector then
             -- Reinitialize the selector when the provider was cleared on hide.
-            if not self.IconSelector.iconDataProvider and self.IconSelector.OnLoad then
-                self.IconSelector:OnLoad()
+            if not self.IconSelector.iconDataProvider then
+                CallScript(self.IconSelector, "OnLoad")
             end
 
-            -- Some clients require the OnShow handler to run before icons are
-            -- generated. Explicitly invoke it so the grid is populated even
-            -- when the frame was constructed manually.
-            if self.IconSelector.OnShow then
-                self.IconSelector:OnShow()
-            end
+            -- Some clients require the IconSelector's OnShow script to run to populate icons.
+            CallScript(self.IconSelector, "OnShow")
 
             if self.IconSelector.SetSelectedIcon then
                 self.IconSelector:SetSelectedIcon(self.selectedIcon)
@@ -463,17 +482,12 @@ end
 function ADDON:GetBankTabSettingsMenu(bankType)
     local menu
 
-    -- Prefer our custom settings menu for character bank tabs so the
-    -- icon selector is always initialized correctly.  Fall back to the
-    -- Blizzard implementation only for account banks so features like
-    -- deposit restrictions remain available.
-    local useCustom = true
-    if bankType and Enum.BankType and bankType == Enum.BankType.Account then
-        useCustom = false
-    end
-
-    if not useCustom and BankPanel and BankPanel.TabSettingsMenu then
-        menu = BankPanel.TabSettingsMenu
+    -- Prefer Blizzard's built-in tab settings menu whenever it exists (it
+    -- exposes the full icon/deposit/sort UI).  Fall back to DJBags' custom
+    -- menu if the built-in menu isn't available in the current client.
+    local panel = BankPanel or (BankFrame and BankFrame.BankPanel)
+    if panel and panel.TabSettingsMenu then
+        menu = panel.TabSettingsMenu
     else
         if not self.bankTabSettingsMenu then
             self.bankTabSettingsMenu = CreateSettingsMenu()
@@ -490,33 +504,45 @@ function ADDON:GetBankTabSettingsMenu(bankType)
     if menu and not menu.DJBagsWrappedOpen then
         local baseOpen = menu.Open
         function menu:Open(...)
-            local bankType, tabIndex
+            -- Args may be: (bankType, tabIndex[, anchorRegion]) or (tabIndex[, anchorRegion])
+            local bankType, tabIndex, anchorRegion
             if select('#', ...) >= 2 then
-                bankType, tabIndex = ...
+                bankType, tabIndex, anchorRegion = ...
             else
-                tabIndex = ...
+                tabIndex, anchorRegion = ...
             end
+
             if baseOpen then
+                -- Call the original Open first so the menu populates correctly.
                 baseOpen(self, bankType, tabIndex)
             end
+
+            -- Anchor beside the clicked tab (or beside the DJBags bank frame) so
+            -- the menu appears off to the side, like the default UI.
             local anchor = BankFrame
             if Enum.BankType and bankType == Enum.BankType.Account then
                 anchor = DJBagsWarbandBank or anchor
             else
                 anchor = DJBagsBank or anchor
             end
+
             if self.SetParent then
-                self:SetParent(anchor)
+                -- Parent to UIParent so we're not constrained by our bank frame.
+                self:SetParent(UIParent)
             end
             if self.SetFrameStrata then
                 self:SetFrameStrata("FULLSCREEN_DIALOG")
+            end
+            if self.SetClampedToScreen then
+                self:SetClampedToScreen(true)
             end
             if self.ClearAllPoints then
                 self:ClearAllPoints()
             end
             if self.SetPoint then
-                self:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 0)
-                self:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 0, 0)
+                local region = (anchorRegion and anchorRegion.GetObjectType and anchorRegion) or anchor
+                -- Put the settings to the right of the tab strip/frame.
+                self:SetPoint("TOPLEFT", region, "TOPRIGHT", 10, 0)
             end
             if self.Show then
                 self:Show()

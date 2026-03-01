@@ -37,7 +37,13 @@ local function InitItem(self, bag, slot)
         })
     end
 
-    self:HookScript('OnClick', self.OnClick)
+    -- Hooking OnClick on bank item buttons can taint the secure click
+    -- handlers used for "use" actions (eg. learning mounts/pets) after the
+    -- bank has been opened.  Only enable our Alt-click helpers on regular
+    -- bag items.
+    if not self.isBankItem then
+        self:HookScript('OnClick', self.OnClick)
+    end
 
     -- hook into can i mog it
     if CIMI_AddToFrame then
@@ -50,11 +56,12 @@ function ADDON:NewItem(parent, slot)
 	assert(bag and type(bag) == 'number', 'Parent is required to be a bag with ID set the bag number')
 	assert(slot and type(slot) == 'number', 'Slot required as integer value')
 
-        local numBags = NUM_BAG_SLOTS or 4
-        local numBankBags = NUM_BANKBAGSLOTS or 7
-        local firstBankBag = Enum.BagIndex.CharacterBankTab_1 or Enum.BagIndex.BankBag_1 or (numBags + 1)
-        local lastBankBag = Enum.BagIndex.CharacterBankTab_6 or Enum.BagIndex.BankBag_6 or (numBags + numBankBags)
-        local isBankItem = bag >= firstBankBag and bag <= lastBankBag
+        -- Prefer the container's owning frame to determine whether we're
+        -- creating an item button for a bank view. This correctly covers both
+        -- character bank tabs and warband bank tabs regardless of their
+        -- underlying bag index values.
+        local bagFrame = parent and parent:GetParent()
+        local isBankItem = bagFrame and bagFrame.bankType ~= nil
         local frameName = string.format('DJBagsItem_%d_%d', bag, slot)
         local object
 
@@ -72,6 +79,8 @@ function ADDON:NewItem(parent, slot)
 	for k, v in pairs(item) do
 		object[k] = v
 	end
+
+        object.isBankItem = isBankItem
 
 	InitItem(object, bag, slot)
 
@@ -178,7 +187,7 @@ end
 
 local function UpdateILevel(self, equipable, quality, level)
     if equipable then
-        if quality and quality >= Enum.ItemQuality.Common then
+        if quality and quality >= Enum.ItemQuality.Common and BAG_ITEM_QUALITY_COLORS and BAG_ITEM_QUALITY_COLORS[quality] then
             self.itemLevel:SetVertexColor(BAG_ITEM_QUALITY_COLORS[quality].r, BAG_ITEM_QUALITY_COLORS[quality].g, BAG_ITEM_QUALITY_COLORS[quality].b)
         else
             self.itemLevel:SetVertexColor(1, 1, 1, 1)

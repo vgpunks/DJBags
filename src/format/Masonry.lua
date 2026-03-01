@@ -42,10 +42,14 @@ local itemSorter = function(A, B)
 end
 
 ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
-    local padding = bag.settings.padding
-    local containerSpacing = bag.settings.containerSpacing
-    local itemSpacing = bag.settings.itemSpacing
-    local maxCols = bag.settings.maxColumns > 0 and bag.settings.maxColumns or 1
+    -- Some frames (especially bank frames built from XML) can call Format() very
+    -- early in load, before SavedVariables are applied.  Fall back to sane
+    -- defaults if settings aren't available yet.
+    local s = bag.settings or {}
+    local padding = s.padding or 5
+    local containerSpacing = s.containerSpacing or 2
+    local itemSpacing = s.itemSpacing or 5
+    local maxCols = (s.maxColumns or 10) > 0 and (s.maxColumns or 10) or 1
 
     -- Track settings that influence layout so we can reset cached sizing when
     -- they change (e.g., adjusting column counts).
@@ -56,10 +60,26 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
         bag._maxHeight = 0
     end
 
+    -- Containers may optionally filter which item buttons are rendered (for
+    -- example when viewing a specific bank tab).  Build a display list using
+    -- the container's predicate while still keeping the master item list
+    -- intact for updates.
+    local displayItems
+    if bag.ShouldDisplayItem then
+        displayItems = {}
+        for _, item in ipairs(bag.items) do
+            if bag:ShouldDisplayItem(item) then
+                tinsert(displayItems, item)
+            end
+        end
+    else
+        displayItems = bag.items
+    end
+
     -- Determine how much horizontal space each category will require so we
     -- can order them by size rather than name for better packing.
     local typeSizes = {}
-    for _, item in pairs(bag.items) do
+    for _, item in ipairs(displayItems) do
         typeSizes[item.type] = (typeSizes[item.type] or 0) + 1
     end
     for t, count in pairs(typeSizes) do
@@ -67,16 +87,21 @@ ADDON.formatter[ADDON.formats.MASONRY] = function(bag)
     end
     ADDON.typeSizes = typeSizes
 
-    table.sort(bag.items, itemSorter)
+    table.sort(displayItems, itemSorter)
     for _, container in pairs(bag.titleContainers) do
         container:Hide()
+    end
+
+    -- Always hide every item button first so stale entries never remain
+    -- visible when a filter is active.
+    for _, item in ipairs(bag.items) do
+        item:Hide()
     end
 
     -- Format the containers
     local containers = {}
     local cnt, x, y, currentType, container, prevItem
-    for _, item in pairs(bag.items) do
-        item:Hide()
+    for _, item in ipairs(displayItems) do
         if item.type ~= currentType then
             currentType = item.type
             container = bag.titleContainers[currentType]
